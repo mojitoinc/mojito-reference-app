@@ -3,41 +3,10 @@ import Select from "react-select";
 import Image from "next/image";
 import styled from "styled-components";
 
-import { Button } from "@components";
+import { Button, Modal } from "@components";
 import { strings, images } from "@constants";
 import { usePlaceBidMutation } from "@hooks";
 import { formatCurrencyAmount, bidIncrement } from "@utils";
-
-const Modal = styled.div(
-  ({ theme }) => `
-  background: ${theme.colors.modalOverlayBackground};
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-`
-);
-
-const ModalContent = styled.section(
-  ({ theme }) => `
-  position: fixed;
-  background: ${theme.colors.background};
-  width: 80%;
-  max-height: 90vh;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  border-radius: ${theme.borderRadius.medium};
-  padding: 45px 61px;
-  overflow-y: auto;
-
-  ${theme.down(theme.breakpoints.md)} {
-    padding: 45px 15px;
-    width: 90%;
-  }
-`
-);
 
 const ModalTitle = styled.h3(
   ({ theme }) => `
@@ -180,24 +149,6 @@ const ConfirmButton = styled(Button)(
 `
 );
 
-const CloseButton = styled.button(
-  ({ theme }) => `
-  position: absolute;
-  top: 0;
-  right: 0;
-  margin: 24px;
-  background: transparent;
-  border: none;
-  font-size: 24px;
-
-  ${theme.down(theme.breakpoints.md)} {
-    & img {
-      width: 15px !important;
-    }
-  }
-`
-);
-
 const SuccessContent = styled.div`
   align-items: center;
   display: flex;
@@ -319,105 +270,94 @@ export const BidConfirmModal = ({
       return null;
     }
   };
+
   return (
-    <Modal>
-      <ModalContent>
-        {showSuccess && (
-          <SuccessContent>
-            <Image
-              src={images.SUCCESS?.src}
-              alt={images.SUCCESS?.alt}
-              width={images.SUCCESS?.width}
-              height={images.SUCCESS?.height}
-            />
-            <SuccessMessage>{strings.LOT.CONFIRM_MODAL.SUCCESS}</SuccessMessage>
-            <ConfirmButton onClick={handleClose} isBig>
-              {strings.LOT.CONFIRM_MODAL.CLOSE}
-            </ConfirmButton>
-          </SuccessContent>
-        )}
-        {!showSuccess && (
-          <>
-            <ModalTitle>{`${strings.LOT.CONFIRM_MODAL.TITLE}${lot.title}`}</ModalTitle>
-            <DetailContainer>
-              <DetailLeft>
-                {lot.format === "image" && (
-                  <LotImage src={lot.image} alt={lot.title} />
-                )}
-                {lot.format === "video" && (
-                  <LotVideo height={350} width={432} src={lot.video} />
-                )}
-              </DetailLeft>
-              <DetailRight>
-                <CurrentBid>
-                  {strings.COMMON.CURRENT_BID}
-                  {formatCurrencyAmount(
-                    mojitoLotData.currentBid?.amount
-                      ? mojitoLotData.currentBid.amount
-                      : 0
-                  )}
-                </CurrentBid>
-                <LotDescription>
-                  {strings.LOT.CONFIRM_MODAL.DISCLAIMER}
-                </LotDescription>
-                <BidContainer>
-                  <LotDescription>
-                    {strings.LOT.CONFIRM_MODAL.YOUR_MAX_BID}
-                  </LotDescription>
-                  <SelectBidContainer
-                    classNamePrefix="reactSelect"
-                    components={{ IndicatorSeparator: () => null }}
-                    onChange={bidOnChange}
-                    menuShouldScrollIntoView={true}
-                    isSearchable={false}
-                    isDisabled={
-                      !!submittedAmount?.current ||
-                      bidAmount > bidIncrement[bidIncrement.length - 1]
-                    }
-                    value={
-                      submittedAmount?.current
-                        ? {
-                            value: submittedAmount?.current,
-                            label: formatCurrencyAmount(
-                              submittedAmount?.current
-                            ),
-                          }
-                        : bidAmount
-                        ? {
-                            value: bidAmount,
-                            label: formatCurrencyAmount(bidAmount),
-                          }
-                        : {
-                            value: availableOptions[0]?.value,
-                            label: formatCurrencyAmount(
-                              availableOptions[0]?.value
-                            ),
-                          }
-                    }
-                    options={availableOptions}
-                  />
-                </BidContainer>
-                <Separator />
-                <MaxTotalContainer>
-                  <p>{strings.LOT.CONFIRM_MODAL.MAX_TOTAL}</p>
-                  <p>{bidAmount} USD</p>
-                </MaxTotalContainer>
-              </DetailRight>
-            </DetailContainer>
-            <ConfirmButton onClick={onSubmit} isBig>
-              {strings.LOT.CONFIRM_MODAL.BUTTON_TITLE}
-            </ConfirmButton>
-          </>
-        )}
-        <CloseButton type="button" onClick={handleClose}>
+    <Modal onClose={handleClose}>
+      {showSuccess && (
+        <SuccessContent>
           <Image
-            src={images.CLOSE_ICON?.src}
-            alt={images.CLOSE_ICON?.alt}
-            width={images.CLOSE_ICON?.width}
-            height={images.CLOSE_ICON?.height}
+            src={images.SUCCESS?.src}
+            alt={images.SUCCESS?.alt}
+            width={images.SUCCESS?.width}
+            height={images.SUCCESS?.height}
           />
-        </CloseButton>
-      </ModalContent>
+          <SuccessMessage>{strings.LOT.CONFIRM_MODAL.SUCCESS}</SuccessMessage>
+          <ConfirmButton onClick={handleClose} isBig>
+            {strings.LOT.CONFIRM_MODAL.CLOSE}
+          </ConfirmButton>
+        </SuccessContent>
+      )}
+      {!showSuccess && (
+        <>
+          <ModalTitle>{`${strings.LOT.CONFIRM_MODAL.TITLE}${lot.title}`}</ModalTitle>
+          <DetailContainer>
+            <DetailLeft>
+              {lot.format === "image" && (
+                <LotImage src={lot.image} alt={lot.title} />
+              )}
+              {lot.format === "video" && (
+                <LotVideo height={350} width={432} src={lot.video} />
+              )}
+            </DetailLeft>
+            <DetailRight>
+              <CurrentBid>
+                {strings.COMMON.CURRENT_BID}
+                {formatCurrencyAmount(
+                  mojitoLotData.currentBid?.amount
+                    ? mojitoLotData.currentBid.amount
+                    : 0
+                )}
+              </CurrentBid>
+              <LotDescription>
+                {strings.LOT.CONFIRM_MODAL.DISCLAIMER}
+              </LotDescription>
+              <BidContainer>
+                <LotDescription>
+                  {strings.LOT.CONFIRM_MODAL.YOUR_MAX_BID}
+                </LotDescription>
+                <SelectBidContainer
+                  classNamePrefix="reactSelect"
+                  components={{ IndicatorSeparator: () => null }}
+                  onChange={bidOnChange}
+                  menuShouldScrollIntoView={true}
+                  isSearchable={false}
+                  isDisabled={
+                    !!submittedAmount?.current ||
+                    bidAmount > bidIncrement[bidIncrement.length - 1]
+                  }
+                  value={
+                    submittedAmount?.current
+                      ? {
+                          value: submittedAmount?.current,
+                          label: formatCurrencyAmount(submittedAmount?.current),
+                        }
+                      : bidAmount
+                      ? {
+                          value: bidAmount,
+                          label: formatCurrencyAmount(bidAmount),
+                        }
+                      : {
+                          value: availableOptions[0]?.value,
+                          label: formatCurrencyAmount(
+                            availableOptions[0]?.value
+                          ),
+                        }
+                  }
+                  options={availableOptions}
+                />
+              </BidContainer>
+              <Separator />
+              <MaxTotalContainer>
+                <p>{strings.LOT.CONFIRM_MODAL.MAX_TOTAL}</p>
+                <p>{bidAmount} USD</p>
+              </MaxTotalContainer>
+            </DetailRight>
+          </DetailContainer>
+          <ConfirmButton onClick={onSubmit} isBig>
+            {strings.LOT.CONFIRM_MODAL.BUTTON_TITLE}
+          </ConfirmButton>
+        </>
+      )}
     </Modal>
   );
 };

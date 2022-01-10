@@ -2,6 +2,7 @@
 import { useState } from "react";
 import type { NextPage } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useAuth0 } from "@auth0/auth0-react";
 import styled from "styled-components";
@@ -321,9 +322,7 @@ const LotDetail: NextPage = ({ lot }: any) => {
             <Author>
               <AuthorImage>
                 <Image
-                  src={
-                    lot.author.avatar.url || images.AVATAR_PLACEHOLDER?.src
-                  }
+                  src={lot.author.avatar.url || images.AVATAR_PLACEHOLDER?.src}
                   alt={images.AVATAR_PLACEHOLDER?.alt}
                   width={images.AVATAR_PLACEHOLDER?.authorSize}
                   height={images.AVATAR_PLACEHOLDER?.authorSize}
@@ -379,15 +378,26 @@ const LotDetail: NextPage = ({ lot }: any) => {
                             {strings.LOT.BID_SENT}
                           </Button>
                         ) : (
-                          <Button
-                            onClick={() => setShowConfirmModal(true)}
-                            isBig
-                          >
-                            {hasBid &&
-                            currentBid?.marketplaceUser.id !== profile?.me.id
-                              ? strings.LOT.BID_AGAIN_BUTTON
-                              : strings.LOT.BID_NOW_BUTTON}
-                          </Button>
+                          <>
+                            {profile && !profile.me.userOrgs[0].username ? (
+                              <Link href="/profile" passHref>
+                                <Button isBig>
+                                  {strings.LOT.SET_USERNAME}
+                                </Button>
+                              </Link>
+                            ) : (
+                              <Button
+                                onClick={() => setShowConfirmModal(true)}
+                                isBig
+                              >
+                                {hasBid &&
+                                currentBid?.marketplaceUser.id !==
+                                  profile?.me.id
+                                  ? strings.LOT.BID_AGAIN_BUTTON
+                                  : strings.LOT.BID_NOW_BUTTON}
+                              </Button>
+                            )}
+                          </>
                         )}
                       </>
                     ) : (
@@ -407,10 +417,11 @@ const LotDetail: NextPage = ({ lot }: any) => {
                     <div>
                       {strings.LOT.BY}
                       <WinnerName>
-                        {currentBid.marketplaceUser.id === profile?.me.id
-                          ? strings.COMMON.YOU
-                          : currentBid.marketplaceUser.username ||
-                            currentBid.userOrganization.user.name}
+                        {`${currentBid.marketplaceUser.username}${
+                          currentBid.marketplaceUser.id === profile?.me.id
+                            ? ` (${strings.COMMON.YOU})`
+                            : ""
+                        }`}
                       </WinnerName>
                     </div>
                   </Winner>

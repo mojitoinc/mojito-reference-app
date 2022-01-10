@@ -107,9 +107,6 @@ export const BidFeedItem = ({ item, isTop, userId }: any) => {
     amount,
     createdAt,
     marketplaceUser: { avatar, username, id },
-    userOrganization: {
-      user: { name },
-    },
     outbidinfo,
   } = item;
   const timeAgo = getTimeAgo(createdAt);
@@ -139,10 +136,14 @@ export const BidFeedItem = ({ item, isTop, userId }: any) => {
           }
         />
         <Name isTop={isTop}>
-          {id === userId ? strings.COMMON.YOU : username || name}
+          {`${username}${id === userId ? ` (${strings.COMMON.YOU})` : ""}`}
         </Name>
         <WarningContainer>
-          {outbidinfo && <Warning onClick={onShowMessage}>{strings.LOT.BID_FEED.WARNING_ICON}</Warning>}
+          {outbidinfo && (
+            <Warning onClick={onShowMessage}>
+              {strings.LOT.BID_FEED.WARNING_ICON}
+            </Warning>
+          )}
           {showMessage && (
             <>
               <Arrow />

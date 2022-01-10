@@ -110,7 +110,7 @@ const CurrentBidAmount = styled.div(
 `
 );
 
-export const LotGridItem = ({ lot, mojitoLotData, isCollectionItem }: any) => (
+export const LotGridItem = ({ lot, mojitoLotData, youHoldBid, isCollectionItem }: any) => (
   <Lot href={`lots/${lot.slug}`}>
     <ImageWrapper>
       {lot.format === "image" && (
@@ -146,7 +146,9 @@ export const LotGridItem = ({ lot, mojitoLotData, isCollectionItem }: any) => (
             <>
               {strings.COMMON.WINNER}
               <WinnerName>
-                {mojitoLotData.currentBid.userOrganization.user.name}
+                {`${mojitoLotData.currentBid.marketplaceUser.username}${
+                  youHoldBid ? ` (${strings.COMMON.YOU})` : ""
+                }`}
               </WinnerName>
             </>
           ) : (
