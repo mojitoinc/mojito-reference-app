@@ -13,8 +13,8 @@ const Lot = styled.a(
   color: inherit;
   display: flex;
   flex-direction: column;
-  margin: 0 12px 68px;
-  max-width: 400px;
+  margin: 0 ${theme.unit()} 68px;
+  max-width: ${theme.unit(36)};
   text-align: left;
   text-decoration: none;
   width: 100%;
@@ -25,12 +25,14 @@ const Lot = styled.a(
 `
 );
 
-const ImageWrapper = styled.div`
+const ImageWrapper = styled.div(
+  ({ theme }) => `
   position: relative;
-  height: 415px;
+  height: ${theme.unit(34.58)};
   width: 100%;
   margin-bottom: 16px;
-`;
+`
+);
 
 const LotImage = styled(Image)(
   ({ theme }) => `

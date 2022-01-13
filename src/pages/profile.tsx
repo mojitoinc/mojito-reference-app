@@ -8,13 +8,14 @@ import { Button, LotGridItem } from "@components";
 import { config, images, strings } from "@constants";
 import { useLazyMojito, useFetchAfterAuth } from "@hooks";
 import { EMojitoQueries } from "@state";
+import { UNIT } from '@theme/theme';
 import Content from "content.json";
 
 const Main = styled.main`
   display: flex;
   flex: 1;
   flex-direction: column;
-  padding: 92px 30px;
+  padding: ${({ theme }) => `90px ${theme.unit(4)}`};
 `;
 
 const TopContainer = styled.div`
@@ -69,7 +70,7 @@ const ButtonsContainer = styled.div`
 
 const Info = styled.div(
   ({ theme }) => `
-${theme.down(theme.breakpoints.sm)} {
+  ${theme.down(theme.breakpoints.sm)} {
     align-items: center;
     display: flex;
     flex-direction: column;
@@ -127,8 +128,8 @@ const Grid = styled.div(
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  margin: 0 -12px;
-  max-width: 1600px;
+  margin: 0 -${theme.unit}px;
+  max-width: ${theme.breakpoints.maxWidth}px;
   width: 100%;
 
   ${theme.down(theme.breakpoints.md)} {
@@ -137,10 +138,12 @@ const Grid = styled.div(
 `
 );
 
-const DummyView = styled.div`
-  width: 432px;
-  margin: 0 12px;
-`;
+const DummyView = styled.div(
+  ({ theme }) => `
+  width: ${theme.unit(36)};
+  margin: 0 ${theme.unit()};
+`
+);
 
 const Placeholder = styled.div`
   align-items: center;
@@ -220,8 +223,7 @@ const Profile: NextPage = () => {
                       <LotGridItem key={lot?.mojitoId} lot={lot} />
                     ) : null;
                   })}
-                  <DummyView />
-                  <DummyView />
+                  {[...Array(Math.round(24 / UNIT))].map(( _, index) => <DummyView key={index}/>)}
                 </Grid>
               </>
             ) : (

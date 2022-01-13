@@ -20,11 +20,9 @@ const Main = styled.main`
 const TopBanner = styled.div(
   ({ theme }) => `
   font: ${theme.fonts.body("bold")};
-  height: 40px;
   margin: 0 auto;
   margin-bottom: 16px;
-  max-width: 1176px;
-  padding: 0 30px;
+  max-width: ${theme.breakpoints.lg + 1}px;
   width: 100%;
 `
 );
@@ -35,8 +33,8 @@ const YourBid = styled.div(
   border: ${theme.borders.medium(theme.colors.bidBannerBorder)};
   border-radius: ${theme.borderRadius.small};
   display: flex;
-  height: 100%;
   justify-content: center;
+  padding: 4px 10px;
   width: 100%;
 `
 );
@@ -48,15 +46,17 @@ const Outbid = styled.div(
   border-radius: ${theme.borderRadius.small};
   color: ${theme.colors.primary};
   display: flex;
-  height: 100%;
   justify-content: center;
+  padding: 4px 10px;
   width: 100%;
 `
 );
 
 const StyledContent = styled.div`
+  align-items: center;
   display: flex;
   flex-direction: column;
+  padding: 0 48px;
 `;
 
 const DetailContainer = styled.div(
@@ -65,6 +65,7 @@ const DetailContainer = styled.div(
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
+  max-width: ${theme.breakpoints.lg + 1}px;
 
   ${theme.down(theme.breakpoints.lg)} {
     margin: 0;
@@ -74,7 +75,8 @@ const DetailContainer = styled.div(
 
 const DetailLeft = styled.div(
   ({ theme }) => `
-  margin: 0 36px 40px;
+  margin: 0 36px 40px 0;
+  max-width: 612px;
 
   & .image,
   .video {
@@ -83,11 +85,6 @@ const DetailLeft = styled.div(
     max-height: 588px;
     object-fit: contain;
   }
-
-  ${theme.down(theme.breakpoints.md)} {
-    padding: 0 30px;
-  }
-
   ${theme.down(theme.breakpoints.lg)} {
     margin: 0 0 40px;
   }
@@ -122,12 +119,12 @@ const Video = styled.video(
 
 const DetailRight = styled.div(
   ({ theme }) => `
-  margin: 0 36px;
+  margin-left: 36px;
   max-width: 432px;
   width: 100%;
 
   ${theme.down(theme.breakpoints.lg)} {
-    margin: 0 30px;
+    margin: 0;
   }
 `
 );
@@ -265,21 +262,21 @@ const LotDetail: NextPage = ({ lot }: any) => {
 
   return (
     <Main>
-      {hasBid &&
-        mojitoLotData &&
-        !!mojitoLotData.getMarketplaceAuctionLot.bids.length &&
-        profile &&
-        mojitoLotData?.getMarketplaceAuctionLot.bidView.isDuringSale && (
-          <TopBanner>
-            {mojitoLotData.getMarketplaceAuctionLot.bids[0].marketplaceUser
-              .id === profile.me.id ? (
-              <YourBid>{strings.LOT.HIGHEST_BID}</YourBid>
-            ) : (
-              <Outbid>{strings.LOT.OUTBID}</Outbid>
-            )}
-          </TopBanner>
-        )}
       <StyledContent>
+          {hasBid &&
+            mojitoLotData &&
+            !!mojitoLotData.getMarketplaceAuctionLot.bids.length &&
+            profile &&
+            mojitoLotData?.getMarketplaceAuctionLot.bidView.isDuringSale && (
+              <TopBanner>
+                {mojitoLotData.getMarketplaceAuctionLot.bids[0].marketplaceUser
+                  .id === profile.me.id ? (
+                  <YourBid>{strings.LOT.HIGHEST_BID}</YourBid>
+                ) : (
+                  <Outbid>{strings.LOT.OUTBID}</Outbid>
+                )}
+              </TopBanner>
+            )}
         <DetailContainer>
           <DetailLeft>
             {lot.format === "image" && (
@@ -321,9 +318,7 @@ const LotDetail: NextPage = ({ lot }: any) => {
             <Author>
               <AuthorImage>
                 <Image
-                  src={
-                    lot.author.avatar.url || images.AVATAR_PLACEHOLDER?.src
-                  }
+                  src={lot.author.avatar.url || images.AVATAR_PLACEHOLDER?.src}
                   alt={images.AVATAR_PLACEHOLDER?.alt}
                   width={images.AVATAR_PLACEHOLDER?.authorSize}
                   height={images.AVATAR_PLACEHOLDER?.authorSize}

@@ -5,20 +5,23 @@ import styled from "styled-components";
 import { LotGridItem } from "@components";
 import { config, images, strings } from "@constants";
 import { useCollection } from "@hooks";
+import { UNIT } from '@theme/theme';
 import Content from "content.json";
 
-const Container = styled.main`
-  background: ${({ theme }) => theme.backgrounds.grid};
+const Container = styled.main(
+  ({ theme }) => `
+  background: ${theme.backgrounds.grid};
   background-size: 100%;
   background-repeat: no-repeat;
   min-height: 100vh;
-  padding: 90px 48px;
+  padding: 90px ${theme.unit(4)};
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-`;
+`
+);
 
 const Title = styled.h1`
   margin: 0;
@@ -53,8 +56,8 @@ const Grid = styled.div(
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  margin: 0 -12px;
-  max-width: 1600px;
+  margin: 0 -${theme.unit()};
+  max-width: ${theme.breakpoints.maxWidth}px;
   width: 100%;
 
   ${theme.down(theme.breakpoints.md)} {
@@ -63,10 +66,12 @@ const Grid = styled.div(
 `
 );
 
-const DummyView = styled.div`
-  width: 432px;
-  margin: 0 12px;
-`;
+const DummyView = styled.div(
+  ({ theme }) => `
+  width: ${theme.unit(36)};
+  margin: 0 ${theme.unit()};
+`
+);
 
 const Home: NextPage = () => {
   const { lots } = Content;
@@ -105,8 +110,7 @@ const Home: NextPage = () => {
             />
           ) : null;
         })}
-        <DummyView />
-        <DummyView />
+        {[...Array(Math.round(24 / UNIT))].map(( _, index) => <DummyView key={index}/>)}
       </Grid>
     </Container>
   );

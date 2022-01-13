@@ -26,7 +26,7 @@ Content must be added in `content.json` following the sample lot object in `lots
 
 ## Customize App
 
-App theme can be edited in `src/theme/theme.ts`. In there, several aspects can be edited, such as grid background, border radiuses, borders, colors, fonts, text decoration for links, breakpoints... In order to change the font families, the new font files must be added to `public/fonts` folder and `@font-face` specification must be included in `src/theme/GlobalStyles.ts`, the same way as for existing ones.
+App theme can be edited in `src/theme/theme.ts`. In there, several aspects can be edited, such as grid background, border radiuses, borders, colors, fonts, text decoration for links, breakpoints... Also dimensions for grid view can also be edited by updating the `UNIT` and `MAX_CONTENT_WIDTH` constants used in the theme. In order to change the font families, the new font files must be added to `public/fonts` folder and `@font-face` specification must be included in `src/theme/GlobalStyles.ts`, the same way as for existing ones.
 
 Copy (including site title) is set in `src/constants/strings.ts` file and can be modified there, and also the images (favicon, logo, default avatar, close icon, profile icon...), in `src/constants/images.ts`. 
 

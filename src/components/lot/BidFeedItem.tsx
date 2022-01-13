@@ -37,8 +37,6 @@ const Bidder = styled.div(
 
 const AvatarImage = styled(Image)`
   border-radius: 50%;
-  height: 51px;
-  width: 51px;
   overflow: hidden;
 `;
 

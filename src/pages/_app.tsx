@@ -20,7 +20,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           <ThemeProvider theme={theme}>
             <GlobalStyles />
             <Header />
-            <Component {...pageProps} />
+            <Component {...pageProps} theme={theme} />
             <Footer />
           </ThemeProvider>
         </MojitoApiProvider>

@@ -27,6 +27,7 @@ export const images = {
     footerHeight: 30,
     headerWidth: 237,
     headerHeight: 40,
+    headerMobileWidth: 142,
   },
   PROFILE_ICON: {
     src: "/icons/profile.svg",
