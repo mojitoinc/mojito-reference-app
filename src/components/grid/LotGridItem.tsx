@@ -115,7 +115,7 @@ const CurrentBidAmount = styled.div(
 
 const QuickBidButton = styled.button(
   ({ theme }) => `
-    background-color: #ff00ff;
+    background-color: ${theme.colors.primary};
     border-radius: ${theme.borderRadius.small};
     border: none;
     font: ${theme.fonts.small("bold")};
