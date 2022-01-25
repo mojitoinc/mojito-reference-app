@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -252,6 +252,8 @@ const LotDetail: NextPage = ({ lot }: any) => {
   const [hasBid, setHasBid] = useState(false);
   const router = useRouter();
   const [showQuickBidModal, setShowQuickBidModal] = useState(false);
+  const showQuickBidOnChange = useCallback(() => { setShowQuickBidModal(!showQuickBidModal) }, [showQuickBidModal]);
+
 
   let { loading, data, error } = useMojitoSubscription(
     EMojitoSubscriptions.getMarketplaceAuctionLot, {
@@ -305,7 +307,7 @@ const LotDetail: NextPage = ({ lot }: any) => {
               <>
                 <Outbid>
                   {strings.LOT.OUTBID}
-                  <QuickBidButton onClick={() => setShowQuickBidModal(true)}>
+                  <QuickBidButton onClick={showQuickBidOnChange}>
                     {strings.LOT.QUICKBID}{" "}
                     {
                       mojitoLotData.getMarketplaceAuctionLot.currentBid
@@ -470,7 +472,7 @@ const LotDetail: NextPage = ({ lot }: any) => {
         )}
         {showQuickBidModal && (
           <QuickBidModal
-            handleClose={() => setShowQuickBidModal(false)}
+            handleClose={showQuickBidOnChange}
             handleCustomBid={() => setShowConfirmModal(true)}
             lot={lot}
             mojitoLotData={mojitoLotData?.getMarketplaceAuctionLot}

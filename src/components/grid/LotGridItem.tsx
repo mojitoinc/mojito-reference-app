@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import Image from "next/image";
 import styled from "styled-components";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -127,6 +127,8 @@ const QuickBidButton = styled.button(
 
 export const LotGridItem = ({ lot, mojitoLotData, profile}: any) => {
   const [showQuickBidModal, setShowQuickBidModal] = useState(false);
+  const showQuickBidOnChange = useCallback(() => { setShowQuickBidModal(!showQuickBidModal) }, [showQuickBidModal]);
+
   const { isAuthenticated } = useAuth0();
 
   const { currentBid } = mojitoLotData;
@@ -198,7 +200,7 @@ export const LotGridItem = ({ lot, mojitoLotData, profile}: any) => {
         </div>
         {showQuickBid &&
           currentBid?.amount && (
-            <QuickBidButton onClick={() => setShowQuickBidModal(true)}>
+            <QuickBidButton onClick={showQuickBidOnChange}>
               {strings.LOT.QUICKBID} $
               {currentBid.nextBidIncrement}
             </QuickBidButton>
@@ -206,7 +208,7 @@ export const LotGridItem = ({ lot, mojitoLotData, profile}: any) => {
       </Row>
       {showQuickBidModal && (
         <QuickBidModal
-          handleClose={() => setShowQuickBidModal(false)}
+          handleClose={showQuickBidOnChange}
           handleCustomBid={() => {}}
           lot={lot}
           mojitoLotData={mojitoLotData}
