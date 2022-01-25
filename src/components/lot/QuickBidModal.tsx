@@ -4,6 +4,7 @@ import { usePlaceBidMutation } from "@hooks";
 import { strings, images } from "@constants";
 import styled from "styled-components";
 import { Button } from "@components";
+import { ILotData } from "@interfaces";
 
 const Modal = styled.div(
   ({ theme }) => `
@@ -21,7 +22,7 @@ const ModalContent = styled.section(
   position: fixed;
   background: ${theme.colors.background};
   width: 60%;
-  max-width: 660px;
+  max-width: ${theme.breakpoints.md}px;
   max-height: 90vh;
   top: 50%;
   left: 50%;
@@ -115,14 +116,14 @@ const ActionButton = styled(Button)(
 
 const CustomBid =  styled.span(
   ({ theme }) => `
-  font-family: "PostGrotesk";
+  font-family: ${theme.fonts.secondary};
   font-style: normal;
   font-weight: bold;
   font-size: 16px;
   line-height: 18px;
   text-align: center;
-  text-decoration-line: underline;
-  color: #FF00FF;
+  text-decoration-line: ${theme.textDecoration.link};
+  color: ${theme.colors.primary};
   cursor: pointer;
 `
 )
@@ -130,7 +131,7 @@ const CustomBid =  styled.span(
 interface QuickBidModalProps {
   handleClose: () => void;
   handleCustomBid: () => void;
-  lot: any;
+  lot: ILotData;
   mojitoLotData: any;
 }
 
@@ -140,7 +141,7 @@ export const QuickBidModal = ({
   lot,
   mojitoLotData,
 }: QuickBidModalProps) => {
-  const [error, setError] = useState<any>(null);
+  const [error, setError] = useState<string|null>(null);
   const [placeBid] = usePlaceBidMutation(lot);
 
   const onSubmit = async () => {

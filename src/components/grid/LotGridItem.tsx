@@ -116,14 +116,11 @@ const CurrentBidAmount = styled.div(
 const QuickBidButton = styled.button(
   ({ theme }) => `
     background-color: #ff00ff;
-    border-radius: 8px;
+    border-radius: ${theme.borderRadius.small};
     border: none;
-    font-family: "PostGrotesk", sans-serif;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 14px;
+    font: ${theme.fonts.small("bold")};
     line-height: 18px;
-    color: #ffffff;
+    color: ${theme.colors.background};
     padding: 5px 10px;
 `
 );
@@ -132,9 +129,9 @@ export const LotGridItem = ({ lot, mojitoLotData, profile}: any) => {
   const [showQuickBidModal, setShowQuickBidModal] = useState(false);
   const { isAuthenticated } = useAuth0();
 
-  const showQuickBid = () => {
-    return mojitoLotData.currentBid.marketplaceUser.id !== profile?.me?.id && isAuthenticated && mojitoLotData.bidView.isDuringSale
-  }
+  const { currentBid } = mojitoLotData;
+
+  const showQuickBid = currentBid.marketplaceUser.id !== profile?.me?.id && isAuthenticated && mojitoLotData.bidView.isDuringSale;
 
   let { loading, data, error } = useMojitoSubscription(
     EMojitoSubscriptions.getMarketplaceAuctionLot, {
@@ -145,7 +142,7 @@ export const LotGridItem = ({ lot, mojitoLotData, profile}: any) => {
   );
 
   if(data){
-    Object.assign({}, mojitoLotData.currentBid , data.getMarketplaceAuctionLot.currentBid)
+    Object.assign({}, currentBid , data.getMarketplaceAuctionLot.currentBid)
   }
 
   return (
@@ -175,11 +172,7 @@ export const LotGridItem = ({ lot, mojitoLotData, profile}: any) => {
           <CurrentBid>
             {strings.COMMON.CURRENT_BID}
             <CurrentBidAmount>
-              {formatCurrencyAmount(
-                mojitoLotData.currentBid?.amount
-                  ? mojitoLotData.currentBid?.amount
-                  : 0
-              )}
+              {formatCurrencyAmount(currentBid?.amount || 0)}
             </CurrentBidAmount>
           </CurrentBid>
         )}
@@ -188,11 +181,11 @@ export const LotGridItem = ({ lot, mojitoLotData, profile}: any) => {
         <div>
           <Id>{`#${lot.lotId}`}</Id>
           <Paragraph>
-            {mojitoLotData.bidView.isPostSale && mojitoLotData.currentBid ? (
+            {mojitoLotData.bidView.isPostSale && currentBid ? (
               <>
                 {strings.COMMON.WINNER}
                 <WinnerName>
-                  {mojitoLotData.currentBid.userOrganization.user.name}
+                  {currentBid.userOrganization.user.name}
                 </WinnerName>
               </>
             ) : (
@@ -203,11 +196,11 @@ export const LotGridItem = ({ lot, mojitoLotData, profile}: any) => {
             )}
           </Paragraph>
         </div>
-        {showQuickBid() &&
-          mojitoLotData.currentBid?.amount && (
+        {showQuickBid &&
+          currentBid?.amount && (
             <QuickBidButton onClick={() => setShowQuickBidModal(true)}>
               {strings.LOT.QUICKBID} $
-              {mojitoLotData.currentBid.nextBidIncrement}
+              {currentBid.nextBidIncrement}
             </QuickBidButton>
           )}
       </Row>
