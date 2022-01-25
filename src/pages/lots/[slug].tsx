@@ -56,15 +56,15 @@ const Outbid = styled.div(
 
 const QuickBidButton = styled.button(
   ({ theme }) => `
-    background-color: #ff00ff;
-    border-radius: 8px;
+    background-color: ${theme.colors.primary};
+    border-radius: ${theme.borderRadius.small};
     border: none;
     font-family: "IBMPlexMono", sans-serif;
     font-style: normal;
     font-weight: bold;
     font-size: 16px;
     line-height: 21px;
-    color: #ffffff;
+    color: ${theme.colors.background};
     padding: 7px 28px;
     margin-left: 24px;
     text-transform: uppercase;
