@@ -12,6 +12,12 @@ export const images = {
     width: 158,
     height: 158,
   },
+  ERROR: {
+    src: "/images/error.svg",
+    alt: "error",
+    width: 158,
+    height: 158,
+  },
   AVATAR_PLACEHOLDER: {
     src: "/images/profile-placeholder.svg",
     alt: "avatar",

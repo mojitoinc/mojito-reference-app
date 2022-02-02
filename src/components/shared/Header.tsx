@@ -70,11 +70,15 @@ export const Header = () => {
   useFetchAfterAuth(getData);
 
   useEffect(() => {
-    if (isAuthenticated && profile && !profile.me.userOrgs[0].username) {
+    if (
+      isAuthenticated &&
+      profile &&
+      profile.me.userOrgs[0]?.id &&
+      !profile.me.userOrgs[0].username
+    ) {
       updateUserSettings({
         variables: {
           userOrgId: profile.me.userOrgs[0].id,
-          username: user?.nickname,
           avatar: user?.picture,
         },
       });
@@ -82,10 +86,8 @@ export const Header = () => {
   }, [
     isAuthenticated,
     profile,
-    profile?.me.userOrgs,
     updateUserSettings,
     user?.picture,
-    user?.nickname,
   ]);
 
   const login = () => {
