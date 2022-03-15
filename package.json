@@ -5,11 +5,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "codegen": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
     "@apollo/client": "^3.4.17",
     "@auth0/auth0-react": "^1.8.0",
+    "@faker-js/faker": "^6.0.0-beta.0",
     "ahooks": "^2.10.12",
     "graphql": "^16.0.1",
     "moment": "^2.29.1",
@@ -22,10 +24,16 @@
     "subscriptions-transport-ws": "^0.11.0"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^2.6.2",
+    "@graphql-codegen/introspection": "^2.1.1",
+    "@graphql-codegen/typescript": "^2.4.7",
+    "@graphql-codegen/typescript-operations": "^2.3.4",
+    "@graphql-codegen/typescript-react-apollo": "^3.2.10",
     "@netlify/plugin-nextjs": "^4.0.0-beta.8",
     "@types/node": "16.11.7",
     "@types/react": "17.0.35",
     "@types/styled-components": "^5.1.19",
+    "@types/uuid": "^8.3.4",
     "babel-plugin-styled-components": "^2.0.2",
     "eslint": "7",
     "eslint-config-next": "12.0.4",

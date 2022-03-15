@@ -1,12 +1,15 @@
 export const strings = {
-  SITE_TITLE: "Metaverso",
+  SITE_TITLE: "Cantina",
   COMMON: {
     LOGIN_BUTTON: "SIGN UP",
     TERMS_AND_CONDITIONS: "Terms and Conditions",
     CURRENT_BID: "Current bid: ",
     AUCTION_FINISHED: "Auction finished",
+    BUYNOW_FINISHED: "Sale is complete ",
     BIDDING_STARTS: "Bidding starts on ",
     AUCTION_CLOSES: "Auction closes in ",
+    BUYNOW_CLOSES: "Sale closes in ",
+    BUYNOW_STARTS: "Sale starts on ",
     WINNER: "Winner ",
     CREATED_BY: "Created by ",
     SEE_MORE: "See more",
@@ -14,10 +17,9 @@ export const strings = {
     YOU: "You",
   },
   GRID: {
-    TITLE: "Metaverso NFTs",
-    SUBTITLE: "Puerto Rico's home in the metaverse",
+    TITLE: "Cantina",
+    SUBTITLE: "Example NFT Marketplace",
     DATE_AND_LOCATION: "Dec 7, 2021 Museo de Arte de Puerto Rico",
-    DOMAIN: "metaver.so",
   },
   LOT: {
     LOGIN_BUTTON: "SIGN IN",

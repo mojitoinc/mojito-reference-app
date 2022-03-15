@@ -2,11 +2,16 @@ import type { NextPage } from "next";
 import Image from "next/image";
 import styled from "styled-components";
 
-import { LotGridItem } from "@components";
+import { CollectionGridItem } from "@components";
 import { config, images, strings } from "@constants";
-import { useCollection, useLazyMojito, useFetchAfterAuth } from "@hooks";
-import { EMojitoQueries } from "@state";
-import Content from "content.json";
+import {
+  useCollectionBySlugQuery,
+  useProfileLazyQuery,
+} from "src/services/graphql/generated";
+import { useMemo } from "react";
+
+import { MockCMSService } from "src/data/MockCMSService";
+import { useFetchAfterAuth } from "@hooks";
 
 const Container = styled.main`
   background: ${({ theme }) => theme.backgrounds.grid};
@@ -70,19 +75,23 @@ const DummyView = styled.div`
 `;
 
 const Home: NextPage = () => {
-  const { lots } = Content;
-  const { collection } = useCollection(config.COLLECTION_SLUG);
+  const cms = useMemo(() => {
+    return new MockCMSService();
+  }, []);
+  const { data, loading, error } = useCollectionBySlugQuery({
+    variables: {
+      slug: config.COLLECTION_SLUG,
+      marketplaceID: config.MARKETPLACE_ID,
+    },
+  });
 
-  const [getData, { data: profile }] = useLazyMojito(EMojitoQueries.profile, {
+  const [getData, { data: profile }] = useProfileLazyQuery({
     variables: {
       organizationID: config.ORGANIZATION_ID,
     },
   });
 
   useFetchAfterAuth(getData);
-
-  const collectionLotsIds = collection?.items?.map((e: any) => e.lot.id) || [];
-  let filteredLots = lots.filter((e) => collectionLotsIds.includes(e.mojitoId));
 
   return (
     <Container>
@@ -96,26 +105,22 @@ const Home: NextPage = () => {
 
       <Subtitle>{strings.GRID.SUBTITLE}</Subtitle>
 
-      <Date>{strings.GRID.DATE_AND_LOCATION}</Date>
-
-      <Domain>{strings.GRID.DOMAIN}</Domain>
+      {error && <div>error getting data</div>}
 
       <Grid>
-        {filteredLots.map((lot) => {
-          const item = collection?.items.find(
-            (item: any) => item.lot.id === lot.mojitoId
-          );
-
-          return lot ? (
-            <LotGridItem
-              key={lot.mojitoId + JSON.stringify(item.lot.bidView)}
-              mojitoLotData={item.lot}
-              lot={lot}
-              isCollectionItem
-              youHoldBid={item.lot.currentBid.marketplaceUser.id === profile?.me.id}
-            />
-          ) : null;
-        })}
+        {data?.collectionBySlug?.items?.map((item) => (
+          <CollectionGridItem
+            key={item.id}
+            item={item}
+            cmsData={cms.getData(item.id)}
+            youHoldBid={
+              (item.details.__typename === "MarketplaceAuctionLot" &&
+                item.details.myBid &&
+                item.details.currentBid?.id === item.details.myBid?.id) ||
+              false
+            }
+          />
+        ))}
         <DummyView />
         <DummyView />
       </Grid>

@@ -1,10 +1,10 @@
 {
-  "lots": [
+  "items": [
     {
       "title": "Lot title",
-      "lotId": 1,
+      "lotNumber": 1,
       "slug": "slug",
-      "mojitoId": "bbe01257-e6c3-4219-a402-29737781271b",
+      "mojitoId": "c1b1bd5e-6d72-4ec3-8ae6-c6941f4bd198",
       "about": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a condimentum mauris. Aenean ac dolor elit. Aliquam malesuada libero sit amet augue feugiat, sed facilisis elit molestie. Proin sed pharetra felis, vel feugiat justo. Quisque at nunc et sapien condimentum scelerisque nec sit amet dui. Fusce viverra urna id accumsan vulputate. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec lectus nulla, aliquam sed lorem non, sollicitudin iaculis augue.",
       "format": "image",
       "image": "https://c7.staticflickr.com/6/5161/5363085619_05ebf513f2_z.jpg",

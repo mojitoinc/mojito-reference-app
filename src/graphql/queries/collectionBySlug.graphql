@@ -1,0 +1,8 @@
+query CollectionBySlug($slug: String!, $marketplaceID: UUID1!) {
+  collectionBySlug(slug: $slug, marketplaceID: $marketplaceID) {
+    id
+    items {
+      ...CollectionItemData
+    }
+  }
+}

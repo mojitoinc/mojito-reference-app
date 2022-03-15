@@ -1,0 +1,12 @@
+query CollectionItemBySlug(
+  $marketplaceID: UUID1!
+  $collectionSlug: String!
+  $filter: BidFilterInput!
+) {
+  collectionBySlug(slug: $collectionSlug, marketplaceID: $marketplaceID) {
+    id
+    items {
+      ...CollectionItemDataAll
+    }
+  }
+}

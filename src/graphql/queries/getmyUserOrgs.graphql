@@ -1,0 +1,15 @@
+query GetMyUserOrgs($filter: UserOrgFilter) {
+  serverTime
+  me {
+    id
+    userOrgs(filter: $filter) {
+      id
+      role
+      kycStatus
+      bidAllowed
+      avatar
+      username
+      settings
+    }
+  }
+}

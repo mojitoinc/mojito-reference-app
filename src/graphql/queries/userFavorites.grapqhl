@@ -1,0 +1,9 @@
+query GetUserFavorites {
+    serverTime
+    me {
+        id
+        favoriteLots {
+            id
+        }
+    }
+}

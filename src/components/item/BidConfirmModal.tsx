@@ -1,12 +1,16 @@
-import { useState, useRef, useLayoutEffect } from "react";
+import { useState, useRef, useLayoutEffect, useMemo } from "react";
 import Select from "react-select";
 import Image from "next/image";
 import styled from "styled-components";
 
 import { Button, Modal } from "@components";
 import { strings, images } from "@constants";
-import { usePlaceBidMutation } from "@hooks";
 import { formatCurrencyAmount, bidIncrement } from "@utils";
+import { CMSData } from "src/data/MockCMSService";
+import {
+  CollectionItemDataAllFragment,
+  usePlaceBidMutation,
+} from "src/services/graphql/generated";
 
 const ModalTitle = styled.h3(
   ({ theme }) => `
@@ -162,17 +166,20 @@ const SuccessMessage = styled.h3`
 
 interface BidConfirmModalProps {
   handleClose: () => void;
-  lot: any;
-  mojitoLotData: any;
+  item: CollectionItemDataAllFragment;
+  cmsData?: CMSData;
   setHasBid: (value: boolean) => void;
 }
 
 export const BidConfirmModal = ({
   handleClose,
-  lot,
-  mojitoLotData,
+  item,
+  cmsData,
   setHasBid,
 }: BidConfirmModalProps) => {
+  if (item.details.__typename !== "MarketplaceAuctionLot") {
+    throw Error("invalid type");
+  }
   const submittedAmount = useRef<number | null>(null);
   const [userAvailableMinBid, setUserAvailableMinBid] = useState<number>(
     bidIncrement[0]
@@ -189,10 +196,19 @@ export const BidConfirmModal = ({
   const [showSuccess, setShowSuccess] = useState<boolean>(false);
 
   const [error, setError] = useState<any>(null);
-  const [placeBid] = usePlaceBidMutation(lot);
+  const [placeBid] = usePlaceBidMutation();
+  const auctionDetails = useMemo(() => {
+    if (!item) {
+      return;
+    }
+    if (item.details.__typename !== "MarketplaceAuctionLot") {
+      throw Error("invalid type");
+    }
+    return item.details;
+  }, [item]);
 
   useLayoutEffect(() => {
-    if (mojitoLotData?.bids) {
+    if (auctionDetails?.bids && auctionDetails.currentBid) {
       const options = bidIncrement.reduce(
         (
           arr: {
@@ -201,10 +217,14 @@ export const BidConfirmModal = ({
           }[],
           e
         ) => {
+          if (item.details.__typename !== "MarketplaceAuctionLot") {
+            throw Error("invalid type");
+          }
           if (
-            e >= (mojitoLotData?.startingBid || 0) &&
-            (e >= mojitoLotData?.currentBid?.nextBidIncrement ||
-              !mojitoLotData?.currentBid)
+            auctionDetails.currentBid &&
+            e >= (auctionDetails.startingBid || 0) &&
+            (e >= auctionDetails.currentBid.nextBidIncrement ||
+              !item.details.currentBid)
           ) {
             arr.push({ value: e, label: formatCurrencyAmount(e) });
           }
@@ -215,9 +235,9 @@ export const BidConfirmModal = ({
 
       if (!options.length) {
         options.push({
-          value: mojitoLotData?.currentBid?.nextBidIncrement,
+          value: auctionDetails?.currentBid?.nextBidIncrement || 0,
           label: formatCurrencyAmount(
-            mojitoLotData?.currentBid?.nextBidIncrement
+            auctionDetails?.currentBid?.nextBidIncrement || 0
           ),
         });
       }
@@ -230,9 +250,9 @@ export const BidConfirmModal = ({
       }
     }
   }, [
-    mojitoLotData?.bids?.length,
-    mojitoLotData?.startingBid,
-    mojitoLotData?.currentBid?.id,
+    item.details?.bids?.length,
+    item.details?.startingBid,
+    item.details?.currentBid?.id,
   ]);
 
   useLayoutEffect(() => {
@@ -256,7 +276,7 @@ export const BidConfirmModal = ({
       return await placeBid({
         variables: {
           amount: bidAmount,
-          marketplaceAuctionLotId: lot.mojitoId,
+          marketplaceAuctionLotId: auctionDetails?.id,
         },
       }).then(() => {
         setShowSuccess(true);
@@ -289,22 +309,22 @@ export const BidConfirmModal = ({
       )}
       {!showSuccess && (
         <>
-          <ModalTitle>{`${strings.LOT.CONFIRM_MODAL.TITLE}${lot.title}`}</ModalTitle>
+          <ModalTitle>{`${strings.LOT.CONFIRM_MODAL.TITLE}${item.name}`}</ModalTitle>
           <DetailContainer>
             <DetailLeft>
-              {lot.format === "image" && (
-                <LotImage src={lot.image} alt={lot.title} />
+              {cmsData?.format === "image" && (
+                <LotImage src={cmsData.image} alt={item.name} />
               )}
-              {lot.format === "video" && (
-                <LotVideo height={350} width={432} src={lot.video} />
+              {cmsData?.format === "video" && (
+                <LotVideo height={350} width={432} src={cmsData.video} />
               )}
             </DetailLeft>
             <DetailRight>
               <CurrentBid>
                 {strings.COMMON.CURRENT_BID}
                 {formatCurrencyAmount(
-                  mojitoLotData.currentBid?.amount
-                    ? mojitoLotData.currentBid.amount
+                  item.details.currentBid?.amount
+                    ? item.details.currentBid.amount
                     : 0
                 )}
               </CurrentBid>

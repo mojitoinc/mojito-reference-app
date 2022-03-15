@@ -1,1 +1,1 @@
-export * from "./LotGridItem";
+export * from "./CollectionGridItem";

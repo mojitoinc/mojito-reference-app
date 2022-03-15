@@ -6,6 +6,9 @@ import styled from "styled-components";
 import { StatusTag } from "@components";
 import { strings } from "@constants";
 import { formatCurrencyAmount } from "@utils";
+import { CollectionItemDataFragment } from "src/services/graphql/generated";
+import { CMSData } from "src/data/MockCMSService";
+import { isDuringSale, isPostSale } from "src/utils/isDuringSale";
 
 const Lot = styled.a(
   ({ theme }) => `
@@ -110,43 +113,51 @@ const CurrentBidAmount = styled.div(
 `
 );
 
-export const LotGridItem = ({ lot, mojitoLotData, youHoldBid, isCollectionItem }: any) => (
-  <Lot href={`lots/${lot.slug}`}>
+export interface CollectionGridItem {
+  item: CollectionItemDataFragment;
+  cmsData?: CMSData;
+  youHoldBid?: boolean;
+}
+
+export const CollectionGridItem = ({
+  item,
+  cmsData,
+  youHoldBid,
+}: CollectionGridItem) => (
+  <Lot href={`item/${item.slug}`}>
     <ImageWrapper>
-      {lot.format === "image" && (
+      {cmsData && cmsData.format === "image" && (
         <LotImage
           objectFit="cover"
           layout="fill"
           draggable="false"
-          src={lot.image}
+          src={cmsData.image!}
           alt="lot-image"
         />
       )}
-      {lot.format === "video" && (
-        <Video preload="none" poster={lot.preview}>
-          <source src={lot.video} />
+      {cmsData && cmsData.format === "video" && (
+        <Video preload="none" poster={cmsData.preview}>
+          <source src={cmsData.video} />
         </Video>
       )}
     </ImageWrapper>
-    {isCollectionItem && (
-      <TagContainer>
-        <StatusTag mojitoLotData={mojitoLotData} />
-      </TagContainer>
-    )}
+    <TagContainer>
+      <StatusTag item={item} />
+    </TagContainer>
     <Line>
-      <Title>{lot.title}</Title>
+      <Title>{item.name}</Title>
     </Line>
     <Row>
       <div>
-        <Id>{`#${lot.lotId}`}</Id>
+        <Id>{`#${item.slug}`}</Id>
         <Paragraph>
-          {isCollectionItem &&
-          mojitoLotData?.bidView.isPostSale &&
-          mojitoLotData?.currentBid ? (
+          {item.details.__typename === "MarketplaceAuctionLot" &&
+          isPostSale(item) &&
+          item.details.currentBid ? (
             <>
               {strings.COMMON.WINNER}
               <WinnerName>
-                {`${mojitoLotData.currentBid.marketplaceUser.username}${
+                {`${item.details.currentBid?.marketplaceUser?.username}${
                   youHoldBid ? ` (${strings.COMMON.YOU})` : ""
                 }`}
               </WinnerName>
@@ -154,23 +165,24 @@ export const LotGridItem = ({ lot, mojitoLotData, youHoldBid, isCollectionItem }
           ) : (
             <>
               {strings.COMMON.CREATED_BY}
-              <CreatorName>{lot.author.name}</CreatorName>
+              <CreatorName>{cmsData?.author.name}</CreatorName>
             </>
           )}
         </Paragraph>
       </div>
-      {isCollectionItem && mojitoLotData?.bidView.isDuringSale && (
-        <CurrentBid>
-          {strings.COMMON.CURRENT_BID}
-          <CurrentBidAmount>
-            {formatCurrencyAmount(
-              mojitoLotData.currentBid?.amount
-                ? mojitoLotData.currentBid?.amount
-                : 0
-            )}
-          </CurrentBidAmount>
-        </CurrentBid>
-      )}
+      {item.details.__typename === "MarketplaceAuctionLot" &&
+        isDuringSale(item) && (
+          <CurrentBid>
+            {strings.COMMON.CURRENT_BID}
+            <CurrentBidAmount>
+              {formatCurrencyAmount(
+                item.details.currentBid?.amount
+                  ? item.details.currentBid?.amount
+                  : 0
+              )}
+            </CurrentBidAmount>
+          </CurrentBid>
+        )}
     </Row>
   </Lot>
 );
