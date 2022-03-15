@@ -8,6 +8,9 @@ query Profile($organizationID: UUID!, $filter: UserOrgFilter) {
       marketplaceAuctionLot {
         id
         status
+        marketplaceCollectionItem {
+          ...CollectionItemData
+        }
         currentBid {
           amount
           id

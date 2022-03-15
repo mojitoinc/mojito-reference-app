@@ -7,7 +7,7 @@ import { StatusTag } from "@components";
 import { strings } from "@constants";
 import { formatCurrencyAmount } from "@utils";
 import { CollectionItemDataFragment } from "src/services/graphql/generated";
-import { CMSData } from "src/pages";
+import { CMSData } from "src/data/MockCMSService";
 
 const Lot = styled.a(
   ({ theme }) => `

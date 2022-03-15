@@ -3,10 +3,9 @@ import { useState } from "react";
 import styled from "styled-components";
 import Link from "next/link";
 import {
-  CollectionItemDataFragment,
+  CollectionItemDataAllFragment,
   useProfileLazyQuery,
 } from "src/services/graphql/generated";
-import { CMSData } from "src/data/cmsData";
 import { config, images, strings } from "@constants";
 import { useFetchAfterAuth } from "@hooks";
 import {
@@ -32,6 +31,7 @@ import {
   CurrentBidAmount,
   Outbid,
   Winner,
+  WinnerName,
   YourBid,
 } from "./AuctionComponents";
 import { Button, StatusTag } from "../shared";
@@ -40,13 +40,16 @@ import Image from "next/image";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useRouter } from "next/router";
 import { BidConfirmModal } from "./BidConfirmModal";
+import { CMSData } from "src/data/MockCMSService";
+import { BidFeed } from "./BidFeed";
+import moment from "moment";
 
 const Main = styled.main`
   padding: 40px 0;
 `;
 
 export interface AuctionDetailProps {
-  item: CollectionItemDataFragment;
+  item: CollectionItemDataAllFragment;
   cmsData?: CMSData;
 }
 export const AuctionDetail: React.FC<AuctionDetailProps> = ({
@@ -83,21 +86,26 @@ export const AuctionDetail: React.FC<AuctionDetailProps> = ({
   const isLotDescriptionLong = cmsData && cmsData.about.length > 350;
   const isAboutAuthorLong = cmsData && cmsData.author.about.length > 150;
 
+  const auctionStartUnix = moment(item.details.startDate ?? null).unix();
+  const auctionEndUnix = moment(item.details.endDate ?? null).unix();
+  const nowUnix = moment().unix();
+
+  const isPreSale = nowUnix < auctionStartUnix;
+  const isDuringSale = nowUnix > auctionStartUnix && nowUnix < auctionEndUnix;
+  const isPostSale = nowUnix > auctionEndUnix;
+  const currentBid = item.details.currentBid;
+
   return (
     <Main>
-      {hasBid &&
-        !!item.details.bids.length &&
-        profile &&
-        mojitoLotData?.getMarketplaceAuctionLot.bidView.isDuringSale && (
-          <TopBanner>
-            {mojitoLotData.getMarketplaceAuctionLot.bids[0].marketplaceUser
-              .id === profile.me?.id ? (
-              <YourBid>{strings.LOT.HIGHEST_BID}</YourBid>
-            ) : (
-              <Outbid>{strings.LOT.OUTBID}</Outbid>
-            )}
-          </TopBanner>
-        )}
+      {hasBid && !!item.details.bids.length && profile && isDuringSale && (
+        <TopBanner>
+          {item.details.bids[0].marketplaceUser?.id === profile.me?.id ? (
+            <YourBid>{strings.LOT.HIGHEST_BID}</YourBid>
+          ) : (
+            <Outbid>{strings.LOT.OUTBID}</Outbid>
+          )}
+        </TopBanner>
+      )}
       <StyledContent>
         <DetailContainer>
           <DetailLeft>
@@ -116,7 +124,7 @@ export const AuctionDetail: React.FC<AuctionDetailProps> = ({
               <>
                 <Row>
                   <LotId>#{cmsData?.lotNumber}</LotId>
-                  <StatusTag mojitoLotData={item.getMarketplaceAuctionLot} />
+                  <StatusTag item={item} />
                 </Row>
               </>
             }
@@ -188,7 +196,7 @@ export const AuctionDetail: React.FC<AuctionDetailProps> = ({
                     <>
                       {currentBid &&
                       profile &&
-                      currentBid.marketplaceUser.id === profile?.me?.id ? (
+                      currentBid.marketplaceUser?.id === profile?.me?.id ? (
                         <Button isBig disabled>
                           {strings.LOT.BID_SENT}
                         </Button>
@@ -204,7 +212,8 @@ export const AuctionDetail: React.FC<AuctionDetailProps> = ({
                               isBig
                             >
                               {hasBid &&
-                              currentBid?.marketplaceUser.id !== profile?.me?.id
+                              currentBid?.marketplaceUser?.id !==
+                                profile?.me?.id
                                 ? strings.LOT.BID_AGAIN_BUTTON
                                 : strings.LOT.BID_NOW_BUTTON}
                             </Button>
@@ -219,39 +228,35 @@ export const AuctionDetail: React.FC<AuctionDetailProps> = ({
                   )}
                 </>
               )}
-              {mojitoLotData?.getMarketplaceAuctionLot.bidView.isPostSale &&
-                currentBid && (
-                  <Winner>
-                    <div>
-                      {strings.LOT.WINNING_BID}
-                      <span>{formatCurrencyAmount(currentBid.amount)}</span>
-                    </div>
-                    <div>
-                      {strings.LOT.BY}
-                      <WinnerName>
-                        {`${currentBid.marketplaceUser.username}${
-                          currentBid.marketplaceUser.id === profile?.me.id
-                            ? ` (${strings.COMMON.YOU})`
-                            : ""
-                        }`}
-                      </WinnerName>
-                    </div>
-                  </Winner>
-                )}
+              {isPostSale && currentBid && (
+                <Winner>
+                  <div>
+                    {strings.LOT.WINNING_BID}
+                    <span>{formatCurrencyAmount(currentBid.amount)}</span>
+                  </div>
+                  <div>
+                    {strings.LOT.BY}
+                    <WinnerName>
+                      {`${currentBid?.marketplaceUser?.username}${
+                        currentBid?.marketplaceUser?.id === profile?.me?.id
+                          ? ` (${strings.COMMON.YOU})`
+                          : ""
+                      }`}
+                    </WinnerName>
+                  </div>
+                </Winner>
+              )}
             </div>
           </DetailRight>
         </DetailContainer>
-        {!!mojitoLotData?.getMarketplaceAuctionLot.bids.length && (
-          <BidFeed
-            bids={mojitoLotData.getMarketplaceAuctionLot.bids}
-            profile={profile}
-          />
+        {!!item.details.bids.length && (
+          <BidFeed bids={item.details.bids} profile={profile} />
         )}
         {showConfirmModal && (
           <BidConfirmModal
             handleClose={() => setShowConfirmModal(false)}
-            lot={lot}
-            mojitoLotData={mojitoLotData?.getMarketplaceAuctionLot}
+            item={item}
+            cmsData={cmsData}
             setHasBid={(value: boolean) => setHasBid(value)}
           />
         )}

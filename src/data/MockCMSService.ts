@@ -29,7 +29,7 @@ export interface CMSData {
 export class MockCMSService {
   constructor() {}
 
-  public getData(itemId: string): CMSData | null {
+  public getData(itemId: string): CMSData | undefined {
     if (cmsItems[itemId]) {
       return cmsItems[itemId];
     }

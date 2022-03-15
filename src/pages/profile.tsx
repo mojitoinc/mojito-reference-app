@@ -5,11 +5,14 @@ import Link from "next/link";
 import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
 import styled from "styled-components";
 
-import { Button, LotGridItem, Modal } from "@components";
+import { Button, CollectionGridItem, Modal } from "@components";
 import { config, images, strings } from "@constants";
-import { useLazyMojito, useFetchAfterAuth, useMojitoMutation } from "@hooks";
-import { EMojitoMutations, EMojitoQueries } from "@state";
+import { useFetchAfterAuth } from "@hooks";
 import Content from "content.json";
+import {
+  useProfileLazyQuery,
+  useUpdateUserOrgSettingsMutation,
+} from "src/services/graphql/generated";
 
 const Main = styled.main`
   display: flex;
@@ -201,7 +204,7 @@ interface ShowFeedbackModalI {
 
 const Profile: NextPage = () => {
   const { logout, user } = useAuth0();
-  const [getData, { data: profile }] = useLazyMojito(EMojitoQueries.profile, {
+  const [getData, { data: profile }] = useProfileLazyQuery({
     variables: {
       organizationID: config.ORGANIZATION_ID,
     },
@@ -220,11 +223,8 @@ const Profile: NextPage = () => {
 
   useFetchAfterAuth(getData);
 
-  const [updateUserSettings, { loading, error }] = useMojitoMutation<{
-    userOrgId: string;
-    username: string;
-    avatar: string;
-  }>(EMojitoMutations.updateUserOrgSettings);
+  const [updateUserSettings, { loading, error }] =
+    useUpdateUserOrgSettingsMutation();
 
   useEffect(() => {
     if (
@@ -240,9 +240,10 @@ const Profile: NextPage = () => {
     editMode && inputRef.current?.focus();
   }, [editMode]);
 
-  const { lots } = Content;
-
   const onEdit = async () => {
+    if (!profile || !profile.me) {
+      throw Error("profile not available");
+    }
     if (editMode) {
       try {
         await updateUserSettings({
@@ -269,7 +270,7 @@ const Profile: NextPage = () => {
     setEditMode(false);
   };
 
-  if (!profile) return null;
+  if (!profile || !profile.me) return null;
   const { activeBids, userOrgs } = profile.me;
   if (!userOrgs.length) return null;
   const { avatar } = userOrgs[0];
@@ -359,14 +360,12 @@ const Profile: NextPage = () => {
           <>
             <BidsTitle>{strings.PROFILE.ACTIVE_BIDS}</BidsTitle>
             <Grid>
-              {activeBids.map((bid: any) => {
-                const lot = lots.find(
-                  (item: any) => item.mojitoId === bid.marketplaceAuctionLot.id
-                );
-                return lot ? (
-                  <LotGridItem key={lot?.mojitoId} lot={lot} />
-                ) : null;
-              })}
+              {activeBids.map((bid) => (
+                <CollectionGridItem
+                  key={bid.id}
+                  item={bid.marketplaceAuctionLot.marketplaceCollectionItem!}
+                />
+              ))}
               <DummyView />
               <DummyView />
             </Grid>

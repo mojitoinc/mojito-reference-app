@@ -7,7 +7,7 @@ import styled from "styled-components";
 
 import { Button } from "@components";
 import { config, strings, images } from "@constants";
-import { useMojitoMutation, useLazyMojito, useFetchAfterAuth } from "@hooks";
+import { useFetchAfterAuth } from "@hooks";
 import {
   useProfileLazyQuery,
   useUpdateUserOrgSettingsMutation,

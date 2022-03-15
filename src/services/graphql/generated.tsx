@@ -1573,7 +1573,7 @@ export type ProfileQueryVariables = Exact<{
 }>;
 
 
-export type ProfileQuery = { __typename?: 'Query', serverTime: any, me?: { __typename?: 'CurrentUser', id: any, activeBids: Array<{ __typename?: 'MarketplaceAuctionBid', id: any, amount: number, marketplaceAuctionLot: { __typename?: 'MarketplaceAuctionLot', id: any, status: AuctionLotStatus, currentBid?: { __typename?: 'MarketplaceAuctionBid', amount: number, id: any } | null, bids: Array<{ __typename?: 'MarketplaceAuctionBid', amount: number }> } }>, user: { __typename?: 'User', id: any, username: string, email?: string | null }, userOrgs: Array<{ __typename?: 'UserOrganization', id: any, organizationId: any, role: string, bidAllowed: boolean, kycStatus: KycStatus, avatar?: string | null, username?: string | null, settings?: string | null }>, favoriteItems?: Array<{ __typename?: 'MarketplaceCollectionItem', id: any }> | null } | null };
+export type ProfileQuery = { __typename?: 'Query', serverTime: any, me?: { __typename?: 'CurrentUser', id: any, activeBids: Array<{ __typename?: 'MarketplaceAuctionBid', id: any, amount: number, marketplaceAuctionLot: { __typename?: 'MarketplaceAuctionLot', id: any, status: AuctionLotStatus, marketplaceCollectionItem?: { __typename?: 'MarketplaceCollectionItem', id: any, slug: string, name: string, details: { __typename?: 'MarketplaceAuctionLot', marketplaceCollectionItemId: any, startDate: any, endDate: any, status: AuctionLotStatus, feeStructure: { __typename?: 'MarketplaceAuctionFeeStructure', buyersPremiumRate: Array<{ __typename?: 'MarketplaceAuctionFeeStructureItem', from: number, to?: number | null, rate: number }>, overheadPremiumRate: Array<{ __typename?: 'MarketplaceAuctionFeeStructureItem', from: number, to?: number | null, rate: number }> }, currentBid?: { __typename?: 'MarketplaceAuctionBid', id: any, marketplaceAuctionLotId: any, amount: number, isCurrent: boolean, nextBidIncrement: number, createdAt: any, marketplaceUser?: { __typename?: 'MarketplaceUser', id: any, username?: string | null, avatar?: string | null } | null, userOrganization: { __typename?: 'UserOrganization', user: { __typename?: 'User', name?: string | null } } } | null, myBid?: { __typename?: 'MarketplaceAuctionBid', id: any, createdAt: any, marketplaceAuctionLotId: any, amount: number } | null } | { __typename?: 'MarketplaceBuyNowOutput', unitPrice: number, totalUnits: number, totalAvailableUnits: number, startDate: any, endDate: any, sortNumber: number } } | null, currentBid?: { __typename?: 'MarketplaceAuctionBid', amount: number, id: any } | null, bids: Array<{ __typename?: 'MarketplaceAuctionBid', amount: number }> } }>, user: { __typename?: 'User', id: any, username: string, email?: string | null }, userOrgs: Array<{ __typename?: 'UserOrganization', id: any, organizationId: any, role: string, bidAllowed: boolean, kycStatus: KycStatus, avatar?: string | null, username?: string | null, settings?: string | null }>, favoriteItems?: Array<{ __typename?: 'MarketplaceCollectionItem', id: any }> | null } | null };
 
 export type ServerTimeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2146,6 +2146,9 @@ export const ProfileDocument = gql`
       marketplaceAuctionLot {
         id
         status
+        marketplaceCollectionItem {
+          ...CollectionItemData
+        }
         currentBid {
           amount
           id
@@ -2175,7 +2178,7 @@ export const ProfileDocument = gql`
     }
   }
 }
-    `;
+    ${CollectionItemDataFragmentDoc}`;
 
 /**
  * __useProfileQuery__

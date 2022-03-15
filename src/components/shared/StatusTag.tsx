@@ -43,6 +43,16 @@ export const StatusTag = ({ item }: { item: CollectionItemDataFragment }) => {
   //   setServerTime(serverTime);
   // }, [loading, data?.timeNotifier?.time]);
 
+  const auctionStartUnix = momentTimeZone(
+    item.details.startDate ?? null
+  ).unix();
+  const auctionEndUnix = momentTimeZone(item.details.endDate ?? null).unix();
+  const nowUnix = momentTimeZone().unix();
+
+  const isPreSale = nowUnix < auctionStartUnix;
+  const isDuringSale = nowUnix > auctionStartUnix && nowUnix < auctionEndUnix;
+  const isPostSale = nowUnix > auctionEndUnix;
+
   const tagTextView = (bidView: IAuctionLotBidView) => {
     if (bidView.isPreSale)
       return (
@@ -62,11 +72,7 @@ export const StatusTag = ({ item }: { item: CollectionItemDataFragment }) => {
     return <TagText>{strings.COMMON.AUCTION_FINISHED}</TagText>;
   };
 
-  return (
-    <Tag>
-      {tagTextView({ isDuringSale: true, isPostSale: false, isPreSale: false })}
-    </Tag>
-  );
+  return <Tag>{tagTextView({ isDuringSale, isPostSale, isPreSale })}</Tag>;
 };
 
 const calculateDuration = (

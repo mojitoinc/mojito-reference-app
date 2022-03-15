@@ -1,14 +1,13 @@
-import { useState, useRef, useLayoutEffect } from "react";
+import { useState, useRef } from "react";
 import Select from "react-select";
 import Image from "next/image";
 import styled from "styled-components";
 
 import { Button, Modal } from "@components";
 import { strings, images } from "@constants";
-import { usePlaceBidMutation } from "@hooks";
 import { formatCurrencyAmount, bidIncrement } from "@utils";
 import { CollectionItemDataFragment } from "src/services/graphql/generated";
-import { CMSData } from "src/data/cmsData";
+import { CMSData } from "src/data/MockCMSService";
 
 const ModalTitle = styled.h3(
   ({ theme }) => `
@@ -176,7 +175,7 @@ export const BuyNowModal = ({
   setHasBid,
 }: BidConfirmModalProps) => {
   if (item.details.__typename !== "MarketplaceBuyNowOutput") {
-    return <div>invalid type</div>;
+    throw Error("invalid type");
   }
   const submittedAmount = useRef<number | null>(null);
   const [userAvailableMinBid, setUserAvailableMinBid] = useState<number>(

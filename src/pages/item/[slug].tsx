@@ -44,6 +44,10 @@ const ItemDetail: NextPage = ({ itemID }: any) => {
     }
   }, [data, error, loading]);
 
+  if (loading) {
+    return <></>;
+  }
+
   if (data?.details.__typename === "MarketplaceAuctionLot") {
     return <AuctionDetail item={data} cmsData={cmsData} />;
   } else if (data?.details.__typename === "MarketplaceBuyNowOutput") {

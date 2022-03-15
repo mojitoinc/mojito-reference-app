@@ -1,4 +1,4 @@
-import { useState, useRef, useLayoutEffect } from "react";
+import { useState, useRef, useLayoutEffect, useMemo } from "react";
 import Select from "react-select";
 import Image from "next/image";
 import styled from "styled-components";
@@ -6,7 +6,7 @@ import styled from "styled-components";
 import { Button, Modal } from "@components";
 import { strings, images } from "@constants";
 import { formatCurrencyAmount, bidIncrement } from "@utils";
-import { CMSData } from "src/data/cmsData";
+import { CMSData } from "src/data/MockCMSService";
 import {
   CollectionItemDataAllFragment,
   usePlaceBidMutation,
@@ -178,7 +178,7 @@ export const BidConfirmModal = ({
   setHasBid,
 }: BidConfirmModalProps) => {
   if (item.details.__typename !== "MarketplaceAuctionLot") {
-    return <div>invalid type</div>;
+    throw Error("invalid type");
   }
   const submittedAmount = useRef<number | null>(null);
   const [userAvailableMinBid, setUserAvailableMinBid] = useState<number>(
@@ -197,9 +197,18 @@ export const BidConfirmModal = ({
 
   const [error, setError] = useState<any>(null);
   const [placeBid] = usePlaceBidMutation();
+  const auctionDetails = useMemo(() => {
+    if (!item) {
+      return;
+    }
+    if (item.details.__typename !== "MarketplaceAuctionLot") {
+      throw Error("invalid type");
+    }
+    return item.details;
+  }, [item]);
 
   useLayoutEffect(() => {
-    if (item.details.bids) {
+    if (auctionDetails?.bids && auctionDetails.currentBid) {
       const options = bidIncrement.reduce(
         (
           arr: {
@@ -208,9 +217,13 @@ export const BidConfirmModal = ({
           }[],
           e
         ) => {
+          if (item.details.__typename !== "MarketplaceAuctionLot") {
+            throw Error("invalid type");
+          }
           if (
-            e >= (item.details.startingBid || 0) &&
-            (e >= item.details.currentBid?.nextBidIncrement ||
+            auctionDetails.currentBid &&
+            e >= (auctionDetails.startingBid || 0) &&
+            (e >= auctionDetails.currentBid.nextBidIncrement ||
               !item.details.currentBid)
           ) {
             arr.push({ value: e, label: formatCurrencyAmount(e) });
@@ -222,9 +235,9 @@ export const BidConfirmModal = ({
 
       if (!options.length) {
         options.push({
-          value: item.details?.currentBid?.nextBidIncrement,
+          value: auctionDetails?.currentBid?.nextBidIncrement || 0,
           label: formatCurrencyAmount(
-            item.details?.currentBid?.nextBidIncrement
+            auctionDetails?.currentBid?.nextBidIncrement || 0
           ),
         });
       }
@@ -263,7 +276,7 @@ export const BidConfirmModal = ({
       return await placeBid({
         variables: {
           amount: bidAmount,
-          marketplaceAuctionLotId: item.details.id,
+          marketplaceAuctionLotId: auctionDetails?.id,
         },
       }).then(() => {
         setShowSuccess(true);
@@ -296,22 +309,22 @@ export const BidConfirmModal = ({
       )}
       {!showSuccess && (
         <>
-          <ModalTitle>{`${strings.LOT.CONFIRM_MODAL.TITLE}${lot.title}`}</ModalTitle>
+          <ModalTitle>{`${strings.LOT.CONFIRM_MODAL.TITLE}${item.name}`}</ModalTitle>
           <DetailContainer>
             <DetailLeft>
-              {lot.format === "image" && (
-                <LotImage src={lot.image} alt={lot.title} />
+              {cmsData?.format === "image" && (
+                <LotImage src={cmsData.image} alt={item.name} />
               )}
-              {lot.format === "video" && (
-                <LotVideo height={350} width={432} src={lot.video} />
+              {cmsData?.format === "video" && (
+                <LotVideo height={350} width={432} src={cmsData.video} />
               )}
             </DetailLeft>
             <DetailRight>
               <CurrentBid>
                 {strings.COMMON.CURRENT_BID}
                 {formatCurrencyAmount(
-                  mojitoLotData.currentBid?.amount
-                    ? mojitoLotData.currentBid.amount
+                  item.details.currentBid?.amount
+                    ? item.details.currentBid.amount
                     : 0
                 )}
               </CurrentBid>
