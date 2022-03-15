@@ -4,8 +4,6 @@ import styled from "styled-components";
 
 import { strings } from "@constants";
 import { IAuctionLotBidView } from "@interfaces";
-import { useMojitoSubscription } from "@hooks";
-import { EMojitoSubscriptions } from "@state";
 import { CollectionItemDataFragment } from "src/services/graphql/generated";
 
 const Tag = styled.div(
@@ -33,17 +31,17 @@ export const StatusTag = ({ item }: { item: CollectionItemDataFragment }) => {
       .tz(Intl.DateTimeFormat().resolvedOptions().timeZone)
       .format("MMM Do / H:mm:ss");
 
-  const { loading, data } = useMojitoSubscription(
-    EMojitoSubscriptions.timeNotifier
-  );
+  // const { loading, data } = useMojitoSubscription(
+  //   EMojitoSubscriptions.timeNotifier
+  // );
 
-  useEffect(() => {
-    if (loading) return;
-    const serverTime = momentTimeZone(
-      data?.timeNotifier?.time.split(".")[0].split(" ").join("T") + "Z"
-    );
-    setServerTime(serverTime);
-  }, [loading, data?.timeNotifier?.time]);
+  // useEffect(() => {
+  //   if (loading) return;
+  //   const serverTime = momentTimeZone(
+  //     data?.timeNotifier?.time.split(".")[0].split(" ").join("T") + "Z"
+  //   );
+  //   setServerTime(serverTime);
+  // }, [loading, data?.timeNotifier?.time]);
 
   const tagTextView = (bidView: IAuctionLotBidView) => {
     if (bidView.isPreSale)

@@ -5,12 +5,15 @@ import { useRouter } from "next/router";
 import { config } from "@constants";
 import { useCollectionItemBySlugQuery } from "src/services/graphql/generated";
 
-import { cmsItems } from "../../data/cmsData";
+import { MockCMSService } from "../../data/MockCMSService";
 import { AuctionDetail } from "src/components/item/AuctionDetail";
 import { BuyNowDetail } from "src/components/item/BuyNowDetail";
 
 const ItemDetail: NextPage = ({ itemID }: any) => {
   const router = useRouter();
+  const cms = useMemo(() => {
+    return new MockCMSService();
+  }, []);
 
   // TODO(dankins): this is not ideal, we should have a query to get a collection item by collection+item slug
   const {
@@ -35,10 +38,16 @@ const ItemDetail: NextPage = ({ itemID }: any) => {
     }
   }, [collectionData, loading, error]);
 
+  const cmsData = useMemo(() => {
+    if (data) {
+      return cms.getData(data.id);
+    }
+  }, [data, error, loading]);
+
   if (data?.details.__typename === "MarketplaceAuctionLot") {
-    return <AuctionDetail item={data} cmsData={cmsItems[data.id]} />;
+    return <AuctionDetail item={data} cmsData={cmsData} />;
   } else if (data?.details.__typename === "MarketplaceBuyNowOutput") {
-    return <BuyNowDetail item={data} cmsData={cmsItems[data.id]} />;
+    return <BuyNowDetail item={data} cmsData={cmsData} />;
   }
 
   return <div>unsupported item type</div>;

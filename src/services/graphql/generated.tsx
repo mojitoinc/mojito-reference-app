@@ -252,7 +252,7 @@ export type CurrentUserUserOrgsArgs = {
 
 
 export type CurrentUserWonBidsArgs = {
-  orgId: Scalars['UUID'];
+  orgId?: InputMaybe<Scalars['UUID']>;
 };
 
 export type DeployContractInput = {
@@ -1324,7 +1324,7 @@ export type UserApiKeyResponse = {
 };
 
 export type UserOrgFilter = {
-  orgId: Scalars['UUID'];
+  orgId?: InputMaybe<Scalars['UUID']>;
 };
 
 export type UserOrganization = {

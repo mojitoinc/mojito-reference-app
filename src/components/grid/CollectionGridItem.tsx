@@ -142,7 +142,6 @@ export const CollectionGridItem = ({ item, cmsData }: CollectionGridItem) => (
     )} */}
     <Line>
       <Title>{item.name}</Title>
-      HELLO
     </Line>
     <Row>
       <div>

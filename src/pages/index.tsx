@@ -4,15 +4,10 @@ import styled from "styled-components";
 
 import { CollectionGridItem } from "@components";
 import { config, images, strings } from "@constants";
-import { useLazyMojito, useFetchAfterAuth } from "@hooks";
-import Content from "content.json";
-import {
-  useCollectionBySlugQuery,
-  useProfileLazyQuery,
-} from "src/services/graphql/generated";
+import { useCollectionBySlugQuery } from "src/services/graphql/generated";
 import { useMemo } from "react";
 
-import { cmsItems } from "../data/cmsData";
+import { MockCMSService } from "src/data/MockCMSService";
 
 const Container = styled.main`
   background: ${({ theme }) => theme.backgrounds.grid};
@@ -76,7 +71,9 @@ const DummyView = styled.div`
 `;
 
 const Home: NextPage = () => {
-  const { items } = Content;
+  const cms = useMemo(() => {
+    return new MockCMSService();
+  }, []);
   const { data, loading, error } = useCollectionBySlugQuery({
     variables: {
       slug: config.COLLECTION_SLUG,
@@ -91,14 +88,6 @@ const Home: NextPage = () => {
   // });
 
   // useFetchAfterAuth(getData);
-
-  if (loading) {
-    return <div>loading</div>;
-  }
-  if (error) {
-    console.log("error getting data", error);
-    return <div>error getting data</div>;
-  }
 
   return (
     <Container>
@@ -119,7 +108,7 @@ const Home: NextPage = () => {
           <CollectionGridItem
             key={item.id}
             item={item}
-            cmsData={cmsItems[item.id]}
+            cmsData={cms.getData(item.id)}
           />
         ))}
         <DummyView />

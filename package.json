@@ -11,6 +11,7 @@
   "dependencies": {
     "@apollo/client": "^3.4.17",
     "@auth0/auth0-react": "^1.8.0",
+    "@faker-js/faker": "^6.0.0-beta.0",
     "ahooks": "^2.10.12",
     "graphql": "^16.0.1",
     "moment": "^2.29.1",
@@ -32,6 +33,7 @@
     "@types/node": "16.11.7",
     "@types/react": "17.0.35",
     "@types/styled-components": "^5.1.19",
+    "@types/uuid": "^8.3.4",
     "babel-plugin-styled-components": "^2.0.2",
     "eslint": "7",
     "eslint-config-next": "12.0.4",
