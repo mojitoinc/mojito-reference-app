@@ -8,6 +8,7 @@ import { strings } from "@constants";
 import { formatCurrencyAmount } from "@utils";
 import { CollectionItemDataFragment } from "src/services/graphql/generated";
 import { CMSData } from "src/data/MockCMSService";
+import { isDuringSale, isPostSale } from "src/utils/isDuringSale";
 
 const Lot = styled.a(
   ({ theme }) => `
@@ -115,9 +116,14 @@ const CurrentBidAmount = styled.div(
 export interface CollectionGridItem {
   item: CollectionItemDataFragment;
   cmsData?: CMSData;
+  youHoldBid?: boolean;
 }
 
-export const CollectionGridItem = ({ item, cmsData }: CollectionGridItem) => (
+export const CollectionGridItem = ({
+  item,
+  cmsData,
+  youHoldBid,
+}: CollectionGridItem) => (
   <Lot href={`item/${item.slug}`}>
     <ImageWrapper>
       {cmsData && cmsData.format === "image" && (
@@ -135,11 +141,9 @@ export const CollectionGridItem = ({ item, cmsData }: CollectionGridItem) => (
         </Video>
       )}
     </ImageWrapper>
-    {/* {isCollectionItem && (
-      <TagContainer>
-        <StatusTag mojitoLotData={mojitoLotData} />
-      </TagContainer>
-    )} */}
+    <TagContainer>
+      <StatusTag item={item} />
+    </TagContainer>
     <Line>
       <Title>{item.name}</Title>
     </Line>
@@ -147,13 +151,13 @@ export const CollectionGridItem = ({ item, cmsData }: CollectionGridItem) => (
       <div>
         <Id>{`#${item.slug}`}</Id>
         <Paragraph>
-          {/* {isCollectionItem &&
-          mojitoLotData?.bidView.isPostSale &&
-          mojitoLotData?.currentBid ? (
+          {item.details.__typename === "MarketplaceAuctionLot" &&
+          isPostSale(item) &&
+          item.details.currentBid ? (
             <>
               {strings.COMMON.WINNER}
               <WinnerName>
-                {`${mojitoLotData.currentBid.marketplaceUser.username}${
+                {`${item.details.currentBid?.marketplaceUser?.username}${
                   youHoldBid ? ` (${strings.COMMON.YOU})` : ""
                 }`}
               </WinnerName>
@@ -161,23 +165,24 @@ export const CollectionGridItem = ({ item, cmsData }: CollectionGridItem) => (
           ) : (
             <>
               {strings.COMMON.CREATED_BY}
-              <CreatorName>{lot.author.name}</CreatorName>
+              <CreatorName>{cmsData?.author.name}</CreatorName>
             </>
-          )} */}
+          )}
         </Paragraph>
       </div>
-      {/* {isCollectionItem && mojitoLotData?.bidView.isDuringSale && (
-        <CurrentBid>
-          {strings.COMMON.CURRENT_BID}
-          <CurrentBidAmount>
-            {formatCurrencyAmount(
-              mojitoLotData.currentBid?.amount
-                ? mojitoLotData.currentBid?.amount
-                : 0
-            )}
-          </CurrentBidAmount>
-        </CurrentBid>
-      )} */}
+      {item.details.__typename === "MarketplaceAuctionLot" &&
+        isDuringSale(item) && (
+          <CurrentBid>
+            {strings.COMMON.CURRENT_BID}
+            <CurrentBidAmount>
+              {formatCurrencyAmount(
+                item.details.currentBid?.amount
+                  ? item.details.currentBid?.amount
+                  : 0
+              )}
+            </CurrentBidAmount>
+          </CurrentBid>
+        )}
     </Row>
   </Lot>
 );

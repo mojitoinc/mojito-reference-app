@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import styled from "styled-components";
 import Link from "next/link";
 import {
@@ -43,6 +43,7 @@ import { BidConfirmModal } from "./BidConfirmModal";
 import { CMSData } from "src/data/MockCMSService";
 import { BidFeed } from "./BidFeed";
 import moment from "moment";
+import { getSaleStage, isDuringSale } from "src/utils/isDuringSale";
 
 const Main = styled.main`
   padding: 40px 0;
@@ -86,14 +87,11 @@ export const AuctionDetail: React.FC<AuctionDetailProps> = ({
   const isLotDescriptionLong = cmsData && cmsData.about.length > 350;
   const isAboutAuthorLong = cmsData && cmsData.author.about.length > 150;
 
-  const auctionStartUnix = moment(item.details.startDate ?? null).unix();
-  const auctionEndUnix = moment(item.details.endDate ?? null).unix();
-  const nowUnix = moment().unix();
-
-  const isPreSale = nowUnix < auctionStartUnix;
-  const isDuringSale = nowUnix > auctionStartUnix && nowUnix < auctionEndUnix;
-  const isPostSale = nowUnix > auctionEndUnix;
   const currentBid = item.details.currentBid;
+  const saleStage = getSaleStage(item);
+  const isPreSale = saleStage === "pre";
+  const isDuringSale = saleStage === "during";
+  const isPostSale = saleStage === "post";
 
   return (
     <Main>

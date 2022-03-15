@@ -364,6 +364,17 @@ const Profile: NextPage = () => {
                 <CollectionGridItem
                   key={bid.id}
                   item={bid.marketplaceAuctionLot.marketplaceCollectionItem!}
+                  youHoldBid={
+                    (bid.marketplaceAuctionLot.marketplaceCollectionItem!
+                      .details.__typename === "MarketplaceAuctionLot" &&
+                      bid.marketplaceAuctionLot.marketplaceCollectionItem!
+                        .details.myBid &&
+                      bid.marketplaceAuctionLot.marketplaceCollectionItem!
+                        .details.currentBid?.id ===
+                        bid.marketplaceAuctionLot.marketplaceCollectionItem!
+                          .details.myBid?.id) ||
+                    false
+                  }
                 />
               ))}
               <DummyView />

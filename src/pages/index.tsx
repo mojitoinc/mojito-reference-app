@@ -4,10 +4,14 @@ import styled from "styled-components";
 
 import { CollectionGridItem } from "@components";
 import { config, images, strings } from "@constants";
-import { useCollectionBySlugQuery } from "src/services/graphql/generated";
+import {
+  useCollectionBySlugQuery,
+  useProfileLazyQuery,
+} from "src/services/graphql/generated";
 import { useMemo } from "react";
 
 import { MockCMSService } from "src/data/MockCMSService";
+import { useFetchAfterAuth } from "@hooks";
 
 const Container = styled.main`
   background: ${({ theme }) => theme.backgrounds.grid};
@@ -81,13 +85,13 @@ const Home: NextPage = () => {
     },
   });
 
-  // const [getData, { data: profile }] = useProfileLazyQuery({
-  //   variables: {
-  //     organizationID: config.ORGANIZATION_ID,
-  //   },
-  // });
+  const [getData, { data: profile }] = useProfileLazyQuery({
+    variables: {
+      organizationID: config.ORGANIZATION_ID,
+    },
+  });
 
-  // useFetchAfterAuth(getData);
+  useFetchAfterAuth(getData);
 
   return (
     <Container>
@@ -109,6 +113,12 @@ const Home: NextPage = () => {
             key={item.id}
             item={item}
             cmsData={cms.getData(item.id)}
+            youHoldBid={
+              (item.details.__typename === "MarketplaceAuctionLot" &&
+                item.details.myBid &&
+                item.details.currentBid?.id === item.details.myBid?.id) ||
+              false
+            }
           />
         ))}
         <DummyView />

@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { strings } from "@constants";
 import { IAuctionLotBidView } from "@interfaces";
 import { CollectionItemDataFragment } from "src/services/graphql/generated";
+import { getSaleStage } from "src/utils/isDuringSale";
 
 const Tag = styled.div(
   ({ theme }) => `
@@ -31,48 +32,61 @@ export const StatusTag = ({ item }: { item: CollectionItemDataFragment }) => {
       .tz(Intl.DateTimeFormat().resolvedOptions().timeZone)
       .format("MMM Do / H:mm:ss");
 
-  // const { loading, data } = useMojitoSubscription(
-  //   EMojitoSubscriptions.timeNotifier
-  // );
+  const saleStage = getSaleStage(item);
+  const isPreSale = saleStage === "pre";
+  const isDuringSale = saleStage === "during";
 
-  // useEffect(() => {
-  //   if (loading) return;
-  //   const serverTime = momentTimeZone(
-  //     data?.timeNotifier?.time.split(".")[0].split(" ").join("T") + "Z"
-  //   );
-  //   setServerTime(serverTime);
-  // }, [loading, data?.timeNotifier?.time]);
-
-  const auctionStartUnix = momentTimeZone(
-    item.details.startDate ?? null
-  ).unix();
-  const auctionEndUnix = momentTimeZone(item.details.endDate ?? null).unix();
-  const nowUnix = momentTimeZone().unix();
-
-  const isPreSale = nowUnix < auctionStartUnix;
-  const isDuringSale = nowUnix > auctionStartUnix && nowUnix < auctionEndUnix;
-  const isPostSale = nowUnix > auctionEndUnix;
-
-  const tagTextView = (bidView: IAuctionLotBidView) => {
-    if (bidView.isPreSale)
+  const tagTextView = () => {
+    let info: string = "";
+    if (isPreSale) {
+      switch (item.details.__typename) {
+        case "MarketplaceAuctionLot":
+          info = strings.COMMON.BIDDING_STARTS;
+          break;
+        case "MarketplaceBuyNowOutput":
+          info = strings.COMMON.BUYNOW_STARTS;
+          break;
+      }
       return (
         <>
-          {strings.COMMON.BIDDING_STARTS}
+          {}
           <TagText>{formattedStartDate}</TagText>
         </>
       );
-    if (bidView.isDuringSale)
+    }
+    if (isDuringSale) {
+      switch (item.details.__typename) {
+        case "MarketplaceAuctionLot":
+          info = strings.COMMON.AUCTION_CLOSES;
+          break;
+        case "MarketplaceBuyNowOutput":
+          info = strings.COMMON.BUYNOW_CLOSES;
+          break;
+      }
+
       return (
         <Countdown
+          prefix={info}
           eventTime={endDate}
           serverTime={serverTime}
           interval={1000}
         />
       );
-    return <TagText>{strings.COMMON.AUCTION_FINISHED}</TagText>;
+    }
+
+    switch (item.details.__typename) {
+      case "MarketplaceAuctionLot":
+        info = strings.COMMON.AUCTION_FINISHED;
+        break;
+      case "MarketplaceBuyNowOutput":
+        info = strings.COMMON.BUYNOW_FINISHED;
+        break;
+    }
+
+    return <TagText>{info}</TagText>;
   };
 
-  return <Tag>{tagTextView({ isDuringSale, isPostSale, isPreSale })}</Tag>;
+  return <Tag>{tagTextView()}</Tag>;
 };
 
 const calculateDuration = (
@@ -85,12 +99,18 @@ const calculateDuration = (
   );
 
 interface CountdownProps {
+  prefix: string;
   eventTime: momentTimeZone.Moment;
   serverTime: momentTimeZone.Moment;
   interval: number;
 }
 
-function Countdown({ eventTime, serverTime, interval }: CountdownProps) {
+function Countdown({
+  prefix,
+  eventTime,
+  serverTime,
+  interval,
+}: CountdownProps) {
   const [duration, setDuration] = useState(
     calculateDuration(eventTime, serverTime)
   );
@@ -106,7 +126,7 @@ function Countdown({ eventTime, serverTime, interval }: CountdownProps) {
 
   return (
     <>
-      {strings.COMMON.AUCTION_CLOSES}
+      {prefix}
       <TagText>
         {duration.days()
           ? `${duration.days().toString().padStart(2, "0")}:`

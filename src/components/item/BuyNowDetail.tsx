@@ -40,6 +40,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { useRouter } from "next/router";
 import { BuyNowModal } from "./BuyNowModal";
 import moment from "moment";
+import { getSaleStage } from "src/utils/isDuringSale";
 
 const Main = styled.main`
   padding: 40px 0;
@@ -83,13 +84,10 @@ export const BuyNowDetail: React.FC<AuctionDetailProps> = ({
   const isLotDescriptionLong = cmsData && cmsData.about.length > 350;
   const isAboutAuthorLong = cmsData && cmsData.author.about.length > 150;
 
-  const auctionStartUnix = moment(item.details.startDate ?? null).unix();
-  const auctionEndUnix = moment(item.details.endDate ?? null).unix();
-  const nowUnix = moment().unix();
-
-  const isPreSale = nowUnix < auctionStartUnix;
-  const isDuringSale = nowUnix > auctionStartUnix && nowUnix < auctionEndUnix;
-  const isPostSale = nowUnix > auctionEndUnix;
+  const saleStage = getSaleStage(item);
+  const isPreSale = saleStage === "pre";
+  const isDuringSale = saleStage === "during";
+  const isPostSale = saleStage === "post";
 
   return (
     <Main>
