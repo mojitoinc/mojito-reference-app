@@ -45,11 +45,6 @@ fragment CollectionItemDataAll on MarketplaceCollectionItem {
           avatar
         }
         amount
-        userOrganization {
-          user {
-            name
-          }
-        }
       }
 
       currentBid {
@@ -59,11 +54,6 @@ fragment CollectionItemDataAll on MarketplaceCollectionItem {
           id
           username
           avatar
-        }
-        userOrganization {
-          user {
-            name
-          }
         }
         amount
         isCurrent
