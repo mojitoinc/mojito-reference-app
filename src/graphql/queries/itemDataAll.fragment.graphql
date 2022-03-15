@@ -1,0 +1,81 @@
+fragment CollectionItemDataAll on MarketplaceCollectionItem {
+  id
+  slug
+  name
+  details {
+    ... on MarketplaceBuyNowOutput {
+      unitPrice
+      totalUnits
+      totalAvailableUnits
+      startDate
+      endDate
+      sortNumber
+    }
+    ... on MarketplaceAuctionLot {
+      id
+      startingBid
+      feeStructure {
+        buyersPremiumRate {
+          from
+          to
+          rate
+        }
+        overheadPremiumRate {
+          from
+          to
+          rate
+        }
+      }
+      marketplaceCollectionItemId
+      startDate
+      endDate
+      status
+      bids(filter: $filter) {
+        id
+        createdAt
+        marketplaceUser {
+          id
+          avatar
+          username
+        }
+        marketplaceAuctionLotId
+        marketplaceUser {
+          id
+          username
+          avatar
+        }
+        amount
+        userOrganization {
+          user {
+            name
+          }
+        }
+      }
+
+      currentBid {
+        id
+        marketplaceAuctionLotId
+        marketplaceUser {
+          id
+          username
+          avatar
+        }
+        userOrganization {
+          user {
+            name
+          }
+        }
+        amount
+        isCurrent
+        nextBidIncrement
+        createdAt
+      }
+      myBid {
+        id
+        createdAt
+        marketplaceAuctionLotId
+        amount
+      }
+    }
+  }
+}

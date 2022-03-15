@@ -6,6 +6,7 @@ import { strings } from "@constants";
 import { IAuctionLotBidView } from "@interfaces";
 import { useMojitoSubscription } from "@hooks";
 import { EMojitoSubscriptions } from "@state";
+import { CollectionItemDataFragment } from "src/services/graphql/generated";
 
 const Tag = styled.div(
   ({ theme }) => `
@@ -22,10 +23,10 @@ const TagText = styled.span`
   font-weight: bold;
 `;
 
-export const StatusTag = ({ mojitoLotData }: any) => {
+export const StatusTag = ({ item }: { item: CollectionItemDataFragment }) => {
   const [serverTime, setServerTime] = useState(momentTimeZone());
-  const startDate = mojitoLotData.startDate;
-  const endDate = momentTimeZone(mojitoLotData.endDate);
+  const startDate = item.details.startDate;
+  const endDate = momentTimeZone(item.details.endDate);
   const formattedStartDate =
     startDate &&
     momentTimeZone(startDate)
@@ -63,7 +64,11 @@ export const StatusTag = ({ mojitoLotData }: any) => {
     return <TagText>{strings.COMMON.AUCTION_FINISHED}</TagText>;
   };
 
-  return <Tag>{tagTextView(mojitoLotData.bidView)}</Tag>;
+  return (
+    <Tag>
+      {tagTextView({ isDuringSale: true, isPostSale: false, isPreSale: false })}
+    </Tag>
+  );
 };
 
 const calculateDuration = (

@@ -31,57 +31,57 @@ export const MojitoApiProvider: FC = ({ children }) => {
           };
         }
 
-        if (_data?.me?.userOrgs?.[0]) {
-          const _organization = _data.me.userOrgs[0];
+        // if (_data?.me?.userOrgs?.[0]) {
+        //   const _organization = _data.me.userOrgs[0];
 
-          const role = _organization.role;
-          const isBasic = role === "Basic";
-          const isMissingInfo = role === "MissingInformation";
-          const isEndUser = role === "EndUser";
-          const isTransactionalNoID = role === "TransactionalNoID";
-          const isTransactionalWithID = role === "TransactionalWithID";
-          const isNotAllowedToBid = role === "NotAllowedToBid";
-          const isCoreUnavailable = role === "CoreUnavailable";
-          const isBidAuthUnavailable = role === "BidAuthUnavailable";
-          const completeYourProfile = isBasic || isMissingInfo || isEndUser;
-          const uploadID = isTransactionalNoID;
-          const moreInformation = isNotAllowedToBid;
-          const contactUs = isCoreUnavailable || isBidAuthUnavailable;
+        //   const role = _organization.role;
+        //   const isBasic = role === "Basic";
+        //   const isMissingInfo = role === "MissingInformation";
+        //   const isEndUser = role === "EndUser";
+        //   const isTransactionalNoID = role === "TransactionalNoID";
+        //   const isTransactionalWithID = role === "TransactionalWithID";
+        //   const isNotAllowedToBid = role === "NotAllowedToBid";
+        //   const isCoreUnavailable = role === "CoreUnavailable";
+        //   const isBidAuthUnavailable = role === "BidAuthUnavailable";
+        //   const completeYourProfile = isBasic || isMissingInfo || isEndUser;
+        //   const uploadID = isTransactionalNoID;
+        //   const moreInformation = isNotAllowedToBid;
+        //   const contactUs = isCoreUnavailable || isBidAuthUnavailable;
 
-          Object.assign(_organization, {
-            notifications: {
-              isTransactionalWithID,
-              completeYourProfile,
-              uploadID,
-              moreInformation,
-              contactUs,
-            },
-            hasNotifications: !!(
-              completeYourProfile ||
-              uploadID ||
-              moreInformation ||
-              contactUs
-            ),
-          });
+        //   Object.assign(_organization, {
+        //     notifications: {
+        //       isTransactionalWithID,
+        //       completeYourProfile,
+        //       uploadID,
+        //       moreInformation,
+        //       contactUs,
+        //     },
+        //     hasNotifications: !!(
+        //       completeYourProfile ||
+        //       uploadID ||
+        //       moreInformation ||
+        //       contactUs
+        //     ),
+        //   });
 
-          _data.me.userOrgs[0] = _organization;
-        }
+        //   _data.me.userOrgs[0] = _organization;
+        // }
 
-        if (_data?.getMarketplaceAuctionLot) {
-          _data.getMarketplaceAuctionLot = extendLot(
-            _data.getMarketplaceAuctionLot
-          );
-        }
+        // if (_data?.getMarketplaceAuctionLot) {
+        //   _data.getMarketplaceAuctionLot = extendLot(
+        //     _data.getMarketplaceAuctionLot
+        //   );
+        // }
 
-        if (_data?.collection?.items) {
-          _data.collection.items = extendCollection(_data.collection.items);
-        }
+        // if (_data?.collection?.items) {
+        //   _data.collection.items = extendCollection(_data.collection.items);
+        // }
 
-        if (_data?.collectionBySlug?.items) {
-          _data.collectionBySlug.items = extendCollection(
-            _data.collectionBySlug.items
-          );
-        }
+        // if (_data?.collectionBySlug?.items) {
+        //   _data.collectionBySlug.items = extendCollection(
+        //     _data.collectionBySlug.items
+        //   );
+        // }
 
         response.data = _data;
       }
@@ -105,7 +105,7 @@ export const MojitoApiProvider: FC = ({ children }) => {
   });
 
   const httpLink = createHttpLink({
-    uri: config.MOJITO_API_URL
+    uri: config.MOJITO_API_URL,
   });
 
   const ssrMode = !process.browser;
@@ -116,7 +116,7 @@ export const MojitoApiProvider: FC = ({ children }) => {
     const wsLink = new WebSocketLink(
       new SubscriptionClient(config.MOJITO_API_WS_URL || "", {
         reconnect: true,
-        lazy: true
+        lazy: true,
       })
     );
     // using the ability to split links, you can send data to each link
@@ -126,12 +126,12 @@ export const MojitoApiProvider: FC = ({ children }) => {
       ({ query }) => {
         const definition = getMainDefinition(query);
         return (
-          definition.kind === 'OperationDefinition' &&
-          definition.operation === 'subscription'
+          definition.kind === "OperationDefinition" &&
+          definition.operation === "subscription"
         );
       },
       wsLink,
-      authLink.concat(dataNormalizers).concat(httpLink),
+      authLink.concat(dataNormalizers).concat(httpLink)
     );
   }
 

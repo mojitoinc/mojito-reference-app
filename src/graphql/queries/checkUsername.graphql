@@ -1,0 +1,3 @@
+query CheckUsername($organizationID: UUID1!, $username: String!) {
+  orgUsernameAvailable(organizationID: $organizationID, username: $username)
+}

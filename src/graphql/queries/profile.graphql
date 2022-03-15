@@ -1,0 +1,39 @@
+query Profile($organizationID: UUID!, $filter: UserOrgFilter) {
+  serverTime
+  me {
+    id
+    activeBids(orgId: $organizationID) {
+      id
+      amount
+      marketplaceAuctionLot {
+        id
+        status
+        currentBid {
+          amount
+          id
+        }
+        bids {
+          amount
+        }
+      }
+    }
+    user {
+      id
+      username
+      email
+    }
+    userOrgs(filter: $filter) {
+      id
+      organizationId
+      role
+      bidAllowed
+      kycStatus
+      avatar
+      username
+      settings
+    }
+    favoriteItems {
+      id
+    }
+  }
+}

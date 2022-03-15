@@ -7,6 +7,8 @@ import { Button, Modal } from "@components";
 import { strings, images } from "@constants";
 import { usePlaceBidMutation } from "@hooks";
 import { formatCurrencyAmount, bidIncrement } from "@utils";
+import { CollectionItemDataFragment } from "src/services/graphql/generated";
+import { CMSData } from "src/data/cmsData";
 
 const ModalTitle = styled.h3(
   ({ theme }) => `
@@ -162,17 +164,20 @@ const SuccessMessage = styled.h3`
 
 interface BidConfirmModalProps {
   handleClose: () => void;
-  lot: any;
-  mojitoLotData: any;
+  item: CollectionItemDataFragment;
+  cmsData?: CMSData;
   setHasBid: (value: boolean) => void;
 }
 
-export const BidConfirmModal = ({
+export const BuyNowModal = ({
   handleClose,
-  lot,
-  mojitoLotData,
+  item,
+  cmsData,
   setHasBid,
 }: BidConfirmModalProps) => {
+  if (item.details.__typename !== "MarketplaceBuyNowOutput") {
+    return <div>invalid type</div>;
+  }
   const submittedAmount = useRef<number | null>(null);
   const [userAvailableMinBid, setUserAvailableMinBid] = useState<number>(
     bidIncrement[0]
@@ -189,55 +194,8 @@ export const BidConfirmModal = ({
   const [showSuccess, setShowSuccess] = useState<boolean>(false);
 
   const [error, setError] = useState<any>(null);
-  const [placeBid] = usePlaceBidMutation(lot);
-
-  useLayoutEffect(() => {
-    if (mojitoLotData?.bids) {
-      const options = bidIncrement.reduce(
-        (
-          arr: {
-            value: number;
-            label: string;
-          }[],
-          e
-        ) => {
-          if (
-            e >= (mojitoLotData?.startingBid || 0) &&
-            (e >= mojitoLotData?.currentBid?.nextBidIncrement ||
-              !mojitoLotData?.currentBid)
-          ) {
-            arr.push({ value: e, label: formatCurrencyAmount(e) });
-          }
-          return arr;
-        },
-        []
-      );
-
-      if (!options.length) {
-        options.push({
-          value: mojitoLotData?.currentBid?.nextBidIncrement,
-          label: formatCurrencyAmount(
-            mojitoLotData?.currentBid?.nextBidIncrement
-          ),
-        });
-      }
-
-      if (
-        !availableOptions ||
-        (availableOptions && availableOptions.length !== options.length)
-      ) {
-        setAvailableOptions(options);
-      }
-    }
-  }, [
-    mojitoLotData?.bids?.length,
-    mojitoLotData?.startingBid,
-    mojitoLotData?.currentBid?.id,
-  ]);
-
-  useLayoutEffect(() => {
-    setBidAmount(availableOptions[0]?.value);
-  }, [availableOptions[0]?.value]);
+  //const [placeBid] = usePlaceBidMutation(lot);
+  const placeBid = (params: any) => Promise.resolve();
 
   const bidOnChange = (e: any) => {
     const value = e.value;
@@ -256,7 +214,7 @@ export const BidConfirmModal = ({
       return await placeBid({
         variables: {
           amount: bidAmount,
-          marketplaceAuctionLotId: lot.mojitoId,
+          marketplaceAuctionLotId: item.details,
         },
       }).then(() => {
         setShowSuccess(true);
@@ -289,24 +247,20 @@ export const BidConfirmModal = ({
       )}
       {!showSuccess && (
         <>
-          <ModalTitle>{`${strings.LOT.CONFIRM_MODAL.TITLE}${lot.title}`}</ModalTitle>
+          <ModalTitle>{`${strings.LOT.CONFIRM_MODAL.TITLE}${item.name}`}</ModalTitle>
           <DetailContainer>
             <DetailLeft>
-              {lot.format === "image" && (
-                <LotImage src={lot.image} alt={lot.title} />
+              {cmsData?.format === "image" && (
+                <LotImage src={cmsData?.image} alt={item.name} />
               )}
-              {lot.format === "video" && (
-                <LotVideo height={350} width={432} src={lot.video} />
+              {cmsData?.format === "video" && (
+                <LotVideo height={350} width={432} src={cmsData?.video} />
               )}
             </DetailLeft>
             <DetailRight>
               <CurrentBid>
                 {strings.COMMON.CURRENT_BID}
-                {formatCurrencyAmount(
-                  mojitoLotData.currentBid?.amount
-                    ? mojitoLotData.currentBid.amount
-                    : 0
-                )}
+                {formatCurrencyAmount(item.details.unitPrice)}
               </CurrentBid>
               <LotDescription>
                 {strings.LOT.CONFIRM_MODAL.DISCLAIMER}

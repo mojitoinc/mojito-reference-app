@@ -1,3 +1,3 @@
 export * from "./shared";
 export * from "./grid";
-export * from "./lot";
+export * from "./item";

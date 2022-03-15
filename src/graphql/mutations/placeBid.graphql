@@ -1,0 +1,13 @@
+mutation PlaceBid($marketplaceAuctionLotId: UUID!, $amount: Float!) {
+  createMarketplaceAuctionBid(
+    marketplaceAuctionBid: {
+      marketplaceAuctionLotId: $marketplaceAuctionLotId
+      amount: $amount
+    }
+  ) {
+    id
+    amount
+    marketplaceAuctionLotId
+    userId
+  }
+}

@@ -1,5 +1,5 @@
 export const strings = {
-  SITE_TITLE: "Metaverso",
+  SITE_TITLE: "Cantina",
   COMMON: {
     LOGIN_BUTTON: "SIGN UP",
     TERMS_AND_CONDITIONS: "Terms and Conditions",
@@ -14,10 +14,9 @@ export const strings = {
     YOU: "You",
   },
   GRID: {
-    TITLE: "Metaverso NFTs",
-    SUBTITLE: "Puerto Rico's home in the metaverse",
+    TITLE: "Cantina",
+    SUBTITLE: "Example NFT Marketplace",
     DATE_AND_LOCATION: "Dec 7, 2021 Museo de Arte de Puerto Rico",
-    DOMAIN: "metaver.so",
   },
   LOT: {
     LOGIN_BUTTON: "SIGN IN",

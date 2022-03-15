@@ -8,7 +8,10 @@ import styled from "styled-components";
 import { Button } from "@components";
 import { config, strings, images } from "@constants";
 import { useMojitoMutation, useLazyMojito, useFetchAfterAuth } from "@hooks";
-import { EMojitoMutations, EMojitoQueries } from "@state";
+import {
+  useProfileLazyQuery,
+  useUpdateUserOrgSettingsMutation,
+} from "src/services/graphql/generated";
 
 const Container = styled.nav(
   ({ theme }) => `
@@ -55,13 +58,9 @@ export const Header = () => {
   const { loginWithRedirect, isAuthenticated, isLoading, user } = useAuth0();
   const router = useRouter();
 
-  const [updateUserSettings] = useMojitoMutation<{
-    userOrgId: string;
-    username: string;
-    avatar: string;
-  }>(EMojitoMutations.updateUserOrgSettings);
+  const [updateUserSettings] = useUpdateUserOrgSettingsMutation();
 
-  const [getData, { data: profile }] = useLazyMojito(EMojitoQueries.profile, {
+  const [getData, { data: profile }] = useProfileLazyQuery({
     variables: {
       organizationID: config.ORGANIZATION_ID,
     },
@@ -73,7 +72,8 @@ export const Header = () => {
     if (
       isAuthenticated &&
       profile &&
-      profile.me.userOrgs[0]?.id &&
+      profile !== null &&
+      profile.me?.userOrgs[0]?.id &&
       !profile.me.userOrgs[0].username
     ) {
       updateUserSettings({
@@ -83,12 +83,7 @@ export const Header = () => {
         },
       });
     }
-  }, [
-    isAuthenticated,
-    profile,
-    updateUserSettings,
-    user?.picture,
-  ]);
+  }, [isAuthenticated, profile, updateUserSettings, user?.picture]);
 
   const login = () => {
     loginWithRedirect({

@@ -1,0 +1,3 @@
+mutation SaveToFavorites($collectionItemId: UUID1!) {
+  addCollectionItemToUserFavorites(collectionItemId: $collectionItemId)
+}

@@ -1,0 +1,30 @@
+query CollectionItem($id: UUID1!, $filter: BidFilterInput!) {
+  collectionItemById(id: $id) {
+    ...CollectionItemData
+    details {
+      ... on MarketplaceAuctionLot {
+        bids(filter: $filter) {
+          id
+          createdAt
+          marketplaceUser {
+            id
+            avatar
+            username
+          }
+          marketplaceAuctionLotId
+          marketplaceUser {
+            id
+            username
+            avatar
+          }
+          amount
+          userOrganization {
+            user {
+              name
+            }
+          }
+        }
+      }
+    }
+  }
+}

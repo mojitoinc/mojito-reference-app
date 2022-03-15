@@ -6,6 +6,8 @@ import styled from "styled-components";
 import { StatusTag } from "@components";
 import { strings } from "@constants";
 import { formatCurrencyAmount } from "@utils";
+import { CollectionItemDataFragment } from "src/services/graphql/generated";
+import { CMSData } from "src/pages";
 
 const Lot = styled.a(
   ({ theme }) => `
@@ -110,37 +112,43 @@ const CurrentBidAmount = styled.div(
 `
 );
 
-export const LotGridItem = ({ lot, mojitoLotData, youHoldBid, isCollectionItem }: any) => (
-  <Lot href={`lots/${lot.slug}`}>
+export interface CollectionGridItem {
+  item: CollectionItemDataFragment;
+  cmsData?: CMSData;
+}
+
+export const CollectionGridItem = ({ item, cmsData }: CollectionGridItem) => (
+  <Lot href={`item/${item.slug}`}>
     <ImageWrapper>
-      {lot.format === "image" && (
+      {cmsData && cmsData.format === "image" && (
         <LotImage
           objectFit="cover"
           layout="fill"
           draggable="false"
-          src={lot.image}
+          src={cmsData.image!}
           alt="lot-image"
         />
       )}
-      {lot.format === "video" && (
-        <Video preload="none" poster={lot.preview}>
-          <source src={lot.video} />
+      {cmsData && cmsData.format === "video" && (
+        <Video preload="none" poster={cmsData.preview}>
+          <source src={cmsData.video} />
         </Video>
       )}
     </ImageWrapper>
-    {isCollectionItem && (
+    {/* {isCollectionItem && (
       <TagContainer>
         <StatusTag mojitoLotData={mojitoLotData} />
       </TagContainer>
-    )}
+    )} */}
     <Line>
-      <Title>{lot.title}</Title>
+      <Title>{item.name}</Title>
+      HELLO
     </Line>
     <Row>
       <div>
-        <Id>{`#${lot.lotId}`}</Id>
+        <Id>{`#${item.slug}`}</Id>
         <Paragraph>
-          {isCollectionItem &&
+          {/* {isCollectionItem &&
           mojitoLotData?.bidView.isPostSale &&
           mojitoLotData?.currentBid ? (
             <>
@@ -156,10 +164,10 @@ export const LotGridItem = ({ lot, mojitoLotData, youHoldBid, isCollectionItem }
               {strings.COMMON.CREATED_BY}
               <CreatorName>{lot.author.name}</CreatorName>
             </>
-          )}
+          )} */}
         </Paragraph>
       </div>
-      {isCollectionItem && mojitoLotData?.bidView.isDuringSale && (
+      {/* {isCollectionItem && mojitoLotData?.bidView.isDuringSale && (
         <CurrentBid>
           {strings.COMMON.CURRENT_BID}
           <CurrentBidAmount>
@@ -170,7 +178,7 @@ export const LotGridItem = ({ lot, mojitoLotData, youHoldBid, isCollectionItem }
             )}
           </CurrentBidAmount>
         </CurrentBid>
-      )}
+      )} */}
     </Row>
   </Lot>
 );

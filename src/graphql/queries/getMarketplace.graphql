@@ -1,0 +1,19 @@
+query GetMarketplace($id: UUID!) {
+  marketplace(id: $id) {
+    id
+    name
+    collections {
+      id
+      items {
+        id
+        name
+        slug
+        details {
+          ... on MarketplaceAuctionLot {
+            id
+          }
+        }
+      }
+    }
+  }
+}

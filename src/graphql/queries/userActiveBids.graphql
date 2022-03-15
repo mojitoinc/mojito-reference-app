@@ -1,0 +1,21 @@
+query GetUserActiveBids($organizationID: UUID!) {
+  serverTime
+  me {
+    id
+    activeBids(orgId: $organizationID) {
+      id
+      amount
+      marketplaceAuctionLot {
+        id
+        status
+        currentBid {
+          amount
+          id
+        }
+        bids {
+          amount
+        }
+      }
+    }
+  }
+}

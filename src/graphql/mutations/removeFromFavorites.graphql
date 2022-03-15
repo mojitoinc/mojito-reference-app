@@ -1,0 +1,3 @@
+mutation RemoveFromUserFavorites($collectionItemId: UUID1!) {
+  deleteCollectionItemFromUserFavorites(collectionItemId: $collectionItemId)
+}
