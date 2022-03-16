@@ -3,6 +3,7 @@ import styled from "styled-components";
 import {
   CollectionItemDataAllFragment,
   useProfileLazyQuery,
+  useProfileQuery,
 } from "src/services/graphql/generated";
 import { CMSData } from "src/data/MockCMSService";
 import { config, images, strings } from "@constants";
@@ -53,7 +54,8 @@ export const BuyNowDetail: React.FC<AuctionDetailProps> = ({
   const [isSeeMoreAuthor, setIsSeeMoreAuthor] = useState(true);
   const router = useRouter();
 
-  const [getData, { data: profile }] = useProfileLazyQuery({
+  const { data: profile } = useProfileQuery({
+    skip: !isAuthenticated,
     variables: {
       organizationID: config.ORGANIZATION_ID,
     },
@@ -68,28 +70,9 @@ export const BuyNowDetail: React.FC<AuctionDetailProps> = ({
     });
   };
 
-  useFetchAfterAuth(getData);
-
-  /*
-  const { profile } = useProfile();
-  const { collection } = useCollection();
-  const { _path } = usePageType();
-  const lots = collection ? generateFakeMojitoLots(collection.items) : [];
-  const lot = lots?.filter((lot) => lot.slug === _path[3])?.[0];
-  const item = collection?.items?.filter(
-    (item) => item.slug === _path[3]
-  )?.[0] as IMojitoCollectionItem<IMojitoCollectionItemBuyNowLot>;
-
-  if (!lot || !item) return null;
-
-  const mojitoItemDetails = collection?.items?.[0]?.details;
-  */
-
   const { isOpen, onOpen, onClose } = useOpenCloseCheckoutModal();
 
   let paymentModalProps: PaymentModalProps | null = null;
-
-  console.log({ item, cmsData });
 
   if (profile && item && cmsData) {
     paymentModalProps = {
@@ -115,7 +98,6 @@ export const BuyNowDetail: React.FC<AuctionDetailProps> = ({
       }],
     };
   }
-
 
   if (item.details.__typename !== "MarketplaceBuyNowOutput") {
     return <div>invalid type</div>;

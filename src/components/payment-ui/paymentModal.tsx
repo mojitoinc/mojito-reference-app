@@ -24,14 +24,10 @@ export const PaymentModal: React.FC<PaymentModalProps> = (props) => {
 
   const router = useRouter();
 
-  // TODO: Should this button be optional?
-  // const handleGoToCollection = useCallback(() => {
-  //   router.push("/profile/collection");
-  // }, []);
-
   const handleLogin = useCallback(() => {
     loginWithRedirect({
       appState: {
+        returnTo: window.location.pathname,
         origin: router.asPath,
       },
     });
