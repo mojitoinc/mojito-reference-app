@@ -1286,9 +1286,9 @@
   resolved "https://registry.yarnpkg.com/@mdi/react/-/react-1.5.0.tgz#461d2064ba12d509723bffc95e2f7169a6ac884a"
   integrity sha512-NztRgUxSYD+ImaKN94Tg66VVVqXj4SmlDGzZoz48H9riJ+Awha56sfXH2fegw819NWo7KI3oeS1Es0lNQqwr0w==
 
-"@mojitoinc/mojito-mixers@https://github.com/mojitoinc/mojito-mixers#9851a45a80f47f7dc4541ab2fc1bf882e3754fdb":
-  version "1.0.12-alpha"
-  resolved "https://github.com/mojitoinc/mojito-mixers#9851a45a80f47f7dc4541ab2fc1bf882e3754fdb"
+"@mojitoinc/mojito-mixers@https://github.com/mojitoinc/mojito-mixers#365fa1beb64e7fea6dffa146080a01a511c7fdf9":
+  version "1.0.13-alpha"
+  resolved "https://github.com/mojitoinc/mojito-mixers#365fa1beb64e7fea6dffa146080a01a511c7fdf9"
   dependencies:
     "@apollo/client" "^3.5.10"
     "@apollo/link-context" "^2.0.0-beta.3"
@@ -1303,7 +1303,7 @@
     country-codes-list "^1.6.8"
     country-region-data "^2.2.0"
     merge-options "^3.0.4"
-    openpgp "^5.2.0"
+    openpgp "5.2.0"
     react-hook-form "^7.28.0"
     react-payment-inputs "^1.1.9"
     react-plaid-link "^3.3.0"
@@ -5595,10 +5595,10 @@ open@^8.0.5:
     is-docker "^2.1.1"
     is-wsl "^2.2.0"
 
-openpgp@^5.2.0:
-  version "5.2.1"
-  resolved "https://registry.yarnpkg.com/openpgp/-/openpgp-5.2.1.tgz#cc48b25eb7d1b4613a167c9e6def8717eea53429"
-  integrity sha512-zvu63kxe70q3D6WlKC/TB2pzI59I8V/l4G+z/VYgNVOyARsoH9q4i/WqwoHPjWG5HnRjhII3WSvp3gXH2DMPVg==
+openpgp@5.2.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/openpgp/-/openpgp-5.2.0.tgz#1275fea03893c7a0081abd2dccaec8124ee687dc"
+  integrity sha512-ZDrvSMq2KZTTWnFV6bSO70HlyAX9uIu2QO/jX+Pd5lb+fewzwsnWHnzN2ZWp++QyM8ifyBPkrD7ZGFq279mpMA==
   dependencies:
     asn1.js "^5.0.0"
 
