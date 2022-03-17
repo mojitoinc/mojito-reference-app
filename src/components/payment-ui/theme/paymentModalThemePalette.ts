@@ -5,17 +5,15 @@ export const REFERENCE_APP_PALETTE_OPTIONS: PaletteOptions = {
 
   primary: {
     main: "#FF00FF",
+    contrastText: "#FFFFFF",
   },
 
-  text: {
-    secondary: "#FFFFFF",
-  },
-
-  gradients: {
-    stepper: "#FF00FF",
-    stepperReverse: "#FF00FF",
-    action: "#FF00FF",
-    actionReverse: "#FF00FF",
+  paymentUI: {
+    progressBar: "#FF00FF",
+    paymentMethodSelectorBorder: "#FF00FF",
+    paymentMethodSelectorBackground: "#FF00FF",
+    mainButtonBackground: "#FF00FF",
+    mainButtonBorderWidth: 0,
   },
 
   // success

@@ -4,20 +4,22 @@ import "@mui/material/styles/createPalette";
 
 declare module "@mui/material/styles/createPalette" {
   interface Palette {
-    gradients?: {
-      stepper?: string;
-      stepperReverse?: string;
-      action?: string;
-      actionReverse?: string;
+    paymentUI?: {
+      progressBar?: string;
+      paymentMethodSelectorBorder?: string;
+      paymentMethodSelectorBackground?: string;
+      mainButtonBackground?: string;
+      mainButtonBorderWidth?: number;
     };
   }
 
   interface PaletteOptions {
-    gradients?: {
-      stepper?: string;
-      stepperReverse?: string;
-      action?: string;
-      actionReverse?: string;
+    paymentUI?: {
+      progressBar?: string;
+      paymentMethodSelectorBorder?: string;
+      paymentMethodSelectorBackground?: string;
+      mainButtonBackground?: string;
+      mainButtonBorderWidth?: number;
     };
   }
 }
