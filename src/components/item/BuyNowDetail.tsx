@@ -74,6 +74,8 @@ export const BuyNowDetail: React.FC<AuctionDetailProps> = ({
 
   let paymentModalProps: PaymentModalProps | null = null;
 
+  console.log(item, cmsData);
+
   if (profile && item && cmsData) {
     paymentModalProps = {
       open: isOpen,
@@ -81,7 +83,7 @@ export const BuyNowDetail: React.FC<AuctionDetailProps> = ({
       orgID: config.ORGANIZATION_ID || "",
       checkoutItems: [{
         // Common:
-        lotID: (item.id as string) || "",
+        lotID: (item.details.id as string) || "",
         lotType: "buyNow",
         name: item.name || "",
         description: cmsData.about || "",

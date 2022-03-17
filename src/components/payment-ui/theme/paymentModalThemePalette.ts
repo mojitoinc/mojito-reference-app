@@ -8,6 +8,8 @@ export const REFERENCE_APP_PALETTE_OPTIONS: PaletteOptions = {
     contrastText: "#FFFFFF",
   },
 
+  // text
+
   paymentUI: {
     progressBar: "#FF00FF",
     paymentMethodSelectorBorder: "#FF00FF",
@@ -16,6 +18,7 @@ export const REFERENCE_APP_PALETTE_OPTIONS: PaletteOptions = {
     mainButtonBorderWidth: 0,
   },
 
+  // info
   // success
   // warning
   // error

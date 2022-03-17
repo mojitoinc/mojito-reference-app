@@ -4,6 +4,7 @@ fragment CollectionItemDataAll on MarketplaceCollectionItem {
   name
   details {
     ... on MarketplaceBuyNowOutput {
+      id
       unitPrice
       totalUnits
       totalAvailableUnits
