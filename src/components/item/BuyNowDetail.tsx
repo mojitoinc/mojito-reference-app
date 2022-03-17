@@ -74,8 +74,6 @@ export const BuyNowDetail: React.FC<AuctionDetailProps> = ({
 
   let paymentModalProps: PaymentModalProps | null = null;
 
-  console.log(item, cmsData);
-
   if (profile && item && cmsData) {
     paymentModalProps = {
       open: isOpen,
