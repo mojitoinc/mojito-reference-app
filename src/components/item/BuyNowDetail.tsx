@@ -1,9 +1,9 @@
 import { useState } from "react";
 import styled from "styled-components";
-import Link from "next/link";
 import {
   CollectionItemDataAllFragment,
   useProfileLazyQuery,
+  useProfileQuery,
 } from "src/services/graphql/generated";
 import { CMSData } from "src/data/MockCMSService";
 import { config, images, strings } from "@constants";
@@ -23,24 +23,19 @@ import {
   Row,
   StyledContent,
   StyledImage,
-  TopBanner,
   Video,
 } from "./ItemComponents";
 import {
-  CurrentBid,
-  CurrentBidAmount,
-  Outbid,
   Winner,
-  YourBid,
 } from "./AuctionComponents";
 import { Button, StatusTag } from "../shared";
-import { formatCurrencyAmount } from "@utils";
 import Image from "next/image";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useRouter } from "next/router";
 import { BuyNowModal } from "./BuyNowModal";
-import moment from "moment";
 import { getSaleStage } from "src/utils/isDuringSale";
+import { useOpenCloseCheckoutModal } from "@mojitoinc/mojito-mixers";
+import { PaymentModal, PaymentModalProps } from "../payment-ui/paymentModal";
 
 const Main = styled.main`
   padding: 40px 0;
@@ -55,17 +50,17 @@ export const BuyNowDetail: React.FC<AuctionDetailProps> = ({
   cmsData,
 }) => {
   const { isAuthenticated, loginWithRedirect, isLoading } = useAuth0();
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [isSeeMoreLot, setIsSeeMoreLot] = useState(true);
   const [isSeeMoreAuthor, setIsSeeMoreAuthor] = useState(true);
-  const [hasBid, setHasBid] = useState(false);
   const router = useRouter();
 
-  const [getData, { data: profile }] = useProfileLazyQuery({
+  const { data: profile } = useProfileQuery({
+    skip: !isAuthenticated,
     variables: {
       organizationID: config.ORGANIZATION_ID,
     },
   });
+
   const login = () => {
     loginWithRedirect({
       appState: {
@@ -75,7 +70,34 @@ export const BuyNowDetail: React.FC<AuctionDetailProps> = ({
     });
   };
 
-  useFetchAfterAuth(getData);
+  const { isOpen, onOpen, onClose } = useOpenCloseCheckoutModal();
+
+  let paymentModalProps: PaymentModalProps | null = null;
+
+  if (profile && item && cmsData) {
+    paymentModalProps = {
+      open: isOpen,
+      onClose,
+      orgID: config.ORGANIZATION_ID || "",
+      checkoutItems: [{
+        // Common:
+        lotID: (item.details.id as string) || "",
+        lotType: "buyNow",
+        name: item.name || "",
+        description: cmsData.about || "",
+        imageSrc: cmsData.image || "",
+        imageBackground: "rgba(0, 0, 0, .125)",
+
+        // Buy Now:
+        units: 1,
+        totalSupply: (item.details as { totalUnits: number }).totalUnits || 0,
+        remainingSupply: (item.details as { totalAvailableUnits: number }).totalAvailableUnits || 0,
+
+        // Auction:
+        fee: 0,
+      }],
+    };
+  }
 
   if (item.details.__typename !== "MarketplaceBuyNowOutput") {
     return <div>invalid type</div>;
@@ -89,7 +111,9 @@ export const BuyNowDetail: React.FC<AuctionDetailProps> = ({
   const isDuringSale = saleStage === "during";
   const isPostSale = saleStage === "post";
 
-  return (
+  return (<>  
+    { paymentModalProps && <PaymentModal { ...paymentModalProps } /> }
+
     <Main>
       <StyledContent>
         <DetailContainer>
@@ -169,7 +193,7 @@ export const BuyNowDetail: React.FC<AuctionDetailProps> = ({
               {isDuringSale && !isLoading && (
                 <>
                   {isAuthenticated ? (
-                    <Button onClick={() => setShowConfirmModal(true)} isBig>
+                    <Button onClick={ onOpen } isBig>
                       BUY NOW
                     </Button>
                   ) : (
@@ -183,15 +207,7 @@ export const BuyNowDetail: React.FC<AuctionDetailProps> = ({
             </div>
           </DetailRight>
         </DetailContainer>
-        {showConfirmModal && (
-          <BuyNowModal
-            handleClose={() => setShowConfirmModal(false)}
-            item={item}
-            cmsData={cmsData}
-            setHasBid={(value: boolean) => setHasBid(value)}
-          />
-        )}
       </StyledContent>
     </Main>
-  );
+  </>);
 };

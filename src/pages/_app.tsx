@@ -15,16 +15,16 @@ function MyApp({ Component, pageProps }: AppProps) {
         <title>{strings.SITE_TITLE}</title>
         <link rel="icon" href={images.FAVICON} />
       </Head>
-      <AuthProvider>
-        <MojitoApiProvider>
-          <ThemeProvider theme={theme}>
+      <ThemeProvider theme={theme}>
+        <AuthProvider>
+          <MojitoApiProvider>
             <GlobalStyles />
             <Header />
             <Component {...pageProps} />
             <Footer />
-          </ThemeProvider>
-        </MojitoApiProvider>
-      </AuthProvider>
+          </MojitoApiProvider>
+        </AuthProvider>
+      </ThemeProvider>
     </>
   );
 }
