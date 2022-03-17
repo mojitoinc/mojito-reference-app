@@ -1,25 +1,12 @@
 import "@mui/material/styles/createPalette";
-
-// TODO: Can this be imported instead?
+import { PalettePaymentUI } from "@mojitoinc/mojito-mixers";
 
 declare module "@mui/material/styles/createPalette" {
   interface Palette {
-    paymentUI?: {
-      progressBar?: string;
-      paymentMethodSelectorBorder?: string;
-      paymentMethodSelectorBackground?: string;
-      mainButtonBackground?: string;
-      mainButtonBorderWidth?: number;
-    };
+    paymentUI?: PalettePaymentUI;
   }
 
   interface PaletteOptions {
-    paymentUI?: {
-      progressBar?: string;
-      paymentMethodSelectorBorder?: string;
-      paymentMethodSelectorBackground?: string;
-      mainButtonBackground?: string;
-      mainButtonBorderWidth?: number;
-    };
+    paymentUI?: PalettePaymentUI;
   }
 }
