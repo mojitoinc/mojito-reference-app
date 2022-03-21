@@ -46,6 +46,8 @@ export const PaymentModal: React.FC<PaymentModalProps> = (props) => {
     // Flow:
     guestCheckoutEnabled: false,
     productConfirmationEnabled: false,
+    vertexEnabled: false,
+    threeDSEnabled: true,
 
     // Personalization:
     themeOptions: REFERENCE_APP_THEME_OPTIONS,
