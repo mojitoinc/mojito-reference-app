@@ -1286,9 +1286,9 @@
   resolved "https://registry.yarnpkg.com/@mdi/react/-/react-1.5.0.tgz#461d2064ba12d509723bffc95e2f7169a6ac884a"
   integrity sha512-NztRgUxSYD+ImaKN94Tg66VVVqXj4SmlDGzZoz48H9riJ+Awha56sfXH2fegw819NWo7KI3oeS1Es0lNQqwr0w==
 
-"@mojitoinc/mojito-mixers@https://github.com/mojitoinc/mojito-mixers#d6a9375430d0e47833cf58d4753fd7aa67db4147":
-  version "1.0.19-alpha"
-  resolved "https://github.com/mojitoinc/mojito-mixers#d6a9375430d0e47833cf58d4753fd7aa67db4147"
+"@mojitoinc/mojito-mixers@https://github.com/mojitoinc/mojito-mixers#812a508449b92eaf03dd06252a9a37196810f94d":
+  version "1.0.21-alpha"
+  resolved "https://github.com/mojitoinc/mojito-mixers#812a508449b92eaf03dd06252a9a37196810f94d"
   dependencies:
     "@apollo/client" "^3.5.10"
     "@apollo/link-context" "^2.0.0-beta.3"
@@ -1304,7 +1304,7 @@
     country-region-data "^2.2.0"
     merge-options "^3.0.4"
     openpgp "5.2.0"
-    react-hook-form "^7.28.0"
+    react-hook-form "^7.28.1"
     react-payment-inputs "^1.1.9"
     react-plaid-link "^3.3.0"
     react-use-country-region "^1.0.0"
@@ -6060,10 +6060,10 @@ react-dom@17.0.2:
     object-assign "^4.1.1"
     scheduler "^0.20.2"
 
-react-hook-form@^7.28.0:
-  version "7.28.0"
-  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.28.0.tgz#40f385da1f31a3c26bb7491d7d77c111b6ad6909"
-  integrity sha512-mmLpT86BkMGPr0r6ca8zxV0WH4Y1FW5MKs7Rq1+uHLVeeg5pSWbF5Z/qLCnM5vPVblHNM6lRBRRotnfEAf0ALA==
+react-hook-form@^7.28.1:
+  version "7.28.1"
+  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.28.1.tgz#95fc37be6c6b9d57212eb7eca055fb36d079b3b7"
+  integrity sha512-mgwxvXuvt3FMY/mdnWbPc++Zf1U5xYzkhOaL05mtFMLvXc9MvUhMUlKtUVuO12sOrgT3nPXBgVFawtiJ4ONrgg==
 
 react-is@17.0.2, react-is@^17.0.2:
   version "17.0.2"
