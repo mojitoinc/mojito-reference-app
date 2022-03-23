@@ -13,7 +13,7 @@
     "@auth0/auth0-react": "^1.9.0",
     "@emotion/styled": "^11.8.1",
     "@faker-js/faker": "^6.0.0-beta.0",
-    "@mojitoinc/mojito-mixers": "https://github.com/mojitoinc/mojito-mixers#d6f5a3a62fe43d66fda2964fab1913459912e2ae",
+    "@mojitoinc/mojito-mixers": "https://github.com/mojitoinc/mojito-mixers#812a508449b92eaf03dd06252a9a37196810f94d",
     "@mui/material": "^5.5.1",
     "ahooks": "^2.10.12",
     "graphql": "^16.0.1",
