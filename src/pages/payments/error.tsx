@@ -18,7 +18,7 @@ const CreditCardPaymentErrorPage: React.FC = () => {
 
   return (
     <PUIError
-      uri={ config.MOJITO_API_URL }
+      uri={ config.MOJITO_API_URL || "" }
       themeOptions={ REFERENCE_APP_THEME_OPTIONS }
       logoSrc={ images.LOGO?.src || "" }
       logoSx={ REFERENCE_APP_LOGO_SX }
