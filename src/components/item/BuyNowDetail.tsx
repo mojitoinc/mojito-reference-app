@@ -34,7 +34,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { useRouter } from "next/router";
 import { BuyNowModal } from "./BuyNowModal";
 import { getSaleStage } from "src/utils/isDuringSale";
-import { useOpenCloseCheckoutModal } from "@mojitoinc/mojito-mixers";
+import { THREEDS_FLOW_SEARCH_PARAM_ERROR_KEY, THREEDS_FLOW_SEARCH_PARAM_SUCCESS_KEY, useOpenCloseCheckoutModal } from "@mojitoinc/mojito-mixers";
 import { PaymentModal, PaymentModalProps } from "../payment-ui/paymentModal";
 
 const Main = styled.main`
@@ -70,7 +70,10 @@ export const BuyNowDetail: React.FC<AuctionDetailProps> = ({
     });
   };
 
-  const { isOpen, onOpen, onClose } = useOpenCloseCheckoutModal();
+  const paymentIdParam = router.query[THREEDS_FLOW_SEARCH_PARAM_SUCCESS_KEY]?.toString();
+  const paymentErrorParam = router.query[THREEDS_FLOW_SEARCH_PARAM_ERROR_KEY]?.toString();
+
+  const { loaderMode, isOpen, onOpen, onClose } = useOpenCloseCheckoutModal({ paymentIdParam, paymentErrorParam });
 
   let paymentModalProps: PaymentModalProps | null = null;
 
@@ -78,6 +81,8 @@ export const BuyNowDetail: React.FC<AuctionDetailProps> = ({
     paymentModalProps = {
       open: isOpen,
       onClose,
+      loaderMode,
+      paymentErrorParam,
       orgID: config.ORGANIZATION_ID || "",
       checkoutItems: [{
         // Common:

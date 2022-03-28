@@ -12,7 +12,7 @@ import { images } from "@constants";
 
 export type PaymentModalProps = Pick<
   PUICheckoutProps,
-  "open" | "onClose" | "orgID" | "checkoutItems"
+  "open" | "onClose" | "loaderMode" | "paymentErrorParam" | "orgID" | "checkoutItems"
 >;
 
 export const PaymentModal: React.FC<PaymentModalProps> = (props) => {
@@ -33,6 +33,13 @@ export const PaymentModal: React.FC<PaymentModalProps> = (props) => {
     });
   }, [loginWithRedirect, router]);
 
+  const onGoTo = useCallback(() => {
+    router.push("/profile");
+  }, [router]);
+
+  const onRemoveUrlParams = useCallback((cleanURL: string) => {
+    router.replace(cleanURL, undefined, { shallow: true });
+  }, [router]);
 
   const checkoutModalProps: PUICheckoutProps = {
     // ProviderInjector:
@@ -41,9 +48,13 @@ export const PaymentModal: React.FC<PaymentModalProps> = (props) => {
     // Modal:
     // open,
     // onClose,
-    // onGoToCollection,
+    onGoTo,
+    goToLabel: "View Profile",
 
     // Flow:
+    // loaderMode,
+    // paymentErrorParam,
+    onRemoveUrlParams,
     guestCheckoutEnabled: false,
     productConfirmationEnabled: false,
     vertexEnabled: false,
@@ -56,9 +67,12 @@ export const PaymentModal: React.FC<PaymentModalProps> = (props) => {
     loaderImageSrc: "",
     purchasingImageSrc: "",
     // purchasingMessages,
+    successImageSrc: "",
     errorImageSrc: "",
     userFormat: "email",
     acceptedPaymentTypes: ["CreditCard"],
+    // acceptedCreditCardNetworks: ["visa", "mastercard"],
+    // network,
     // dictionary,
 
     // Legal:
@@ -88,7 +102,6 @@ export const PaymentModal: React.FC<PaymentModalProps> = (props) => {
     // onEvent,
     // onError,
     // onCatch,
-    // onMarketingOptInChange,
 
     // Lot-specific props:
     ...props,
