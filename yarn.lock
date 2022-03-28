@@ -1276,25 +1276,25 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@mdi/js@^6.5.95":
-  version "6.5.95"
-  resolved "https://registry.yarnpkg.com/@mdi/js/-/js-6.5.95.tgz#2d895b013408f213252b77c30e0fdaaba6dc8b4b"
-  integrity sha512-x/bwEoAGP+Mo10Dfk5audNIPi7Yz8ZBrILcbXLW3ShOI/njpgodzpgpC2WYK3D2ZSC392peRRemIFb/JsyzzYQ==
+"@mdi/js@^6.6.96":
+  version "6.6.96"
+  resolved "https://registry.yarnpkg.com/@mdi/js/-/js-6.6.96.tgz#119f79fa9327359421167a7d4b8bde26e84702ce"
+  integrity sha512-ke9PN5DjPCOlMfhioxeZYADz8Yiz6v47W0IYRza01SSJD7y1EwESVpwFnnFUso+eCoWtE1CO9cTIvQF6sEreuA==
 
 "@mdi/react@^1.5.0":
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/@mdi/react/-/react-1.5.0.tgz#461d2064ba12d509723bffc95e2f7169a6ac884a"
   integrity sha512-NztRgUxSYD+ImaKN94Tg66VVVqXj4SmlDGzZoz48H9riJ+Awha56sfXH2fegw819NWo7KI3oeS1Es0lNQqwr0w==
 
-"@mojitoinc/mojito-mixers@https://github.com/mojitoinc/mojito-mixers#3fbf429f4165e1975274b32aa0967de845160ffe":
-  version "1.0.28-alpha"
-  resolved "https://github.com/mojitoinc/mojito-mixers#3fbf429f4165e1975274b32aa0967de845160ffe"
+"@mojitoinc/mojito-mixers@https://github.com/mojitoinc/mojito-mixers#2e0d14def4627d37905c651b508484dd2f2516c1":
+  version "1.2.6-alpha"
+  resolved "https://github.com/mojitoinc/mojito-mixers#2e0d14def4627d37905c651b508484dd2f2516c1"
   dependencies:
     "@apollo/client" "^3.5.10"
     "@apollo/link-context" "^2.0.0-beta.3"
     "@auth0/auth0-react" "^1.9.0"
     "@hookform/resolvers" "^2.8.8"
-    "@mdi/js" "^6.5.95"
+    "@mdi/js" "^6.6.96"
     "@mdi/react" "^1.5.0"
     "@mui/icons-material" "^5.5.1"
     "@swyg/corre" "^1.0.1"
@@ -1310,7 +1310,7 @@
     react-use-country-region "^1.0.0"
     ts-deepmerge "^2.0.1"
     use-callback-ref "^1.2.5"
-    uuidv4 "^6.2.12"
+    uuidv4 "^6.2.13"
     yup "^0.32.11"
 
 "@mui/base@5.0.0-alpha.72":
@@ -1720,12 +1720,7 @@
     "@types/react" "*"
     csstype "^3.0.2"
 
-"@types/uuid@8.3.1":
-  version "8.3.1"
-  resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-8.3.1.tgz#1a32969cf8f0364b3d8c8af9cc3555b7805df14f"
-  integrity sha512-Y2mHTRAbqfFkpjldbkHGY8JIzRN6XqYRliG8/24FcHm2D2PwW24fl5xMRTVGdrb7iMrwCaIEbLWerGIkXuFWVg==
-
-"@types/uuid@^8.3.4":
+"@types/uuid@8.3.4", "@types/uuid@^8.3.4":
   version "8.3.4"
   resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-8.3.4.tgz#bd86a43617df0594787d38b735f55c805becf1bc"
   integrity sha512-c/I8ZRb51j+pYGAu5CrFMRxqZ2ke4y2grEBO5AUjgSkSk+qT2Ea+OdWElz/OiMf5MNpn2b17kuVBwZLQJXzihw==
@@ -7279,12 +7274,12 @@ uuid@8.3.2:
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
 
-uuidv4@^6.2.12:
-  version "6.2.12"
-  resolved "https://registry.yarnpkg.com/uuidv4/-/uuidv4-6.2.12.tgz#e8c1d1d733c3fa4963d4610b8a3a09b4ec58ca96"
-  integrity sha512-UnN4ThIYWhv3ZUE8UwDnnCvh4JafCNu+sQkxmLyjCVwK3rjLfkg3DYiEv6oCMDIAIVEDP4INg4kX/C5hKaRzZA==
+uuidv4@^6.2.13:
+  version "6.2.13"
+  resolved "https://registry.yarnpkg.com/uuidv4/-/uuidv4-6.2.13.tgz#8f95ec5ef22d1f92c8e5d4c70b735d1c89572cb7"
+  integrity sha512-AXyzMjazYB3ovL3q051VLH06Ixj//Knx7QnUSi1T//Ie3io6CpsPu9nVMOx5MoLWh6xV0B9J0hIaxungxXUbPQ==
   dependencies:
-    "@types/uuid" "8.3.1"
+    "@types/uuid" "8.3.4"
     uuid "8.3.2"
 
 v8-compile-cache@^2.0.3:

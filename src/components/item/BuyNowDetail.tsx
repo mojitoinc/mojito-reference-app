@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import {
   CollectionItemDataAllFragment,
@@ -32,10 +32,8 @@ import { Button, StatusTag } from "../shared";
 import Image from "next/image";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useRouter } from "next/router";
-import { BuyNowModal } from "./BuyNowModal";
 import { getSaleStage } from "src/utils/isDuringSale";
-import { useOpenCloseCheckoutModal } from "@mojitoinc/mojito-mixers";
-import { PaymentModal, PaymentModalProps } from "../payment-ui/paymentModal";
+import { CheckoutComponentProps, useCheckoutOverlay } from "@mojitoinc/mojito-mixers";
 
 const Main = styled.main`
   padding: 40px 0;
@@ -70,34 +68,45 @@ export const BuyNowDetail: React.FC<AuctionDetailProps> = ({
     });
   };
 
-  const { isOpen, onOpen, onClose } = useOpenCloseCheckoutModal();
 
-  let paymentModalProps: PaymentModalProps | null = null;
+  const { open, setCheckoutComponentProps } = useCheckoutOverlay();
 
-  if (profile && item && cmsData) {
-    paymentModalProps = {
-      open: isOpen,
-      onClose,
+  const getComponentPropsRef = useRef<() => CheckoutComponentProps>(() => ({}));
+
+  getComponentPropsRef.current = () => {
+    return {
       orgID: config.ORGANIZATION_ID || "",
       checkoutItems: [{
         // Common:
-        lotID: (item.details.id as string) || "",
+        lotID: (item?.details?.id as string) || "",
         lotType: "buyNow",
         name: item.name || "",
-        description: cmsData.about || "",
-        imageSrc: cmsData.image || "",
+        description: cmsData?.about || "",
+        imageSrc: cmsData?.image || "",
         imageBackground: "rgba(0, 0, 0, .125)",
 
         // Buy Now:
         units: 1,
-        totalSupply: (item.details as { totalUnits: number }).totalUnits || 0,
-        remainingSupply: (item.details as { totalAvailableUnits: number }).totalAvailableUnits || 0,
+        totalSupply: (item?.details as { totalUnits: number })?.totalUnits || 0,
+        remainingSupply: (item?.details as { totalAvailableUnits: number })?.totalAvailableUnits || 0,
 
         // Auction:
         fee: 0,
       }],
     };
-  }
+  };
+
+  const handleOpenClicked = useCallback(() => {
+    if (!profile || !item || !cmsData) return;
+
+    open(getComponentPropsRef.current());
+  }, [open, profile, item, cmsData]);
+
+  useEffect(() => {
+    setCheckoutComponentProps(getComponentPropsRef.current());
+
+  // If some of the fields in the object above can change, add them to the dependencies here:
+  }, [setCheckoutComponentProps, profile, item, cmsData]);
 
   if (item.details.__typename !== "MarketplaceBuyNowOutput") {
     return <div>invalid type</div>;
@@ -111,9 +120,7 @@ export const BuyNowDetail: React.FC<AuctionDetailProps> = ({
   const isDuringSale = saleStage === "during";
   const isPostSale = saleStage === "post";
 
-  return (<>  
-    { paymentModalProps && <PaymentModal { ...paymentModalProps } /> }
-
+  return (  
     <Main>
       <StyledContent>
         <DetailContainer>
@@ -193,7 +200,7 @@ export const BuyNowDetail: React.FC<AuctionDetailProps> = ({
               {isDuringSale && !isLoading && (
                 <>
                   {isAuthenticated ? (
-                    <Button onClick={ onOpen } isBig>
+                    <Button onClick={ handleOpenClicked } isBig>
                       BUY NOW
                     </Button>
                   ) : (
@@ -209,5 +216,5 @@ export const BuyNowDetail: React.FC<AuctionDetailProps> = ({
         </DetailContainer>
       </StyledContent>
     </Main>
-  </>);
+  );
 };
