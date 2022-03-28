@@ -1286,9 +1286,9 @@
   resolved "https://registry.yarnpkg.com/@mdi/react/-/react-1.5.0.tgz#461d2064ba12d509723bffc95e2f7169a6ac884a"
   integrity sha512-NztRgUxSYD+ImaKN94Tg66VVVqXj4SmlDGzZoz48H9riJ+Awha56sfXH2fegw819NWo7KI3oeS1Es0lNQqwr0w==
 
-"@mojitoinc/mojito-mixers@https://github.com/mojitoinc/mojito-mixers#13aa519afa5c857df6bc76cc7da680eeb7fc57e5":
-  version "1.1.2-alpha"
-  resolved "https://github.com/mojitoinc/mojito-mixers#13aa519afa5c857df6bc76cc7da680eeb7fc57e5"
+"@mojitoinc/mojito-mixers@https://github.com/mojitoinc/mojito-mixers#2e0d14def4627d37905c651b508484dd2f2516c1":
+  version "1.2.6-alpha"
+  resolved "https://github.com/mojitoinc/mojito-mixers#2e0d14def4627d37905c651b508484dd2f2516c1"
   dependencies:
     "@apollo/client" "^3.5.10"
     "@apollo/link-context" "^2.0.0-beta.3"
