@@ -34,7 +34,7 @@ export const BidFeed = ({ bids: parentBids, profile }: any) => {
     return parentBids.map((parentBid: any, i: number) => {
       const holdBid = i === 0 && yourFirstBidIndex === 0;
       const outbid = !holdBid && i === yourFirstBidIndex && yourFirstBidIndex > 0;
-      const outbidinfo = outbid && bids[0].amount === parentBid.amount;
+      const outbidinfo = outbid && parentBids[0].amount === parentBid.amount;
 
       return {
         ...parentBid,
