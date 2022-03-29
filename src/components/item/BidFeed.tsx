@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import styled from "styled-components";
 
 import { BidFeedItem } from "@components";
@@ -25,20 +25,25 @@ const Table = styled.div`
   position: relative;
 `;
 
-export const BidFeed = ({ bids, profile }: any) => {
-  bids = bids?.map((bid: any) => {
-    bid.isYou = profile?.me.id == bid.marketplaceUser.id;
-    return bid;
-  });
+export const BidFeed = ({ bids: parentBids, profile }: any) => {
+  const userId = profile?.me?.id || "";
 
-  const _youFirstBid = bids.findIndex((bid: any) => bid.isYou);
-  if (_youFirstBid == 0) bids[0].holdBid = true;
-  else if (_youFirstBid > 0) {
-    bids[_youFirstBid].outbid = true;
-    if (bids[0].amount == bids[_youFirstBid].amount) {
-      bids[_youFirstBid].outbidinfo = true;
-    }
-  }
+  const bids = useMemo(() => {
+    const yourFirstBidIndex = parentBids.findIndex((bid: any) => bid.marketplaceUser.id === userId);
+
+    return parentBids.map((parentBid: any, i: number) => {
+      const holdBid = i === 0 && yourFirstBidIndex === 0;
+      const outbid = !holdBid && i === yourFirstBidIndex && yourFirstBidIndex > 0;
+      const outbidinfo = outbid && parentBids[0].amount === parentBid.amount;
+
+      return {
+        ...parentBid,
+        holdBid,
+        outbid,
+        outbidinfo,
+      };
+    })
+  }, [parentBids, userId]);
 
   return (
     <Container>
