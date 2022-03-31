@@ -1,13 +1,18 @@
+import Image from "next/image";
+import { useRouter } from "next/router";
 import { useCallback, useEffect, useRef, useState } from "react";
-import styled from "styled-components";
+import { useAuth0 } from "@auth0/auth0-react";
+
 import {
-  CollectionItemDataAllFragment,
-  useProfileLazyQuery,
-  useProfileQuery,
-} from "src/services/graphql/generated";
-import { CMSData } from "src/data/MockCMSService";
+  CheckoutComponentProps,
+  useCheckoutOverlay,
+} from "@mojitoinc/mojito-mixers";
+
 import { config, images, strings } from "@constants";
-import { useFetchAfterAuth } from "@hooks";
+import { AuctionDetailProps } from "@interfaces";
+import { useProfileQuery } from "@services";
+import { getSaleStage } from "@utils";
+
 import {
   Author,
   AuthorDescription,
@@ -24,25 +29,11 @@ import {
   StyledContent,
   StyledImage,
   Video,
+  Main,
 } from "./ItemComponents";
-import {
-  Winner,
-} from "./AuctionComponents";
+import { Winner } from "./AuctionComponents";
 import { Button, StatusTag } from "../shared";
-import Image from "next/image";
-import { useAuth0 } from "@auth0/auth0-react";
-import { useRouter } from "next/router";
-import { getSaleStage } from "src/utils/isDuringSale";
-import { CheckoutComponentProps, useCheckoutOverlay } from "@mojitoinc/mojito-mixers";
 
-const Main = styled.main`
-  padding: 40px 0;
-`;
-
-export interface AuctionDetailProps {
-  item: CollectionItemDataAllFragment;
-  cmsData?: CMSData;
-}
 export const BuyNowDetail: React.FC<AuctionDetailProps> = ({
   item,
   cmsData,
@@ -68,7 +59,6 @@ export const BuyNowDetail: React.FC<AuctionDetailProps> = ({
     });
   };
 
-
   const { open, setCheckoutComponentProps } = useCheckoutOverlay();
 
   const getComponentPropsRef = useRef<() => CheckoutComponentProps>(() => ({}));
@@ -76,23 +66,28 @@ export const BuyNowDetail: React.FC<AuctionDetailProps> = ({
   getComponentPropsRef.current = () => {
     return {
       orgID: config.ORGANIZATION_ID || "",
-      checkoutItems: [{
-        // Common:
-        lotID: (item?.details?.id as string) || "",
-        lotType: "buyNow",
-        name: item.name || "",
-        description: cmsData?.about || "",
-        imageSrc: cmsData?.image || "",
-        imageBackground: "rgba(0, 0, 0, .125)",
+      checkoutItems: [
+        {
+          // Common:
+          lotID: (item?.details?.id as string) || "",
+          lotType: "buyNow",
+          name: item.name || "",
+          description: cmsData?.about || "",
+          imageSrc: cmsData?.image || "",
+          imageBackground: "rgba(0, 0, 0, .125)",
 
-        // Buy Now:
-        units: 1,
-        totalSupply: (item?.details as { totalUnits: number })?.totalUnits || 0,
-        remainingSupply: (item?.details as { totalAvailableUnits: number })?.totalAvailableUnits || 0,
+          // Buy Now:
+          units: 1,
+          totalSupply:
+            (item?.details as { totalUnits: number })?.totalUnits || 0,
+          remainingSupply:
+            (item?.details as { totalAvailableUnits: number })
+              ?.totalAvailableUnits || 0,
 
-        // Auction:
-        fee: 0,
-      }],
+          // Auction:
+          fee: 0,
+        },
+      ],
     };
   };
 
@@ -105,11 +100,11 @@ export const BuyNowDetail: React.FC<AuctionDetailProps> = ({
   useEffect(() => {
     setCheckoutComponentProps(getComponentPropsRef.current());
 
-  // If some of the fields in the object above can change, add them to the dependencies here:
+    // If some of the fields in the object above can change, add them to the dependencies here:
   }, [setCheckoutComponentProps, profile, item, cmsData]);
 
   if (item.details.__typename !== "MarketplaceBuyNowOutput") {
-    return <div>invalid type</div>;
+    return <div>{strings.COMMON.INVALID_TYPE}</div>;
   }
 
   const isLotDescriptionLong = cmsData && cmsData.about.length > 350;
@@ -120,7 +115,7 @@ export const BuyNowDetail: React.FC<AuctionDetailProps> = ({
   const isDuringSale = saleStage === "during";
   const isPostSale = saleStage === "post";
 
-  return (  
+  return (
     <Main>
       <StyledContent>
         <DetailContainer>
@@ -136,14 +131,10 @@ export const BuyNowDetail: React.FC<AuctionDetailProps> = ({
           </DetailLeft>
 
           <DetailRight>
-            {
-              <>
-                <Row>
-                  <LotId>#{cmsData?.lotNumber}</LotId>
-                  <StatusTag item={item} />
-                </Row>
-              </>
-            }
+            <Row>
+              <LotId>#{cmsData?.lotNumber}</LotId>
+              <StatusTag item={item} />
+            </Row>
             <ItemTitle>{item.name}</ItemTitle>
             <ItemDescription>
               {`${
@@ -194,23 +185,23 @@ export const BuyNowDetail: React.FC<AuctionDetailProps> = ({
             <div>
               {isPreSale && (
                 <Button isBig disabled>
-                  {strings.LOT.AVAILABLE_SOON}
+                  {strings.ITEM.AVAILABLE_SOON}
                 </Button>
               )}
               {isDuringSale && !isLoading && (
                 <>
                   {isAuthenticated ? (
-                    <Button onClick={ handleOpenClicked } isBig>
-                      BUY NOW
+                    <Button onClick={handleOpenClicked} isBig>
+                      {strings.ITEM.BUY_NOW}
                     </Button>
                   ) : (
                     <Button isBig onClick={login}>
-                      {strings.LOT.LOGIN_BUTTON}
+                      {strings.ITEM.LOGIN_BUTTON}
                     </Button>
                   )}
                 </>
               )}
-              {isPostSale && <Winner>Sold out</Winner>}
+              {isPostSale && <Winner>{strings.ITEM.SOLD_OUT}</Winner>}
             </div>
           </DetailRight>
         </DetailContainer>

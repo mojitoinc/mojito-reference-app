@@ -1,6 +1,6 @@
-import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import React from "react";
 import styled from "styled-components";
 
 import { images, strings, TERMS_AND_CONDITIONS_LINK } from "@constants";
@@ -23,20 +23,20 @@ const FooterLogo = styled.div`
   z-index: ${({ theme }) => theme.zIndex.footerLogo}; ;
 `;
 
-export const Footer = () => {
-  return (
-    <StyledFooter>
-      <Link href={TERMS_AND_CONDITIONS_LINK} passHref>
-        <FooterText target="_blank">{strings.COMMON.TERMS_AND_CONDITIONS}</FooterText>
-      </Link>
-      <FooterLogo>
-        <Image
-          src={images.LOGO?.src}
-          alt={images.LOGO?.alt}
-          width={images.LOGO?.footerWidth}
-          height={images.LOGO?.footerHeight}
-        />
-      </FooterLogo>
-    </StyledFooter>
-  );
-};
+export const Footer = () => (
+  <StyledFooter>
+    <Link href={TERMS_AND_CONDITIONS_LINK} passHref>
+      <FooterText target="_blank">
+        {strings.COMMON.TERMS_AND_CONDITIONS}
+      </FooterText>
+    </Link>
+    <FooterLogo>
+      <Image
+        src={images.LOGO?.src}
+        alt={images.LOGO?.alt}
+        width={images.LOGO?.footerWidth}
+        height={images.LOGO?.footerHeight}
+      />
+    </FooterLogo>
+  </StyledFooter>
+);

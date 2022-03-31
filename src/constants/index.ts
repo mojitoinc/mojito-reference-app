@@ -1,3 +1,3 @@
 export * from "./general.constants";
-export * from "./images";
-export * from "./strings";
+export * from "./images.constants";
+export * from "./strings.constants";

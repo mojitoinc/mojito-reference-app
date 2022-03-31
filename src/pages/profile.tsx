@@ -1,18 +1,17 @@
-import { useEffect, useRef, useState } from "react";
 import type { NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
+import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
 
 import { Button, CollectionGridItem, Modal } from "@components";
 import { config, images, strings } from "@constants";
 import { useFetchAfterAuth } from "@hooks";
-import Content from "content.json";
 import {
   useProfileLazyQuery,
   useUpdateUserOrgSettingsMutation,
-} from "src/services/graphql/generated";
+} from "@services";
 
 const Main = styled.main`
   display: flex;

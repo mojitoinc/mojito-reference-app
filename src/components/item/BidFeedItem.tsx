@@ -1,5 +1,5 @@
-import React, { useState } from "react";
 import Image from "next/image";
+import React, { useState } from "react";
 import styled from "styled-components";
 
 import { config, images, strings } from "@constants";
@@ -141,14 +141,14 @@ export const BidFeedItem = ({ item, isTop, userId }: any) => {
         <WarningContainer>
           {outbidinfo && (
             <Warning onClick={onShowMessage}>
-              {strings.LOT.BID_FEED.WARNING_ICON}
+              {strings.ITEM.BID_FEED.WARNING_ICON}
             </Warning>
           )}
           {showMessage && (
             <>
               <Arrow />
               <WarningMessage>
-                {strings.LOT.BID_FEED.WARNING_MESSAGE}
+                {strings.ITEM.BID_FEED.WARNING_MESSAGE}
               </WarningMessage>
             </>
           )}
