@@ -1,13 +1,26 @@
 /* eslint-disable @next/next/no-img-element */
-import { useMemo, useState } from "react";
-import styled from "styled-components";
+import Image from "next/image";
 import Link from "next/link";
-import {
-  CollectionItemDataAllFragment,
-  useProfileLazyQuery,
-} from "src/services/graphql/generated";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
+
 import { config, images, strings } from "@constants";
 import { useFetchAfterAuth } from "@hooks";
+import { AuctionDetailProps } from "@interfaces";
+import { useProfileLazyQuery } from "@services";
+import { formatCurrencyAmount, getSaleStage } from "@utils";
+
+import {
+  CurrentBid,
+  CurrentBidAmount,
+  Outbid,
+  Winner,
+  WinnerName,
+  YourBid,
+} from "./AuctionComponents";
+import { BidConfirmModal } from "./BidConfirmModal";
+import { BidFeed } from "./BidFeed";
 import {
   Author,
   AuthorDescription,
@@ -25,34 +38,10 @@ import {
   StyledImage,
   TopBanner,
   Video,
+  Main,
 } from "./ItemComponents";
-import {
-  CurrentBid,
-  CurrentBidAmount,
-  Outbid,
-  Winner,
-  WinnerName,
-  YourBid,
-} from "./AuctionComponents";
 import { Button, StatusTag } from "../shared";
-import { formatCurrencyAmount } from "@utils";
-import Image from "next/image";
-import { useAuth0 } from "@auth0/auth0-react";
-import { useRouter } from "next/router";
-import { BidConfirmModal } from "./BidConfirmModal";
-import { CMSData } from "src/data/MockCMSService";
-import { BidFeed } from "./BidFeed";
-import moment from "moment";
-import { getSaleStage, isDuringSale } from "src/utils/isDuringSale";
 
-const Main = styled.main`
-  padding: 40px 0;
-`;
-
-export interface AuctionDetailProps {
-  item: CollectionItemDataAllFragment;
-  cmsData?: CMSData;
-}
 export const AuctionDetail: React.FC<AuctionDetailProps> = ({
   item,
   cmsData,
@@ -69,6 +58,7 @@ export const AuctionDetail: React.FC<AuctionDetailProps> = ({
       organizationID: config.ORGANIZATION_ID,
     },
   });
+
   const login = () => {
     loginWithRedirect({
       appState: {
@@ -81,7 +71,7 @@ export const AuctionDetail: React.FC<AuctionDetailProps> = ({
   useFetchAfterAuth(getData);
 
   if (item.details.__typename !== "MarketplaceAuctionLot") {
-    return <div>invalid type</div>;
+    return <div>{strings.COMMON.INVALID_TYPE}</div>;
   }
 
   const isLotDescriptionLong = cmsData && cmsData.about.length > 350;
@@ -98,9 +88,9 @@ export const AuctionDetail: React.FC<AuctionDetailProps> = ({
       {hasBid && !!item.details.bids.length && profile && isDuringSale && (
         <TopBanner>
           {item.details.bids[0].marketplaceUser?.id === profile.me?.id ? (
-            <YourBid>{strings.LOT.HIGHEST_BID}</YourBid>
+            <YourBid>{strings.ITEM.HIGHEST_BID}</YourBid>
           ) : (
-            <Outbid>{strings.LOT.OUTBID}</Outbid>
+            <Outbid>{strings.ITEM.OUTBID}</Outbid>
           )}
         </TopBanner>
       )}
@@ -118,14 +108,10 @@ export const AuctionDetail: React.FC<AuctionDetailProps> = ({
           </DetailLeft>
 
           <DetailRight>
-            {
-              <>
-                <Row>
-                  <LotId>#{cmsData?.lotNumber}</LotId>
-                  <StatusTag item={item} />
-                </Row>
-              </>
-            }
+            <Row>
+              <LotId>#{cmsData?.lotNumber}</LotId>
+              <StatusTag item={item} />
+            </Row>
             <ItemTitle>{item.name}</ItemTitle>
             <ItemDescription>
               {`${
@@ -185,7 +171,7 @@ export const AuctionDetail: React.FC<AuctionDetailProps> = ({
             <div>
               {isPreSale && (
                 <Button isBig disabled>
-                  {strings.LOT.AVAILABLE_SOON}
+                  {strings.ITEM.AVAILABLE_SOON}
                 </Button>
               )}
               {isDuringSale && !isLoading && (
@@ -196,13 +182,13 @@ export const AuctionDetail: React.FC<AuctionDetailProps> = ({
                       profile &&
                       currentBid.marketplaceUser?.id === profile?.me?.id ? (
                         <Button isBig disabled>
-                          {strings.LOT.BID_SENT}
+                          {strings.ITEM.BID_SENT}
                         </Button>
                       ) : (
                         <>
                           {profile && !profile.me?.userOrgs[0].username ? (
                             <Link href="/profile" passHref>
-                              <Button isBig>{strings.LOT.SET_USERNAME}</Button>
+                              <Button isBig>{strings.ITEM.SET_USERNAME}</Button>
                             </Link>
                           ) : (
                             <Button
@@ -212,8 +198,8 @@ export const AuctionDetail: React.FC<AuctionDetailProps> = ({
                               {hasBid &&
                               currentBid?.marketplaceUser?.id !==
                                 profile?.me?.id
-                                ? strings.LOT.BID_AGAIN_BUTTON
-                                : strings.LOT.BID_NOW_BUTTON}
+                                ? strings.ITEM.BID_AGAIN_BUTTON
+                                : strings.ITEM.BID_NOW_BUTTON}
                             </Button>
                           )}
                         </>
@@ -221,7 +207,7 @@ export const AuctionDetail: React.FC<AuctionDetailProps> = ({
                     </>
                   ) : (
                     <Button isBig onClick={login}>
-                      {strings.LOT.LOGIN_BUTTON}
+                      {strings.ITEM.LOGIN_BUTTON}
                     </Button>
                   )}
                 </>
@@ -229,11 +215,11 @@ export const AuctionDetail: React.FC<AuctionDetailProps> = ({
               {isPostSale && currentBid && (
                 <Winner>
                   <div>
-                    {strings.LOT.WINNING_BID}
+                    {strings.ITEM.WINNING_BID}
                     <span>{formatCurrencyAmount(currentBid.amount)}</span>
                   </div>
                   <div>
-                    {strings.LOT.BY}
+                    {strings.ITEM.BY}
                     <WinnerName>
                       {`${currentBid?.marketplaceUser?.username}${
                         currentBid?.marketplaceUser?.id === profile?.me?.id

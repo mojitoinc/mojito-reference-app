@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useAuth0 } from "@auth0/auth0-react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
+import { useAuth0 } from "@auth0/auth0-react";
 
 import { Button } from "@components";
 import { config, strings, images } from "@constants";
@@ -11,7 +11,7 @@ import { useFetchAfterAuth } from "@hooks";
 import {
   useProfileLazyQuery,
   useUpdateUserOrgSettingsMutation,
-} from "src/services/graphql/generated";
+} from "@services";
 
 const Container = styled.nav(
   ({ theme }) => `
@@ -72,7 +72,6 @@ export const Header = () => {
     if (
       isAuthenticated &&
       profile &&
-      profile !== null &&
       profile.me?.userOrgs[0]?.id &&
       !profile.me.userOrgs[0].username
     ) {

@@ -1,17 +1,12 @@
 import type { NextPage } from "next";
 import Image from "next/image";
+import { useMemo } from "react";
 import styled from "styled-components";
 
 import { CollectionGridItem } from "@components";
 import { config, images, strings } from "@constants";
-import {
-  useCollectionBySlugQuery,
-  useProfileLazyQuery,
-} from "src/services/graphql/generated";
-import { useMemo } from "react";
-
-import { MockCMSService } from "src/data/MockCMSService";
-import { useFetchAfterAuth } from "@hooks";
+import { useCollectionBySlugQuery } from "@services";
+import { MockCMSService } from "@state";
 
 const Container = styled.main`
   background: ${({ theme }) => theme.backgrounds.grid};
@@ -35,21 +30,6 @@ const Subtitle = styled.p(
   ({ theme }) => `
   font: ${theme.fonts.body()};
   text-align: center;
-`
-);
-
-const Date = styled.p(
-  ({ theme }) => `
-  color: ${theme.colors.background};
-  font: ${theme.fonts.body()};
-  text-align: center;
-`
-);
-
-const Domain = styled.p(
-  ({ theme }) => `
-  font: ${theme.fonts.body("bold")};
-  margin: 35px 0 120px;
 `
 );
 
@@ -78,20 +58,12 @@ const Home: NextPage = () => {
   const cms = useMemo(() => {
     return new MockCMSService();
   }, []);
-  const { data, loading, error } = useCollectionBySlugQuery({
+  const { data, error } = useCollectionBySlugQuery({
     variables: {
       slug: config.COLLECTION_SLUG,
       marketplaceID: config.MARKETPLACE_ID,
     },
   });
-
-  const [getData, { data: profile }] = useProfileLazyQuery({
-    variables: {
-      organizationID: config.ORGANIZATION_ID,
-    },
-  });
-
-  useFetchAfterAuth(getData);
 
   return (
     <Container>
@@ -105,7 +77,7 @@ const Home: NextPage = () => {
 
       <Subtitle>{strings.GRID.SUBTITLE}</Subtitle>
 
-      {error && <div>error getting data</div>}
+      {error && <div>{strings.COMMON.ERROR_GETTING_DATA}</div>}
 
       <Grid>
         {data?.collectionBySlug?.items?.map((item) => (

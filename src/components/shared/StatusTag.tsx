@@ -3,9 +3,8 @@ import momentTimeZone from "moment-timezone";
 import styled from "styled-components";
 
 import { strings } from "@constants";
-import { IAuctionLotBidView } from "@interfaces";
-import { CollectionItemDataFragment } from "src/services/graphql/generated";
-import { getSaleStage } from "src/utils/isDuringSale";
+import { CollectionItemDataFragment } from "@services";
+import { getSaleStage } from "@utils";
 
 const Tag = styled.div(
   ({ theme }) => `
@@ -47,12 +46,7 @@ export const StatusTag = ({ item }: { item: CollectionItemDataFragment }) => {
           info = strings.COMMON.BUYNOW_STARTS;
           break;
       }
-      return (
-        <>
-          {}
-          <TagText>{formattedStartDate}</TagText>
-        </>
-      );
+      return <TagText>{formattedStartDate}</TagText>;
     }
     if (isDuringSale) {
       switch (item.details.__typename) {

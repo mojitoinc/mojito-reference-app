@@ -47,7 +47,7 @@ export const BidFeed = ({ bids: parentBids, profile }: any) => {
 
   return (
     <Container>
-      <Title>{strings.LOT.BID_FEED.TITLE}</Title>
+      <Title>{strings.ITEM.BID_FEED.TITLE}</Title>
       <Table>
         {bids.map((item: any, index: number) => (
           <BidFeedItem
