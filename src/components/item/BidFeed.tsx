@@ -10,10 +10,6 @@ const Container = styled.div(
   margin-top: 100px;
   max-width: ${theme.breakpoints.lg + 1}px;
   width: 100%;
-
-  ${theme.down(theme.breakpoints.lg)} {
-    padding: 0 30px;
-  }
 `
 );
 

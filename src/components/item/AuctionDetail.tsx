@@ -85,16 +85,16 @@ export const AuctionDetail: React.FC<AuctionDetailProps> = ({
 
   return (
     <Main>
-      {hasBid && !!item.details.bids.length && profile && isDuringSale && (
-        <TopBanner>
-          {item.details.bids[0].marketplaceUser?.id === profile.me?.id ? (
-            <YourBid>{strings.ITEM.HIGHEST_BID}</YourBid>
-          ) : (
-            <Outbid>{strings.ITEM.OUTBID}</Outbid>
-          )}
-        </TopBanner>
-      )}
       <StyledContent>
+        {hasBid && !!item.details.bids.length && profile && isDuringSale && (
+          <TopBanner>
+            {item.details.bids[0].marketplaceUser?.id === profile.me?.id ? (
+              <YourBid>{strings.ITEM.HIGHEST_BID}</YourBid>
+            ) : (
+              <Outbid>{strings.ITEM.OUTBID}</Outbid>
+            )}
+          </TopBanner>
+        )}
         <DetailContainer>
           <DetailLeft>
             {cmsData?.format === "image" && (

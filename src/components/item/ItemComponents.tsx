@@ -6,54 +6,52 @@ export const Main = styled.main`
 
 export const TopBanner = styled.div(
   ({ theme }) => `
-      font: ${theme.fonts.body("bold")};
-      height: 40px;
-      margin: 0 auto;
-      margin-bottom: 16px;
-      max-width: 1176px;
-      padding: 0 30px;
-      width: 100%;
-    `
+    font: ${theme.fonts.body("bold")};
+    margin: 0 auto;
+    margin-bottom: 16px;
+    max-width: ${theme.breakpoints.lg + 1}px;
+    width: 100%;
+  `
 );
 
 export const DetailContainer = styled.div(
   ({ theme }) => `
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-      justify-content: center;
-    
-      ${theme.down(theme.breakpoints.lg)} {
-        margin: 0;
-      }
-    `
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: ${theme.breakpoints.lg + 1}px;
+  
+    ${theme.down(theme.breakpoints.lg)} {
+      margin: 0;
+    }
+  `
 );
 
 export const DetailLeft = styled.div(
   ({ theme }) => `
-      margin: 0 36px 40px;
-    
-      & .image,
-      .video {
-        background-color: ${theme.colors.imageBackground};
-        border-radius: ${theme.borderRadius.medium};
-        max-height: 588px;
-        object-fit: contain;
-      }
-    
-      ${theme.down(theme.breakpoints.md)} {
-        padding: 0 30px;
-      }
-    
-      ${theme.down(theme.breakpoints.lg)} {
-        margin: 0 0 40px;
-      }
-    `
+    margin: 0 36px 40px 0;
+    max-width: 612px;
+  
+    & .image,
+    .video {
+      background-color: ${theme.colors.imageBackground};
+      border-radius: ${theme.borderRadius.medium};
+      max-height: 588px;
+      object-fit: contain;
+    }
+  
+    ${theme.down(theme.breakpoints.lg)} {
+      margin: 0 0 40px;
+    }
+  `
 );
 
 export const StyledContent = styled.div`
+  align-items: center;
   display: flex;
   flex-direction: column;
+  padding: 0 48px;
 `;
 
 export const StyledImage = styled.img(
@@ -84,12 +82,12 @@ export const Video = styled.video(
 
 export const DetailRight = styled.div(
   ({ theme }) => `
-    margin: 0 36px;
+    margin-left: 36px;
     max-width: 432px;
     width: 100%;
   
     ${theme.down(theme.breakpoints.lg)} {
-      margin: 0 30px;
+      margin: 0;
     }
   `
 );
@@ -101,10 +99,10 @@ export const Row = styled.div`
 
 export const LotId = styled.span(
   ({ theme }) => `
-      color: ${theme.colors.primary};
-      font: ${theme.fonts.body("bold")};
-      margin-right: 8px;
-    `
+    color: ${theme.colors.primary};
+    font: ${theme.fonts.body("bold")};
+    margin-right: 8px;
+  `
 );
 
 export const ItemTitle = styled.h2`

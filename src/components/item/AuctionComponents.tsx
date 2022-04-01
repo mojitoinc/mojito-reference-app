@@ -6,8 +6,8 @@ export const YourBid = styled.div(
     border: ${theme.borders.medium(theme.colors.bidBannerBorder)};
     border-radius: ${theme.borderRadius.small};
     display: flex;
-    height: 100%;
     justify-content: center;
+    padding: 4px 10px;
     width: 100%;
   `
 );
@@ -19,8 +19,8 @@ export const Outbid = styled.div(
     border-radius: ${theme.borderRadius.small};
     color: ${theme.colors.primary};
     display: flex;
-    height: 100%;
     justify-content: center;
+    padding: 4px 10px;
     width: 100%;
   `
 );
