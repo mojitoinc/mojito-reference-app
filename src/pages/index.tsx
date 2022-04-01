@@ -3,23 +3,25 @@ import Image from "next/image";
 import { useMemo } from "react";
 import styled from "styled-components";
 
-import { CollectionGridItem } from "@components";
+import { CollectionGridItem, DummyViews } from "@components";
 import { config, images, strings } from "@constants";
 import { useCollectionBySlugQuery } from "@services";
 import { MockCMSService } from "@state";
 
-const Container = styled.main`
-  background: ${({ theme }) => theme.backgrounds.grid};
+const Container = styled.main(
+  ({ theme }) => `
+  background: ${theme.backgrounds.grid};
   background-size: 100%;
   background-repeat: no-repeat;
   min-height: 100vh;
-  padding: 90px 48px;
+  padding: 90px ${theme.unit(4)};
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-`;
+`
+);
 
 const Title = styled.h1`
   margin: 0;
@@ -36,23 +38,17 @@ const Subtitle = styled.p(
 const Grid = styled.div(
   ({ theme }) => `
   display: flex;
-  align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  margin: 0 -12px;
-  max-width: 1600px;
+  margin: 0 -${theme.unit()};
+  max-width: ${theme.breakpoints.maxWidth}px;
   width: 100%;
 
-  ${theme.down(theme.breakpoints.md)} {
+  ${theme.down(theme.breakpoints.sm)} {
     display: block;
   }
 `
 );
-
-const DummyView = styled.div`
-  width: 432px;
-  margin: 0 12px;
-`;
 
 const Home: NextPage = () => {
   const cms = useMemo(() => {
@@ -93,8 +89,7 @@ const Home: NextPage = () => {
             }
           />
         ))}
-        <DummyView />
-        <DummyView />
+        <DummyViews />
       </Grid>
     </Container>
   );

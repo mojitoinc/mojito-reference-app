@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
 
-import { Button, CollectionGridItem, Modal } from "@components";
+import { Button, CollectionGridItem, DummyViews, Modal } from "@components";
 import { config, images, strings } from "@constants";
 import { useFetchAfterAuth } from "@hooks";
 import {
@@ -17,7 +17,7 @@ const Main = styled.main`
   display: flex;
   flex: 1;
   flex-direction: column;
-  padding: 92px 30px;
+  padding: ${({ theme }) => `90px ${theme.unit(4)}`};
 `;
 
 const TopContainer = styled.div`
@@ -153,11 +153,10 @@ const BidsTitle = styled.h3(
 const Grid = styled.div(
   ({ theme }) => `
   display: flex;
-  align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  margin: 0 -12px;
-  max-width: 1600px;
+  margin: 0 -${theme.unit}px;
+  max-width: ${theme.breakpoints.maxWidth}px;
   width: 100%;
 
   ${theme.down(theme.breakpoints.md)} {
@@ -165,11 +164,6 @@ const Grid = styled.div(
   }
 `
 );
-
-const DummyView = styled.div`
-  width: 432px;
-  margin: 0 12px;
-`;
 
 const Placeholder = styled.div`
   align-items: center;
@@ -376,8 +370,7 @@ const Profile: NextPage = () => {
                   }
                 />
               ))}
-              <DummyView />
-              <DummyView />
+              <DummyViews />
             </Grid>
           </>
         ) : (

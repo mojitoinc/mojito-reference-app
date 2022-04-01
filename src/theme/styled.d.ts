@@ -55,10 +55,12 @@ declare module "styled-components" {
       info: number;
       footerLogo: number;
     };
+    unit: (times?: number) => string;
     breakpoints: {
       sm: number;
       md: number;
       lg: number;
+      maxWidth: number;
     };
     up: (breakpoint: number) => string;
     down: (breakpoint: number) => string;
