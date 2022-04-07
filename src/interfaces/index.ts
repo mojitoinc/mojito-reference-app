@@ -1,2 +1,1 @@
-export * from "./auctionItems.interface";
-export * from "./navigationState.interface";
+export * from "./general.interface";

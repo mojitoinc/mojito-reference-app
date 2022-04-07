@@ -1,41 +1,42 @@
 /* eslint-disable @next/next/no-img-element */
-import React from "react";
 import Image from "next/image";
+import React from "react";
 import styled from "styled-components";
 
 import { StatusTag } from "@components";
 import { strings } from "@constants";
-import { formatCurrencyAmount } from "@utils";
-import { CollectionItemDataFragment } from "src/services/graphql/generated";
-import { CMSData } from "src/data/MockCMSService";
-import { isDuringSale, isPostSale } from "src/utils/isDuringSale";
+import { CollectionItemDataFragment } from "@services";
+import { CMSData } from "@state";
+import { formatCurrencyAmount, isDuringSale, isPostSale } from "@utils";
 
-const Lot = styled.a(
+const Item = styled.a(
   ({ theme }) => `
   border-radius: ${theme.borderRadius.medium};
   color: inherit;
   display: flex;
   flex-direction: column;
-  margin: 0 12px 68px;
-  max-width: 400px;
+  margin: 0 ${theme.unit()} 68px;
+  max-width: ${theme.unit(36)};
   text-align: left;
   text-decoration: none;
   width: 100%;
 
-  ${theme.down(theme.breakpoints.md)} {
+  ${theme.down(theme.breakpoints.sm)} {
     margin: 0 auto 68px;
   }
 `
 );
 
-const ImageWrapper = styled.div`
+const ImageWrapper = styled.div(
+  ({ theme }) => `
   position: relative;
-  height: 415px;
+  height: ${theme.unit(34.58)};
   width: 100%;
   margin-bottom: 16px;
-`;
+`
+);
 
-const LotImage = styled(Image)(
+const ItemImage = styled(Image)(
   ({ theme }) => `
   background-color: ${theme.colors.imageBackground};
   border-radius: ${theme.borderRadius.medium};
@@ -113,7 +114,7 @@ const CurrentBidAmount = styled.div(
 `
 );
 
-export interface CollectionGridItem {
+export interface CollectionGridItemProps {
   item: CollectionItemDataFragment;
   cmsData?: CMSData;
   youHoldBid?: boolean;
@@ -123,11 +124,11 @@ export const CollectionGridItem = ({
   item,
   cmsData,
   youHoldBid,
-}: CollectionGridItem) => (
-  <Lot href={`item/${item.slug}`}>
+}: CollectionGridItemProps) => (
+  <Item href={`item/${item.slug}`}>
     <ImageWrapper>
-      {cmsData && cmsData.format === "image" && (
-        <LotImage
+      {cmsData?.format === "image" && (
+        <ItemImage
           objectFit="cover"
           layout="fill"
           draggable="false"
@@ -135,7 +136,7 @@ export const CollectionGridItem = ({
           alt="lot-image"
         />
       )}
-      {cmsData && cmsData.format === "video" && (
+      {cmsData?.format === "video" && (
         <Video preload="none" poster={cmsData.preview}>
           <source src={cmsData.video} />
         </Video>
@@ -184,5 +185,5 @@ export const CollectionGridItem = ({
           </CurrentBid>
         )}
     </Row>
-  </Lot>
+  </Item>
 );

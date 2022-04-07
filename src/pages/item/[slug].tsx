@@ -1,15 +1,13 @@
-import { useMemo } from "react";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
+import { useMemo } from "react";
 
-import { config } from "@constants";
-import { useCollectionItemBySlugQuery } from "src/services/graphql/generated";
+import { AuctionDetail, BuyNowDetail } from "@components";
+import { config, strings } from "@constants";
+import { useCollectionItemBySlugQuery } from "@services";
+import { MockCMSService } from "@state";
 
-import { MockCMSService } from "../../data/MockCMSService";
-import { AuctionDetail } from "src/components/item/AuctionDetail";
-import { BuyNowDetail } from "src/components/item/BuyNowDetail";
-
-const ItemDetail: NextPage = ({ itemID }: any) => {
+const ItemDetail: NextPage = () => {
   const router = useRouter();
   const cms = useMemo(() => {
     return new MockCMSService();
@@ -54,7 +52,7 @@ const ItemDetail: NextPage = ({ itemID }: any) => {
     return <BuyNowDetail item={data} cmsData={cmsData} />;
   }
 
-  return <div>unsupported item type</div>;
+  return <div>{strings.COMMON.UNSUPPORTED_ITEM_TYPE}</div>;
 };
 
 export default ItemDetail;

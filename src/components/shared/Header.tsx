@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useAuth0 } from "@auth0/auth0-react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
+import { useAuth0 } from "@auth0/auth0-react";
 
 import { Button } from "@components";
 import { config, strings, images } from "@constants";
@@ -11,19 +11,17 @@ import { useFetchAfterAuth } from "@hooks";
 import {
   useProfileLazyQuery,
   useUpdateUserOrgSettingsMutation,
-} from "src/services/graphql/generated";
+} from "@services";
 
 const Container = styled.nav(
   ({ theme }) => `
   align-items: center;
   background-color: ${theme.colors.background};
   display: flex;
-  height: 82px;
   justify-content: space-between;
   padding: 0 48px;
 
   ${theme.down(theme.breakpoints.md)} {
-    height: 50px;
     padding: 0 16px;
   }
 `
@@ -32,11 +30,13 @@ const Container = styled.nav(
 const LogoLink = styled.a(
   ({ theme }) => `
   display: flex;
+  padding: 21px 0;
 
   ${theme.down(theme.breakpoints.md)} {
+    padding: 15px 0;
+
     &:first-child {
-      height: 24px !important;
-      width: 142px !important;
+      width: ${images.LOGO?.headerMobileWidth}px !important;
     }
   }
 `
@@ -44,12 +44,26 @@ const LogoLink = styled.a(
 
 const DivButton = styled.div(
   ({ theme }) => `
+  padding: 17px 0;
+
   ${theme.down(theme.breakpoints.md)} {
+    padding: 8px 0;
+
     & button {
       font-size: 16px;
       min-height: 35px;
       padding: 0 28px;
     }
+  }
+`
+);
+
+const ProfileLink = styled.a(
+  ({ theme }) => `
+  padding: 28px 0;
+
+  ${theme.down(theme.breakpoints.md)} {
+    padding: 12px 0;
   }
 `
 );
@@ -72,7 +86,6 @@ export const Header = () => {
     if (
       isAuthenticated &&
       profile &&
-      profile !== null &&
       profile.me?.userOrgs[0]?.id &&
       !profile.me.userOrgs[0].username
     ) {
@@ -109,15 +122,15 @@ export const Header = () => {
       {!isLoading && (
         <>
           {isAuthenticated ? (
-            <Link href="/profile">
-              <a>
+            <Link href="/profile" passHref>
+              <ProfileLink>
                 <Image
                   src={images.PROFILE_ICON?.src}
                   alt={images.PROFILE_ICON?.alt}
                   width={images.PROFILE_ICON?.width}
                   height={images.PROFILE_ICON?.height}
                 />
-              </a>
+              </ProfileLink>
             </Link>
           ) : (
             <DivButton>

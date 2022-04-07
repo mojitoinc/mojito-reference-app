@@ -1,23 +1,43 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { useRouter } from "next/router";
 import React, { ErrorInfo, useCallback } from "react";
-import { config } from "@constants";
-import { CheckoutComponentWithRequiredProps, CheckoutEventData, CheckoutEventType, CheckoutModalError, PUICheckout, PUICheckoutProps } from "@mojitoinc/mojito-mixers";
-import { REFERENCE_APP_LOGO_SX, REFERENCE_APP_THEME_OPTIONS } from "./theme/paymentModalTheme";
-import { images } from "@constants";
 
-export const CheckoutComponent: React.FC<CheckoutComponentWithRequiredProps> = (checkoutComponentProps) => {
+import {
+  CheckoutComponentWithRequiredProps,
+  CheckoutEventData,
+  CheckoutEventType,
+  CheckoutModalError,
+  PUICheckout,
+  PUICheckoutProps,
+} from "@mojitoinc/mojito-mixers";
+
+import { config, images } from "@constants";
+import {
+  REFERENCE_APP_LOGO_SX,
+  REFERENCE_APP_THEME_OPTIONS,
+} from "./theme/paymentModalTheme";
+
+export const CheckoutComponent: React.FC<CheckoutComponentWithRequiredProps> = (
+  checkoutComponentProps
+) => {
   const router = useRouter();
 
-  const { loginWithRedirect, isAuthenticated, isLoading: isAuthenticatedLoading } = useAuth0();
+  const {
+    loginWithRedirect,
+    isAuthenticated,
+    isLoading: isAuthenticatedLoading,
+  } = useAuth0();
 
   const onGoTo = useCallback(() => {
     router.push("/profile/invoices");
   }, [router]);
 
-  const onRemoveUrlParams = useCallback((cleanURL: string) => {
-    router.replace(cleanURL, undefined, { shallow: true });
-  }, [router]);
+  const onRemoveUrlParams = useCallback(
+    (cleanURL: string) => {
+      router.replace(cleanURL, undefined, { shallow: true });
+    },
+    [router]
+  );
 
   const handleLogin = useCallback(async () => {
     loginWithRedirect({
@@ -28,19 +48,25 @@ export const CheckoutComponent: React.FC<CheckoutComponentWithRequiredProps> = (
     });
   }, [loginWithRedirect, router]);
 
-  const handleEvent = useCallback((eventType: CheckoutEventType, eventData: CheckoutEventData) => {
-    // console.log(`🎯 ${ eventType }`, eventData);
-  }, []);
+  const handleEvent = useCallback(
+    (eventType: CheckoutEventType, eventData: CheckoutEventData) => {
+      // console.log(`🎯 ${ eventType }`, eventData);
+    },
+    []
+  );
 
   const handleError = useCallback((error: CheckoutModalError) => {
     // console.log(error);
   }, []);
 
-  const handleCatch = useCallback((error: Error, errorInfo?: ErrorInfo): void | true => {
-    // console.log(error, errorInfo);
-    
-    return true;
-  }, []);
+  const handleCatch = useCallback(
+    (error: Error, errorInfo?: ErrorInfo): void | true => {
+      // console.log(error, errorInfo);
+
+      return true;
+    },
+    []
+  );
 
   const checkoutProps: PUICheckoutProps = {
     ...checkoutComponentProps,
@@ -104,4 +130,4 @@ export const CheckoutComponent: React.FC<CheckoutComponentWithRequiredProps> = (
   };
 
   return <PUICheckout {...checkoutProps} />;
-}
+};

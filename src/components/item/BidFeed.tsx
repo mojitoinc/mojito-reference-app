@@ -10,10 +10,6 @@ const Container = styled.div(
   margin-top: 100px;
   max-width: ${theme.breakpoints.lg + 1}px;
   width: 100%;
-
-  ${theme.down(theme.breakpoints.lg)} {
-    padding: 0 30px;
-  }
 `
 );
 
@@ -47,7 +43,7 @@ export const BidFeed = ({ bids: parentBids, profile }: any) => {
 
   return (
     <Container>
-      <Title>{strings.LOT.BID_FEED.TITLE}</Title>
+      <Title>{strings.ITEM.BID_FEED.TITLE}</Title>
       <Table>
         {bids.map((item: any, index: number) => (
           <BidFeedItem

@@ -15,16 +15,20 @@ export const strings = {
     SEE_MORE: "See more",
     SEE_LESS: "See less",
     YOU: "You",
+    ERROR_GETTING_DATA: "error getting data",
+    UNSUPPORTED_ITEM_TYPE: "unsupported item type",
+    INVALID_TYPE: "invalid type",
   },
   GRID: {
     TITLE: "Cantina",
     SUBTITLE: "Example NFT Marketplace",
     DATE_AND_LOCATION: "Dec 7, 2021 Museo de Arte de Puerto Rico",
   },
-  LOT: {
+  ITEM: {
     LOGIN_BUTTON: "SIGN IN",
     BID_AGAIN_BUTTON: "BID AGAIN!",
     BID_NOW_BUTTON: "BID NOW!",
+    BUY_NOW: "BUY NOW",
     BID_SENT: "YOUR BID WAS SENT",
     SET_USERNAME: "SET USERNAME TO BID",
     AVAILABLE_SOON: "AVAILABLE SOON",
@@ -32,6 +36,7 @@ export const strings = {
     OUTBID: "You have been outbid! ⚠️",
     WINNING_BID: "Winning Bid: ",
     BY: "By ",
+    SOLD_OUT: "Sold out",
     BID_FEED: {
       TITLE: "Bid feed",
       WARNING_MESSAGE:

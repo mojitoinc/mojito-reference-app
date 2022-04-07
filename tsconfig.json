@@ -20,6 +20,7 @@
       "@constants": ["./src/constants/index.ts"],
       "@hooks": ["./src/hooks/index.ts"],
       "@interfaces": ["./src/interfaces/index.ts"],
+      "@services": ["./src/services/graphql/generated.tsx"],
       "@state": ["./src/data/index.ts"],
       "@theme/*": ["./src/theme/*"],
       "@utils": ["./src/utils/index.ts"]
