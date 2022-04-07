@@ -10,6 +10,7 @@ module.exports = {
       "c7.staticflickr.com",
       "placeimg.com",
       "cloudflare-ipfs.com",
+      "loremflickr.com",
     ],
   },
   webpack: (config) => {
