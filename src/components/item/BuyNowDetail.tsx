@@ -6,7 +6,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import {
   CheckoutComponentProps,
   useCheckoutOverlay,
-} from "@mojitoinc/mojito-mixers";
+} from "@mojitonft/mojito-mixers";
 
 import { config, images, strings } from "@constants";
 import { AuctionDetailProps } from "@interfaces";
