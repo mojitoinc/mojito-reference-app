@@ -1,8 +1,8 @@
 import type { GetServerSideProps, NextPage } from "next";
 import { useRouter } from "next/router";
-import { hasAccessToToken } from "src/services/tokens";
+import hasAccessToToken from "src/services/hasAccessToToken";
 
-const TokensPage: NextPage = () => {
+const SuccessPage: NextPage = () => {
   const router = useRouter();
 
   const { token } = router.query;
@@ -37,4 +37,4 @@ const getServerSideProps: GetServerSideProps = async (context) => {
 };
 
 export { getServerSideProps };
-export default TokensPage;
+export default SuccessPage;
