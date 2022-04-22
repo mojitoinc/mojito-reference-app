@@ -56,6 +56,7 @@ const CloseButton = styled.button(
 interface ModalProps {
   onClose: () => void;
   width?: string;
+  children: React.ReactNode;
 }
 
 export const Modal: React.FC<ModalProps> = ({ onClose, children, width }) => (
