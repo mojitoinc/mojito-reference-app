@@ -32,8 +32,6 @@ export const CheckoutComponent: React.FC<CheckoutComponentWithRequiredProps> = (
   const getAuthenticationToken = useCallback(async () => {
     const token = await getIdTokenClaims();
 
-    console.log("getAuthenticationToken =", token?.__raw || "");
-
     return token?.__raw || "";
   }, [getIdTokenClaims]);
 
