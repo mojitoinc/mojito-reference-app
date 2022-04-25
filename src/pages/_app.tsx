@@ -14,8 +14,9 @@ import { images, strings } from "@constants";
 import { AuthProvider, MojitoApiProvider } from "@state";
 import { GlobalStyles } from "@theme/GlobalStyles";
 import { theme } from "@theme/theme";
+import  { Layout } from "../components/shared";
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps }: AppProps) :JSX.Element{
   const router = useRouter();
   const paymentIdParam =
     router.query[THREEDS_FLOW_SEARCH_PARAM_SUCCESS_KEY]?.toString();
@@ -47,10 +48,12 @@ function MyApp({ Component, pageProps }: AppProps) {
               checkoutComponent={CheckoutComponent}
               doNotRenderPaymentUI={doNotRenderPaymentUI}
             >
-              <GlobalStyles />
-              <Header />
-              <Component {...pageProps} />
-              <Footer />
+             <Layout >
+                <GlobalStyles />
+                <Header />
+                <Component {...pageProps} />
+                <Footer />
+              </Layout>
             </CheckoutOverlayProvider>
           </MojitoApiProvider>
         </AuthProvider>

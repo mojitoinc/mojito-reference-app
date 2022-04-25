@@ -12,6 +12,7 @@ import {
   useProfileLazyQuery,
   useUpdateUserOrgSettingsMutation,
 } from "@services";
+import { ConnectWallet } from "./ConnectWallet";
 
 const Container = styled.nav(
   ({ theme }) => `
@@ -139,6 +140,7 @@ export const Header = () => {
           )}
         </>
       )}
+      <ConnectWallet/>
     </Container>
   );
 };
