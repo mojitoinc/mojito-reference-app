@@ -5,34 +5,34 @@ import hasAccessToToken from "src/services/hasAccessToToken";
 const SuccessPage: NextPage = () => {
   const router = useRouter();
 
-  const { token } = router.query;
+  const { id } = router.query;
 
-  return <div>You have access to the token: {token}</div>;
+  return <div>You have access to the token: {id}</div>;
 };
 
 const getServerSideProps: GetServerSideProps = async (context) => {
-  const redirectToPurchase = (token?: string) => {
+  const redirectToPurchase = (id?: string) => {
     return {
       redirect: {
-        destination: token ? `/purchase/${token}` : "",
+        destination: id ? `/purchase/${id}` : "",
         permanent: false,
       },
     };
   };
 
-  const token = context.params?.token;
+  const id = context.params?.id;
 
-  if (typeof token !== "string") {
+  if (typeof id !== "string") {
     return redirectToPurchase();
   }
 
-  const hasAccess = hasAccessToToken(token);
+  const hasAccess = hasAccessToToken(id);
   if (hasAccess) {
     return {
       props: {},
     };
   } else {
-    return redirectToPurchase(token);
+    return redirectToPurchase(id);
   }
 };
 
