@@ -34,14 +34,12 @@ const getServerSideProps: GetServerSideProps = async (context) => {
   }
 
   const token = convertToToken(mojitoId);
-  
-  if (hasAccessToToken(token)) {
-    return getRedirect("tokens", mojitoId);
-  } else {
-    return {
-      props: { token },
-    };
-  }
+
+  return hasAccessToToken(token)
+    ? getRedirect("tokens", mojitoId)
+    : {
+        props: { token },
+      };
 };
 
 export { getServerSideProps };

@@ -23,7 +23,7 @@ const SuccessPage: NextPage<IProps> = ({ token }) => {
     return cms.getData(mojitoId);
   }, [cms, mojitoId]);
 
-  return <TokenDetail cmsData={cmsData}></TokenDetail>
+  return <TokenDetail cmsData={cmsData}></TokenDetail>;
 };
 
 const getServerSideProps: GetServerSideProps = async (context) => {
@@ -35,13 +35,11 @@ const getServerSideProps: GetServerSideProps = async (context) => {
 
   const token = convertToToken(mojitoId);
 
-  if (!hasAccessToToken(token)) {
-    return getRedirect("purchase", mojitoId);
-  } else {
-    return {
-      props: { token },
-    };
-  }
+  return hasAccessToToken(token)
+    ? {
+        props: { token },
+      }
+    : getRedirect("purchase", mojitoId);
 };
 
 export { getServerSideProps };
