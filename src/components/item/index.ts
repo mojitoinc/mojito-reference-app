@@ -7,3 +7,4 @@ export * from "./BuyNowDetail";
 export * from "./BuyNowModal";
 export * from "./ItemComponents";
 export * from "./ModalComponents";
+export * from "./TokenDetail";

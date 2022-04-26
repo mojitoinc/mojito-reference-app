@@ -3,6 +3,9 @@ import { useRouter } from "next/router";
 import hasAccessToToken from "src/services/hasAccessToToken";
 import convertToToken from "src/services/convertToToken";
 import { getRedirect } from "@utils";
+import { MockCMSService } from "@state";
+import { useMemo } from "react";
+import { AuctionDetail, BuyNowDetail, TokenDetail } from "@components";
 
 interface IProps {
   token: string;
@@ -10,8 +13,17 @@ interface IProps {
 
 const SuccessPage: NextPage<IProps> = ({ token }) => {
   const router = useRouter();
+  const cms = useMemo(() => {
+    return new MockCMSService();
+  }, []);
 
-  return <div>You have access to the token: {token}</div>;
+  const mojitoId = router.query.id as string;
+
+  const cmsData = useMemo(() => {
+    return cms.getData(mojitoId);
+  }, [cms, mojitoId]);
+
+  return <TokenDetail cmsData={cmsData}></TokenDetail>
 };
 
 const getServerSideProps: GetServerSideProps = async (context) => {
@@ -23,7 +35,7 @@ const getServerSideProps: GetServerSideProps = async (context) => {
 
   const token = convertToToken(mojitoId);
 
-  if (hasAccessToToken(token)) {
+  if (!hasAccessToToken(token)) {
     return getRedirect("purchase", mojitoId);
   } else {
     return {
