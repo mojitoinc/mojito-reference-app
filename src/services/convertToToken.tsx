@@ -1,7 +1,7 @@
 // TODO: write detailed implementation
 
 const convertToToken = (mojitoId: string): string => {
-  return mojitoId === "00000000-0000-0000-0000-000000000000"
+  return mojitoId === "1234567890"
     ? "1234567890"
     : "";
 };
