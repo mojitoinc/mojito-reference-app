@@ -1,7 +1,11 @@
 // TODO: write detailed implementation
-const hasAccessToToken = (mojitoId: string): boolean => {
-  // TODO: get token using mojitoId
-  return mojitoId === "00000000-0000-0000-0000-000000000000"
+
+const hasAccessToToken = (token: string): boolean => {
+  if (token === "1234567890") {
+    return true;
+  } else {
+    return false;
+  }
 };
 
 export default hasAccessToToken;

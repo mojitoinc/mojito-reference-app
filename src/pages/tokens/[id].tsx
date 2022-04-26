@@ -1,38 +1,34 @@
 import type { GetServerSideProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import hasAccessToToken from "src/services/hasAccessToToken";
+import convertToToken from "src/services/convertToToken";
+import { getRedirect } from "@utils";
 
-const SuccessPage: NextPage = () => {
+interface IProps {
+  token: string;
+}
+
+const SuccessPage: NextPage<IProps> = ({ token }) => {
   const router = useRouter();
 
-  const { id } = router.query;
-
-  return <div>You have access to the token: {id}</div>;
+  return <div>You have access to the token: {token}</div>;
 };
 
 const getServerSideProps: GetServerSideProps = async (context) => {
-  const redirectToPurchase = (id?: string) => {
-    return {
-      redirect: {
-        destination: id ? `/purchase/${id}` : "",
-        permanent: false,
-      },
-    };
-  };
+  const mojitoId = context.params?.id;
 
-  const id = context.params?.id;
-
-  if (typeof id !== "string") {
-    return redirectToPurchase();
+  if (typeof mojitoId !== "string") {
+    return getRedirect();
   }
 
-  const hasAccess = hasAccessToToken(id);
-  if (hasAccess) {
-    return {
-      props: {},
-    };
+  const token = convertToToken(mojitoId);
+
+  if (hasAccessToToken(token)) {
+    return getRedirect("purchase", mojitoId);
   } else {
-    return redirectToPurchase(id);
+    return {
+      props: { token },
+    };
   }
 };
 
