@@ -37,7 +37,7 @@ export class MockCMSService {
   }
 
   private mockData(itemId: string): CMSData {
-    const itemIdHex = itemId.replaceAll("-", "");
+    const itemIdHex = itemId.replace(/-/g, '');
     const itemIdNum = parseInt(itemIdHex, 16);
     faker.seed(itemIdNum);
     console.log({ itemId, itemIdHex, itemIdNum });
