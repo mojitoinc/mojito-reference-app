@@ -2,6 +2,7 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { ThemeProvider } from "styled-components";
+import { StyledEngineProvider } from '@mui/material/styles';
 
 import {
   CheckoutOverlayProvider,
@@ -40,6 +41,8 @@ function MyApp({ Component, pageProps }: AppProps) :JSX.Element{
         <link rel="icon" href={images.FAVICON} />
       </Head>
       <ThemeProvider theme={theme}>
+      <StyledEngineProvider injectFirst>
+
         <AuthProvider>
           <MojitoApiProvider>
             <CheckoutOverlayProvider
@@ -56,7 +59,8 @@ function MyApp({ Component, pageProps }: AppProps) :JSX.Element{
               </Layout>
             </CheckoutOverlayProvider>
           </MojitoApiProvider>
-        </AuthProvider>
+          </AuthProvider>
+          </StyledEngineProvider>
       </ThemeProvider>
     </>
   );

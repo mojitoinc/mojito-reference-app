@@ -2277,3 +2277,22 @@ export function useGetUserActiveBidsLazyQuery(baseOptions?: Apollo.LazyQueryHook
 export type GetUserActiveBidsQueryHookResult = ReturnType<typeof useGetUserActiveBidsQuery>;
 export type GetUserActiveBidsLazyQueryHookResult = ReturnType<typeof useGetUserActiveBidsLazyQuery>;
 export type GetUserActiveBidsQueryResult = Apollo.QueryResult<GetUserActiveBidsQuery, GetUserActiveBidsQueryVariables>;
+
+export type VerifySignatureMutation = { __typename?: 'Mutation', verifySignature: { signature: string, message: string, address: string } };
+export type VerifySignatureVariables = Exact<{
+  signature: Scalars['String'];
+  message: Scalars['String'];
+  address: Scalars['String'];
+}>;
+
+export const VerifySignature = gql`
+mutation VerifySignature($signature: String!, $message: String!, $address: String!) {
+  verifySignature(signature: $signature, message: $message, address: $address)
+}
+`;
+
+export function useVerifySignature(baseOptions?: Apollo.MutationHookOptions<VerifySignatureMutation, VerifySignatureVariables>) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useMutation<VerifySignatureMutation, VerifySignatureVariables>(VerifySignature, options);
+}
+export type VerifySignatureMessageFn = Apollo.MutationFunction<VerifySignatureMutation, VerifySignatureVariables>;

@@ -1,9 +1,11 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { setupAll, onConnect } from "../../utils/connectWallet";
 import ConnectContext from "../../utils/ConnectContext";
 import DropdownMenu from "./DropdownMenu";
 import styled from "styled-components";
+import { SnackbarAlert } from "./SnackbarAlert";
 import { media } from "../../utils/media";
+import { useVerifySignature } from "@services";
 
 const ConnectBtn = styled.div`
   position: relative;
@@ -55,7 +57,10 @@ export const DisconnectBtn = styled.div`
 `;
 
 export const ConnectWallet: React.FC = () => {
+  const [visbleAlert,setVisibleAlert] = useState<boolean>(false);
+  const [isVerified,setVerify] = useState<boolean>(false);
   const { connect, setConnect } = useContext(ConnectContext);
+  const [verifySignature] = useVerifySignature();
 
   const connectWeb3 = async () => {
     const modal = await setupAll();
@@ -74,6 +79,25 @@ export const ConnectWallet: React.FC = () => {
         chainId,
         modal,
       });
+
+      const message = 'Test meta mask';
+      
+      const signer = provider.provider.getSigner(); 
+      const signature = await signer.signMessage(message);
+      const address = await signer.getAddress()
+
+      try {
+        const result = await verifySignature({
+          variables: {
+            signature:signature, message: message, address: address
+          }
+        })
+        const value = result?.data?.verifySignature ?? false
+        setVerify(value);
+      } catch (err) {
+        setVerify(false)
+      }
+      setVisibleAlert(true);
 
       provider.web3.on("accountsChanged", (accounts: string[]) => {
         setConnect((prevValue) => ({
@@ -95,7 +119,9 @@ export const ConnectWallet: React.FC = () => {
       });
     }
   };
-
+  const handleClose = () => {
+    setVisibleAlert(false);
+  }
   const renderConnectBtn = () => {
     if (connect.connected && connect.account) {
       return (
@@ -118,7 +144,14 @@ export const ConnectWallet: React.FC = () => {
       );
     }
   };
-  return renderConnectBtn();
+
+  return <>
+    {renderConnectBtn()}
+    <SnackbarAlert show={visbleAlert}
+        severity={isVerified ? "success" : "error"}
+        message={isVerified ? 'Your public address and  signature is valid' : 'Not valid'}
+        onClose={handleClose} />
+    </>;
 };
 
 export default ConnectWallet;
