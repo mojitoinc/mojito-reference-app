@@ -1,5 +1,5 @@
 import "@mui/material/styles/createPalette";
-import { PalettePaymentUI } from "@mojitoinc/mojito-mixers";
+import { PalettePaymentUI } from "@mojitonft/mojito-mixers";
 
 declare module "@mui/material/styles/createPalette" {
   interface Palette {

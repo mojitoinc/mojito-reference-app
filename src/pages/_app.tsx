@@ -7,7 +7,7 @@ import {
   CheckoutOverlayProvider,
   THREEDS_FLOW_SEARCH_PARAM_ERROR_KEY,
   THREEDS_FLOW_SEARCH_PARAM_SUCCESS_KEY,
-} from "@mojitoinc/mojito-mixers";
+} from "@mojitonft/mojito-mixers";
 
 import { Header, Footer, CheckoutComponent } from "@components";
 import { images, strings } from "@constants";

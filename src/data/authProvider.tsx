@@ -15,10 +15,10 @@ export const AuthProvider = ({
 }) => {
   const router = useRouter();
 
-  const onRedirectCallback = (appState: IAuth0State) => {
+  const onRedirectCallback = (appState?: IAuth0State) => {
     router.push({
       pathname: appState?.returnTo || window.location.pathname,
-      query: { redirect_url: appState?.origin, ...appState.query },
+      query: { redirect_url: appState?.origin, ...appState?.query },
     });
   };
 

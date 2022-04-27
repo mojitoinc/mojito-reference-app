@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { useCallback } from "react";
 
-import { PUISuccess } from "@mojitoinc/mojito-mixers";
+import { PUISuccess } from "@mojitonft/mojito-mixers";
 
 import {
   REFERENCE_APP_LOGO_SX,
