@@ -1,5 +1,6 @@
 import React, { useCallback } from "react";
 import Snackbar from '@material-ui/core/Snackbar';
+import { SnackbarCloseReason } from '@material-ui/core';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 
 type Severity = "error" | "success" | "info" | "warning";
@@ -15,15 +16,18 @@ interface SnackbarAlertProps {
 }
 
 export const SnackbarAlert = ({ show, message, severity = 'success' , onClose}: SnackbarAlertProps) => {
-  const handleClose = (event: string, reason:string) => {
+  const handleClose = (event: React.SyntheticEvent<Element, Event>,) => {
+    onClose && onClose();
+  };
+  const _handleSnackBarClose = (event: React.SyntheticEvent<Element, Event>, reason?: SnackbarCloseReason) => {
     if (reason === 'clickaway' || onClose === undefined) {
       return;
     }
-    onClose();
+    onClose && onClose();
   };
   return (
     <React.Fragment>
-        <Snackbar open={show} autoHideDuration={6000}  onClose={handleClose}>
+        <Snackbar open={show} autoHideDuration={6000}  onClose={_handleSnackBarClose}>
             <Alert  severity={severity}  onClose={handleClose}>
             {message}
         </Alert>
