@@ -20,7 +20,7 @@ export const SnackbarAlert = ({ show, message, severity = 'success' , onClose}: 
     onClose && onClose();
   };
   const _handleSnackBarClose = (event: React.SyntheticEvent<Element, Event>, reason?: SnackbarCloseReason) => {
-    if (reason === 'clickaway' || onClose === undefined) {
+    if (reason === 'clickaway') {
       return;
     }
     onClose && onClose();

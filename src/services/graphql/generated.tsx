@@ -2296,3 +2296,22 @@ export function useVerifySignature(baseOptions?: Apollo.MutationHookOptions<Veri
   return Apollo.useMutation<VerifySignatureMutation, VerifySignatureVariables>(VerifySignature, options);
 }
 export type VerifySignatureMessageFn = Apollo.MutationFunction<VerifySignatureMutation, VerifySignatureVariables>;
+
+export type CheckTokenOwnersMutation = { __typename?: 'Mutation', checkTokenOwners: { contractId: any, walletAddress: string, rangeStart: number, rangeEnd: number } };
+export type CheckTokenOwnersVariables = Exact<{
+  contractId: Scalars['UUID1'];
+  walletAddress: Scalars['String'];
+  rangeStart: Scalars['Int'];
+  rangeEnd: Scalars['Int'];
+}>;
+
+export const CheckTokenOwners = gql`
+mutation CheckTokenOwners($contractId: UUID1!, $walletAddress: String!, $rangeStart: Int!, $rangeEnd: Int!) {
+  checkTokenOwners(contractId: $contractId, walletAddress: $walletAddress, rangeStart: $rangeStart, rangeEnd: $rangeEnd)
+}
+`;
+export function userCheckTokenOwners(baseOptions?: Apollo.MutationHookOptions<CheckTokenOwnersMutation, CheckTokenOwnersVariables>) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useMutation<CheckTokenOwnersMutation, CheckTokenOwnersVariables>(CheckTokenOwners, options);
+}
+export type checkTokenOwnersFn = Apollo.MutationFunction<CheckTokenOwnersMutation, CheckTokenOwnersVariables>;

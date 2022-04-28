@@ -60,7 +60,7 @@ function MyApp({ Component, pageProps }: AppProps) :JSX.Element{
             </CheckoutOverlayProvider>
           </MojitoApiProvider>
           </AuthProvider>
-          </StyledEngineProvider>
+        </StyledEngineProvider>
       </ThemeProvider>
     </>
   );

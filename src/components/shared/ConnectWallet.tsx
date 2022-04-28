@@ -5,7 +5,7 @@ import DropdownMenu from "./DropdownMenu";
 import styled from "styled-components";
 import { SnackbarAlert } from "./SnackbarAlert";
 import { media } from "../../utils/media";
-import { useVerifySignature } from "@services";
+import { useVerifySignature, userCheckTokenOwners } from "@services";
 
 const ConnectBtn = styled.div`
   position: relative;
@@ -61,6 +61,7 @@ export const ConnectWallet: React.FC = () => {
   const [isVerified,setVerify] = useState<boolean>(false);
   const { connect, setConnect } = useContext(ConnectContext);
   const [verifySignature] = useVerifySignature();
+  const [checkTokenOwners] = userCheckTokenOwners();
 
   const connectWeb3 = async () => {
     const modal = await setupAll();
@@ -99,6 +100,16 @@ export const ConnectWallet: React.FC = () => {
       }
       setVisibleAlert(true);
 
+      try {
+        console.log('address',address)
+        const result = await checkTokenOwners({
+          variables: {
+            contractId: "81503ff9-cb5c-428e-bb37-7877b7bf946c", walletAddress:  address,rangeStart: 1, rangeEnd: 67
+          }
+        })
+        console.log('result', result)
+      } catch (err) {
+       }
       provider.web3.on("accountsChanged", (accounts: string[]) => {
         setConnect((prevValue) => ({
           ...prevValue,
@@ -150,7 +161,7 @@ export const ConnectWallet: React.FC = () => {
     <SnackbarAlert show={visbleAlert}
         severity={isVerified ? "success" : "error"}
         message={isVerified ? 'Your public address and  signature is valid' : 'Not valid'}
-        onClose={handleClose} />
+      onClose={handleClose} />
     </>;
 };
 
