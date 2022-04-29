@@ -14,7 +14,11 @@ import {
 } from "@apollo/client";
 import { config } from "@constants";
 
-export const MojitoApiProvider: FC = ({ children }) => {
+interface MojitoApiProviderProps {
+  children: React.ReactNode;
+}
+
+export const MojitoApiProvider: FC<MojitoApiProviderProps> = ({ children }) => {
   const { getIdTokenClaims } = useAuth0();
 
   const dataNormalizers = new ApolloLink((operation, forward) => {

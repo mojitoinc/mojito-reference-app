@@ -9,7 +9,7 @@ import {
   CheckoutModalError,
   PUICheckout,
   PUICheckoutProps,
-} from "@mojitoinc/mojito-mixers";
+} from "@mojitonft/mojito-mixers";
 
 import { config, images } from "@constants";
 import {
@@ -26,7 +26,14 @@ export const CheckoutComponent: React.FC<CheckoutComponentWithRequiredProps> = (
     loginWithRedirect,
     isAuthenticated,
     isLoading: isAuthenticatedLoading,
+    getIdTokenClaims,
   } = useAuth0();
+
+  const getAuthenticationToken = useCallback(async () => {
+    const token = await getIdTokenClaims();
+
+    return token?.__raw || "";
+  }, [getIdTokenClaims]);
 
   const onGoTo = useCallback(() => {
     router.push("/profile/invoices");
@@ -73,6 +80,7 @@ export const CheckoutComponent: React.FC<CheckoutComponentWithRequiredProps> = (
 
     // ProviderInjector:
     uri: config.MOJITO_API_URL || "",
+    getAuthenticationToken,
 
     // Modal:
     // open,
