@@ -25,6 +25,7 @@
     "@walletconnect/web3-provider": "^1.4.1",
     "ahooks": "^2.10.12",
     "graphql": "^16.0.1",
+    "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.34",
     "next": "^12.1.5",
