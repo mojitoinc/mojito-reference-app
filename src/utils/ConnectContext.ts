@@ -6,9 +6,9 @@ import Web3Modal from "web3modal";
 export interface ConnectType {
   connected: boolean;
   chainId: number;
-  signer: Signer;
-  provider: Provider;
-  account: string;
+  signer: Signer | null;
+  provider: Provider | null;
+  account: string | null;
   modal?: Web3Modal;
 }
 export interface ContextType {

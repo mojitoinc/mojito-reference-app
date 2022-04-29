@@ -83,7 +83,7 @@ const DropdownMenu: React.FC<{ address: string }> = ({ address }) => {
       signer: null,
       provider: null,
       connected: false,
-      chainId: parseInt(process.env.NEXT_PUBLIC_CHAINID),
+      chainId: parseInt(process.env.NEXT_PUBLIC_CHAINID!),
     });
   };
 
