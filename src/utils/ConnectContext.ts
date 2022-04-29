@@ -15,7 +15,7 @@ export interface ContextType {
   connect: ConnectType;
   setConnect(f: ConnectType | ((prev: ConnectType) => ConnectType)): void;
 }
-const Context = createContext<ContextType>(null);
+const Context = createContext<ContextType>({} as ContextType);
 
 export default Context;
 

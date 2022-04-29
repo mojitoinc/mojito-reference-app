@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ReactNode } from "react";
 import ConnectContext, { ConnectType } from "../../utils/ConnectContext";
 
 interface LayoutProps {
-  children: [JSX.Element]
+  children: ReactNode
 }
 
 export const Layout = ( { children }:LayoutProps ) => {
