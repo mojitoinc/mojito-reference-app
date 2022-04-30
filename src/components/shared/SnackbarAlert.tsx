@@ -27,7 +27,7 @@ export const SnackbarAlert = ({ show, message, severity = 'success' , onClose}: 
   };
   return (
     <React.Fragment>
-        <Snackbar open={show} autoHideDuration={6000}  onClose={_handleSnackBarClose}>
+        <Snackbar open={show} autoHideDuration={3000}  onClose={_handleSnackBarClose}>
             <Alert  severity={severity}  onClose={handleClose}>
             {message}
         </Alert>

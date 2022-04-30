@@ -1,9 +1,5 @@
 import { useState, useContext } from "react";
-import Button from "@material-ui/core/Button";
-import Menu, { MenuProps } from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
+import { Button, Menu, MenuProps, MenuItem, ListItemIcon, ListItemText } from "@material-ui/core";
 import PersonIcon from "@material-ui/icons/Person";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { useRouter } from "next/router";

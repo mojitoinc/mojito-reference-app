@@ -1,5 +1,4 @@
 import { useContext, useState } from "react";
-import { get } from "lodash";
 import { setupAll, onConnect } from "../../utils/connectWallet";
 import ConnectContext from "../../utils/ConnectContext";
 import DropdownMenu from "./DropdownMenu";
@@ -91,11 +90,11 @@ export const ConnectWallet: React.FC = () => {
       try {
         const result = await verifySignature({
           variables: {
-            signature:signature, message: message, address: address
+            signature, message, address
           }
         })
-        const value = get(result, 'data.verifySignature', false);
-        setVerify(value);
+        const value =  (result?.data?.verifySignature) ?? false
+        setVerify(value as boolean);
       } catch (err) {
         setVerify(false)
       }
