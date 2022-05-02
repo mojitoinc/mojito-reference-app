@@ -58,7 +58,7 @@ export const DisconnectBtn = styled.div`
 
 export const ConnectWallet: React.FC = () => {
   const [visbleAlert,setVisibleAlert] = useState<boolean>(false);
-  const [isVerified,setVerify] = useState<boolean>(false);
+  const [isValidAccount,setValidAccount] = useState<boolean>(false);
   const { connect, setConnect } = useContext(ConnectContext);
   const [verifySignature] = useVerifySignature();
   const [checkTokenOwners] = userCheckTokenOwners();
@@ -88,27 +88,24 @@ export const ConnectWallet: React.FC = () => {
       const address = await signer.getAddress()
 
       try {
-        const result = await verifySignature({
+        await verifySignature({
           variables: {
             signature, message, address
           }
         })
-        const value =  (result?.data?.verifySignature) ?? false
-        setVerify(value as boolean);
-      } catch (err) {
-        setVerify(false)
-      }
-      setVisibleAlert(true);
+      } catch (e) { }
 
       try {
-        console.log('address',address)
         const result = await checkTokenOwners({
           variables: {
             contractId: "81503ff9-cb5c-428e-bb37-7877b7bf946c", walletAddress:  address,rangeStart: 1, rangeEnd: 67
           }
         })
-        console.log('result', result)
+        const value =  (result?.data?.checkTokenOwners) ?? false
+        setValidAccount(value as boolean);
+        setVisibleAlert(true);
       } catch (err) {
+        setValidAccount(false)
        }
       provider.web3.on("accountsChanged", (accounts: string[]) => {
         setConnect((prevValue) => ({
@@ -159,8 +156,8 @@ export const ConnectWallet: React.FC = () => {
   return <>
     {renderConnectBtn()}
     <SnackbarAlert show={visbleAlert}
-        severity={isVerified ? "success" : "error"}
-        message={isVerified ? 'Your public address and  signature is valid' : 'Not valid'}
+        severity={isValidAccount ? "success" : "error"}
+        message={isValidAccount ? 'Your account has valid access!' : 'Your account does not have access.'}
       onClose={handleClose} />
     </>;
 };
