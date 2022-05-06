@@ -1,9 +1,10 @@
 import { useContext, useState } from "react";
+import { useRouter } from "next/router";
 import { setupAll, onConnect } from "../../utils/connectWallet";
 import ConnectContext from "../../utils/ConnectContext";
+import { useWallet} from "@utils";
 import DropdownMenu from "./DropdownMenu";
 import styled from "styled-components";
-import { SnackbarAlert } from "./SnackbarAlert";
 import { media } from "../../utils/media";
 import { useVerifySignature, userCheckTokenOwners } from "@services";
 
@@ -57,11 +58,12 @@ export const DisconnectBtn = styled.div`
 `;
 
 export const ConnectWallet: React.FC = () => {
-  const [visbleAlert,setVisibleAlert] = useState<boolean>(false);
-  const [isValidAccount,setValidAccount] = useState<boolean>(false);
+  const router = useRouter();
+
   const { connect, setConnect } = useContext(ConnectContext);
   const [verifySignature] = useVerifySignature();
   const [checkTokenOwners] = userCheckTokenOwners();
+  const {setWallet} = useWallet();
 
   const connectWeb3 = async () => {
     const modal = await setupAll();
@@ -101,12 +103,12 @@ export const ConnectWallet: React.FC = () => {
             contractId: "81503ff9-cb5c-428e-bb37-7877b7bf946c", walletAddress:  address,rangeStart: 1, rangeEnd: 67
           }
         })
-        const value =  (result?.data?.checkTokenOwners) ?? false
-        setValidAccount(value as boolean);
-        setVisibleAlert(true);
-      } catch (err) {
-        setValidAccount(false)
-       }
+        const value = ((result?.data?.checkTokenOwners) ?? false) as boolean
+        setWallet({ isTokenOwner: value });
+        const page = value ? '/wallet/connected' : '/wallet/purchase'; 
+        router.push(page);
+      } catch (err) { }
+      
       provider.web3.on("accountsChanged", (accounts: string[]) => {
         setConnect((prevValue) => ({
           ...prevValue,
@@ -127,9 +129,7 @@ export const ConnectWallet: React.FC = () => {
       });
     }
   };
-  const handleClose = () => {
-    setVisibleAlert(false);
-  }
+ 
   const renderConnectBtn = () => {
     if (connect.connected && connect.account) {
       return (
@@ -153,13 +153,7 @@ export const ConnectWallet: React.FC = () => {
     }
   };
 
-  return <>
-    {renderConnectBtn()}
-    <SnackbarAlert show={visbleAlert}
-        severity={isValidAccount ? "success" : "error"}
-        message={isValidAccount ? 'Your account has valid access!' : 'Your account does not have access.'}
-      onClose={handleClose} />
-    </>;
+  return renderConnectBtn();
 };
 
 export default ConnectWallet;
