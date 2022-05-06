@@ -1,5 +1,7 @@
-import { useContext, useState } from "react";
+import { useContext , useState} from "react";
 import { useRouter } from "next/router";
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
 import { setupAll, onConnect } from "../../utils/connectWallet";
 import ConnectContext from "../../utils/ConnectContext";
 import { useWallet} from "@utils";
@@ -59,6 +61,7 @@ export const DisconnectBtn = styled.div`
 
 export const ConnectWallet: React.FC = () => {
   const router = useRouter();
+  const [isLoading, setLoading] = useState(false);
 
   const { connect, setConnect } = useContext(ConnectContext);
   const [verifySignature] = useVerifySignature();
@@ -89,6 +92,8 @@ export const ConnectWallet: React.FC = () => {
       const signature = await signer.signMessage(message);
       const address = await signer.getAddress()
 
+      setLoading(true);
+
       try {
         await verifySignature({
           variables: {
@@ -108,7 +113,9 @@ export const ConnectWallet: React.FC = () => {
         const page = value ? '/wallet/connected' : '/wallet/purchase'; 
         router.push(page);
       } catch (err) { }
-      
+
+       setLoading(false);
+
       provider.web3.on("accountsChanged", (accounts: string[]) => {
         setConnect((prevValue) => ({
           ...prevValue,
@@ -153,7 +160,12 @@ export const ConnectWallet: React.FC = () => {
     }
   };
 
-  return renderConnectBtn();
+  return <>
+           {renderConnectBtn()}
+           <Backdrop sx={{ color: '#fff', zIndex: (theme: any) => theme.zIndex.drawer + 1 }}  open={isLoading}  >
+             <CircularProgress color="inherit" />
+           </Backdrop>
+         </>
 };
 
 export default ConnectWallet;
