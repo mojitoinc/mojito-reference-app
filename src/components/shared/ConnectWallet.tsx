@@ -1,5 +1,4 @@
-import { useContext , useState} from "react";
-import { useRouter } from "next/router";
+import { useContext , useState, useCallback} from "react";
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import { setupAll, onConnect } from "../../utils/connectWallet";
@@ -9,6 +8,7 @@ import DropdownMenu from "./DropdownMenu";
 import styled from "styled-components";
 import { media } from "../../utils/media";
 import { useVerifySignature, userCheckTokenOwners } from "@services";
+import  { WalledConnectedResultModal, WalledPurchaseResultModal } from "./WalledResultModal";
 
 const ConnectBtn = styled.div`
   position: relative;
@@ -58,15 +58,44 @@ export const DisconnectBtn = styled.div`
     text-align: center;
   }
 `;
-
+const CONTRACT_ID = "81503ff9-cb5c-428e-bb37-7877b7bf946c";
 export const ConnectWallet: React.FC = () => {
-  const router = useRouter();
   const [isLoading, setLoading] = useState(false);
+  const [walletResultSuccess, setWalletResultSuccess] = useState(false);
+  const [walletResultFailure, setWalletResultFailure] = useState(false);
 
   const { connect, setConnect } = useContext(ConnectContext);
   const [verifySignature] = useVerifySignature();
   const [checkTokenOwners] = userCheckTokenOwners();
-  const {setWallet} = useWallet();
+  const { setWallet } = useWallet();
+  
+
+  const handleCloseFailure = useCallback(() => { setWalletResultFailure(false); },[]);
+  
+  const handleCloseSucces = useCallback(() => { setWalletResultSuccess(false) }, []);
+  
+  const handleVerifyOwner = useCallback(async (account: string) => {
+    setLoading(true);
+    try {
+      const result = await checkTokenOwners({
+        variables: {
+          contractId: CONTRACT_ID, walletAddress: account,rangeStart: 1, rangeEnd: 67
+        }
+      })
+      const value = ((result?.data?.checkTokenOwners) ?? false) as boolean
+      setWallet({ isTokenOwner: value });
+      setWalletResultSuccess(value);
+      setWalletResultFailure(!value);
+    } catch (err) { 
+      setWalletResultFailure(true);
+    }
+    setLoading(false);
+  }, [checkTokenOwners, setWallet]);
+  
+  const handleTryNow = useCallback(() => {
+    setWalletResultFailure(false);
+    handleVerifyOwner(connect.account as string);
+  }, [handleVerifyOwner, connect]);
 
   const connectWeb3 = async () => {
     const modal = await setupAll();
@@ -89,32 +118,17 @@ export const ConnectWallet: React.FC = () => {
       const message = 'Test meta mask';
       
       const signer = provider.provider.getSigner(); 
-      const signature = await signer.signMessage(message);
+      // const signature = await signer.signMessage(message);
       const address = await signer.getAddress()
 
-      setLoading(true);
-
-      try {
-        await verifySignature({
-          variables: {
-            signature, message, address
-          }
-        })
-      } catch (e) { }
-
-      try {
-        const result = await checkTokenOwners({
-          variables: {
-            contractId: "81503ff9-cb5c-428e-bb37-7877b7bf946c", walletAddress:  address,rangeStart: 1, rangeEnd: 67
-          }
-        })
-        const value = ((result?.data?.checkTokenOwners) ?? false) as boolean
-        setWallet({ isTokenOwner: value });
-        const page = value ? '/wallet/connected' : '/wallet/purchase'; 
-        router.push(page);
-      } catch (err) { }
-
-       setLoading(false);
+      // try {
+      //   await verifySignature({
+      //     variables: {
+      //       signature, message, address
+      //     }
+      //   })
+      // } catch (e) { }
+     await handleVerifyOwner(address);
 
       provider.web3.on("accountsChanged", (accounts: string[]) => {
         setConnect((prevValue) => ({
@@ -122,6 +136,7 @@ export const ConnectWallet: React.FC = () => {
           account: accounts[0],
           signer: provider.provider.getSigner(accounts[0]),
         }));
+        handleVerifyOwner(accounts[0]);
       });
 
       provider.web3.on("chainChanged", (_chainId: number) => {
@@ -161,7 +176,9 @@ export const ConnectWallet: React.FC = () => {
   };
 
   return <>
-           {renderConnectBtn()}
+          {renderConnectBtn()}
+    <WalledConnectedResultModal show={walletResultSuccess} onClose={ handleCloseSucces}/> 
+    <WalledPurchaseResultModal show={walletResultFailure} onTryAgainLater={handleTryNow} onClose={handleCloseFailure}/> 
            <Backdrop sx={{ color: '#fff', zIndex: (theme: any) => theme.zIndex.drawer + 1 }}  open={isLoading}  >
              <CircularProgress color="inherit" />
            </Backdrop>

@@ -66,8 +66,4 @@ export const strings = {
     HOME_BUTTON: "GET STARTED",
     PLACEHOLDER: "You don't have any bids going on now",
   },
-  WALLET: {
-    OWNER_SUCCESS_MESSAGE: "Your account has valid access!",
-    OWNER_FAILTURE_MESSAGE: "Your account does not have access",
-  },
 };
