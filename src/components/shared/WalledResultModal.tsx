@@ -3,11 +3,25 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import styled from "styled-components";
 
+
+export const HeaderContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 30px;
+  border-bottom: 1px solid gray;
+  button {
+    text-transform: unset !important
+  }
+`;
+
+
 const HeaderText = styled.div(
   ({ theme }) => `
   font: ${theme.fonts.h3()};
-  line-height: 18px;
-  margin-block: 20px;
+  line-height: 24px;
+  margin-bottom: 12px;
 `
 );
 
@@ -15,32 +29,25 @@ const MesssageText = styled.div(
   ({ theme }) => `
   font: ${theme.fonts.small()};
   line-height: 18px;
-  margin-block: 20px;
+  margin-bottom: 25px;
 `
 );
 const TryAgainButton = styled(Button)({
+  display: 'flex',
+  alignSelf: 'stretch',
   boxShadow: 'none',
   textTransform: 'none',
   fontSize: 16,
   padding: '6px 12px',
   border: '1px solid',
   lineHeight: 1.5,
-  backgroundColor: '#000',
-  borderColor: '#0063cc',
-  fontFamily: [
-    '-apple-system',
-    'BlinkMacSystemFont',
-    '"Segoe UI"',
-    'Roboto',
-    '"Helvetica Neue"',
-    'Arial',
-    'sans-serif',
-    '"Apple Color Emoji"',
-    '"Segoe UI Emoji"',
-    '"Segoe UI Symbol"',
-  ].join(','),
+  borderRadius: 5,
+  backgroundColor: '#000 !important',
+  color: '#fff !important',
+  marginInline: 16,
+  borderColor: '#000',
   '&:hover': {
-    backgroundColor: '#0069d9',
+    backgroundColor: '#000ff',
     borderColor: '#0062cc',
     boxShadow: 'none',
   },
@@ -53,46 +60,46 @@ const TryAgainButton = styled(Button)({
     boxShadow: '0 0 0 0.2rem rgba(0,123,255,.5)',
   },
 });
+
 const BuyNowButton = styled(Button)({
   boxShadow: 'none',
   textTransform: 'none',
   fontSize: 16,
   padding: '6px 12px',
   lineHeight: 1.5,
-  textDecoration: 'underline',
+  textDecoration: 'underline !important',
+  fontWeight: '900 !important',
+  color: '#000 !important'
 });
-export const HeaderContainer = styled.div(
+
+
+export const BottomContainer = styled.div(
   ({ theme }) => `
-    margin: 10px 36px 20px 10px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid gray;
-  `
-);
-export const AccessContainer = styled.div(
-  ({ theme }) => `
-    margin: 10px 36px 40px 10px;
+    margin: 20px 5px 0 10px;
     color: #737373;  
     font: ${theme.fonts.small()};
-     a{
-      font: ${theme.fonts.body()};
-      margin-left: 5px;
-      color: #000;  
-      text-decoration: underline;
+    button{
+      margin-top: -5px;
+      text-transform: unset
     }
   `
 );
 
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  textAlign: 'center',
-  transform: 'translate(-50%, -50%)',
-  bgcolor: 'background.paper',
-  boxShadow: 24,
-  borderRadius: 3,
-  p: 4,
-};
+export const Container = styled.div(
+  ({ theme }) => `
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background-color: white;
+    transform: translate(-50%, -50%);
+    padding: 25px; 
+    border-radius: 5px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    ${theme.down(theme.breakpoints.sm)} {
+      width: 280px;
+    }
+    `
+);
 
 export interface WalledConnectedResultProps{
   show: boolean;
@@ -108,10 +115,10 @@ export const WalledConnectedResultModal = ({show, onClose}: WalledConnectedResul
             onClose={handleClose}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description">
-            <Box sx={style}> 
+            <Container> 
               <HeaderText>Success!</HeaderText>
               <MesssageText>{"You're now being redirected"}</MesssageText>
-            </Box>
+            </Container>
           </Modal>
 };
 
@@ -137,14 +144,14 @@ export const WalledPurchaseResultModal = ({show, onTryAgainLater, onBuyNow, onCl
              onClose={handleClose}
              aria-labelledby="modal-modal-title"
              aria-describedby="modal-modal-description">
-              <Box sx={style}> 
+              <Container> 
                 <HeaderContainer>
-                <HeaderText>Uh-Oh</HeaderText>
+                  <HeaderText>Uh-Oh</HeaderText>
                   <MesssageText>{"it looks like you don't have access"}</MesssageText>
-                  <TryAgainButton variant="contained" onClick={handleTryAgainLater}>Try again</TryAgainButton>
+                  <TryAgainButton onClick={handleTryAgainLater}>Try again</TryAgainButton>
                 </HeaderContainer>
-                <AccessContainer>Don&apos;t have the token yet?<BuyNowButton onClick={handleBuyNow}>Buy now</BuyNowButton></AccessContainer>
-              </Box>
+                <BottomContainer>Don&apos;t have the token yet?<BuyNowButton onClick={handleBuyNow}>Buy now</BuyNowButton></BottomContainer>
+              </Container>
           </Modal>
 };
 
