@@ -77,6 +77,8 @@ export const ConnectWallet: React.FC = () => {
   const handleVerifyOwner = useCallback(async (account: string) => {
     setLoading(true);
     try {
+      setWalletResultSuccess(false);
+      setWalletResultFailure(false);
       const result = await checkTokenOwners({
         variables: {
           contractId: CONTRACT_ID, walletAddress: account,rangeStart: 1, rangeEnd: 67
