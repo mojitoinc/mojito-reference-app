@@ -134,6 +134,7 @@ export const Header = () => {
             </Link>
           ) : (
             <DivButton>
+              {/* Wallet connect demo purpose remove the sign-in */}
               {/* <Button onClick={login}>{strings.COMMON.LOGIN_BUTTON}</Button> */}
             </DivButton>
           )}
