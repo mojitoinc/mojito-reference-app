@@ -4,7 +4,7 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import { setupAll, onConnect } from "../../utils/connectWallet";
 import ConnectContext from "../../utils/ConnectContext";
-import { useWallet} from "@utils";
+import { useWallet } from "@utils";
 import DropdownMenu from "./DropdownMenu";
 import styled from "styled-components";
 import { media } from "../../utils/media";
@@ -61,12 +61,12 @@ export const DisconnectBtn = styled.div`
 
 export const ConnectWallet: React.FC = () => {
   const router = useRouter();
-  const [isLoading, setLoading] = useState(false);
+  const [ isLoading, setLoading ] = useState(false);
 
   const { connect, setConnect } = useContext(ConnectContext);
   const [verifySignature] = useVerifySignature();
   const [checkTokenOwners] = userCheckTokenOwners();
-  const {setWallet} = useWallet();
+  const { setWallet } = useWallet();
 
   const connectWeb3 = async () => {
     const modal = await setupAll();
