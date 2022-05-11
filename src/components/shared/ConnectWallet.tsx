@@ -122,6 +122,7 @@ export const ConnectWallet: React.FC = () => {
           account: accounts[0],
           signer: provider.provider.getSigner(accounts[0]),
         }));
+        setWallet({ isTokenOwner: false });
       });
 
       provider.web3.on("chainChanged", (_chainId: number) => {

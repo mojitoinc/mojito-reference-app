@@ -16,14 +16,16 @@ const ConnectedPage: NextPage = ({  }) => {
     }
   },[router, wallet]);
 
-  return <Center>
+  return <>{wallet.isTokenOwner && <Center>
     <Card>
       <SuccessContainer>
-          <DoneIcon/>
+        <DoneIcon />
       </SuccessContainer>
-       <InfoLabel>{strings.WALLET.OWNER_SUCCESS_MESSAGE}</InfoLabel>
-      </Card>
-  </Center>;
+      <InfoLabel>{strings.WALLET.OWNER_SUCCESS_MESSAGE}</InfoLabel>
+    </Card>
+  </Center>
+  }
+  </>;
 };
 
 export default ConnectedPage;
