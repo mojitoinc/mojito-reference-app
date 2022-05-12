@@ -105,7 +105,7 @@ export const ConnectWallet: React.FC = () => {
       try {
         const result = await checkTokenOwners({
           variables: {
-            contractId: "81503ff9-cb5c-428e-bb37-7877b7bf946c", walletAddress:  address,rangeStart: 1, rangeEnd: 67
+            contractId: process.env.NEXT_PUBLIC_CONTRACT_ID, walletAddress:  address,rangeStart: 1, rangeEnd: 67
           }
         })
         const value = ((result?.data?.checkTokenOwners) ?? false) as boolean
