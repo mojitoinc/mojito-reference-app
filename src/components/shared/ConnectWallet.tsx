@@ -86,7 +86,7 @@ export const ConnectWallet: React.FC = () => {
         modal,
       });
 
-      const message = 'Test meta mask';
+      const message = 'Wallet Connect signature verification';
       
       const signer = provider.provider.getSigner(); 
       const signature = await signer.signMessage(message);
@@ -105,7 +105,10 @@ export const ConnectWallet: React.FC = () => {
       try {
         const result = await checkTokenOwners({
           variables: {
-            contractId: process.env.NEXT_PUBLIC_CONTRACT_ID, walletAddress:  address,rangeStart: 1, rangeEnd: 67
+            contractId: process.env.NEXT_PUBLIC_CONTRACT_ID,
+            walletAddress: address,
+            rangeStart: parseInt(process.env.NEXT_PUBLIC_CONTRACT_RANGE_START!),
+            rangeEnd: parseInt(process.env.NEXT_PUBLIC_CONTRACT_RANGE_END!)
           }
         })
         const value = ((result?.data?.checkTokenOwners) ?? false) as boolean
