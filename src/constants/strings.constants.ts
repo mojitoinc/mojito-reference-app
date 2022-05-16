@@ -68,6 +68,6 @@ export const strings = {
   },
   WALLET: {
     OWNER_SUCCESS_MESSAGE: "Your account has valid access!",
-    OWNER_FAILTURE_MESSAGE: "Your account does not have access",
+    OWNER_FAILURE_MESSAGE: "Your account does not have access",
   },
 };

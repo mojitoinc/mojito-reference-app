@@ -1,7 +1,6 @@
 import { useState, useContext } from "react";
 import { Button, Menu, MenuProps, MenuItem, ListItemIcon, ListItemText } from "@material-ui/core";
-import PersonIcon from "@material-ui/icons/Person";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import { ExitToApp as ExitToAppIcon, Person as PersonIcon } from "@material-ui/icons";
 import { useRouter } from "next/router";
 import ConnectContext from "../../utils/ConnectContext";
 import { makeStyles } from "@material-ui/core/styles";

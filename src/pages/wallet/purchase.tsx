@@ -11,7 +11,7 @@ const PurchasePage: NextPage = ({  }) => {
       <FailureContainer>
           <CloseIcon/>
       </FailureContainer>
-       <InfoLabel>{strings.WALLET.OWNER_FAILTURE_MESSAGE}</InfoLabel>
+       <InfoLabel>{strings.WALLET.OWNER_FAILURE_MESSAGE}</InfoLabel>
       </Card>
   </Center>;
 };
