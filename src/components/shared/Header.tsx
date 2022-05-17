@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useAuth0 } from "@auth0/auth0-react";
-
 import { Button } from "@components";
 import { config, strings, images } from "@constants";
 import { useFetchAfterAuth } from "@hooks";
@@ -12,6 +11,7 @@ import {
   useProfileLazyQuery,
   useUpdateUserOrgSettingsMutation,
 } from "@services";
+import { ConnectWallet } from "./ConnectWallet";
 
 const Container = styled.nav(
   ({ theme }) => `
@@ -134,11 +134,13 @@ export const Header = () => {
             </Link>
           ) : (
             <DivButton>
-              <Button onClick={login}>{strings.COMMON.LOGIN_BUTTON}</Button>
+              {/* Wallet connect demo purpose remove the sign-in */}
+              {/* <Button onClick={login}>{strings.COMMON.LOGIN_BUTTON}</Button> */}
             </DivButton>
           )}
         </>
       )}
+      <ConnectWallet/>
     </Container>
   );
 };

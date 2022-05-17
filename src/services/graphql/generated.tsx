@@ -2277,3 +2277,41 @@ export function useGetUserActiveBidsLazyQuery(baseOptions?: Apollo.LazyQueryHook
 export type GetUserActiveBidsQueryHookResult = ReturnType<typeof useGetUserActiveBidsQuery>;
 export type GetUserActiveBidsLazyQueryHookResult = ReturnType<typeof useGetUserActiveBidsLazyQuery>;
 export type GetUserActiveBidsQueryResult = Apollo.QueryResult<GetUserActiveBidsQuery, GetUserActiveBidsQueryVariables>;
+
+export type VerifySignatureMutation = { __typename?: 'Mutation', verifySignature: { signature: string, message: string, address: string } };
+export type VerifySignatureVariables = Exact<{
+  signature: Scalars['String'];
+  message: Scalars['String'];
+  address: Scalars['String'];
+}>;
+
+export const VerifySignature = gql`
+mutation VerifySignature($signature: String!, $message: String!, $address: String!) {
+  verifySignature(signature: $signature, message: $message, address: $address)
+}
+`;
+
+export function useVerifySignature(baseOptions?: Apollo.MutationHookOptions<VerifySignatureMutation, VerifySignatureVariables>) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useMutation<VerifySignatureMutation, VerifySignatureVariables>(VerifySignature, options);
+}
+export type VerifySignatureMessageFn = Apollo.MutationFunction<VerifySignatureMutation, VerifySignatureVariables>;
+
+export type CheckTokenOwnersMutation = { __typename?: 'Mutation', checkTokenOwners: { contractId: any, walletAddress: string, rangeStart: number, rangeEnd: number } };
+export type CheckTokenOwnersVariables = Exact<{
+  contractId: Scalars['UUID1'];
+  walletAddress: Scalars['String'];
+  rangeStart: Scalars['Int'];
+  rangeEnd: Scalars['Int'];
+}>;
+
+export const CheckTokenOwners = gql`
+mutation CheckTokenOwners($contractId: UUID1!, $walletAddress: String!, $rangeStart: Int!, $rangeEnd: Int!) {
+  checkTokenOwners(contractId: $contractId, walletAddress: $walletAddress, rangeStart: $rangeStart, rangeEnd: $rangeEnd)
+}
+`;
+export function userCheckTokenOwners(baseOptions?: Apollo.MutationHookOptions<CheckTokenOwnersMutation, CheckTokenOwnersVariables>) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useMutation<CheckTokenOwnersMutation, CheckTokenOwnersVariables>(CheckTokenOwners, options);
+}
+export type checkTokenOwnersFn = Apollo.MutationFunction<CheckTokenOwnersMutation, CheckTokenOwnersVariables>;

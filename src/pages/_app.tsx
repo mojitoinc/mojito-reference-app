@@ -2,6 +2,7 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { ThemeProvider } from "styled-components";
+import { StyledEngineProvider } from '@mui/material/styles';
 
 import {
   CheckoutOverlayProvider,
@@ -14,8 +15,9 @@ import { images, strings } from "@constants";
 import { AuthProvider, MojitoApiProvider } from "@state";
 import { GlobalStyles } from "@theme/GlobalStyles";
 import { theme } from "@theme/theme";
+import  { Layout } from "../components/shared";
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps }: AppProps) :JSX.Element{
   const router = useRouter();
   const paymentIdParam =
     router.query[THREEDS_FLOW_SEARCH_PARAM_SUCCESS_KEY]?.toString();
@@ -39,6 +41,8 @@ function MyApp({ Component, pageProps }: AppProps) {
         <link rel="icon" href={images.FAVICON} />
       </Head>
       <ThemeProvider theme={theme}>
+      <StyledEngineProvider injectFirst>
+
         <AuthProvider>
           <MojitoApiProvider>
             <CheckoutOverlayProvider
@@ -47,13 +51,16 @@ function MyApp({ Component, pageProps }: AppProps) {
               checkoutComponent={CheckoutComponent}
               doNotRenderPaymentUI={doNotRenderPaymentUI}
             >
-              <GlobalStyles />
-              <Header />
-              <Component {...pageProps} />
-              <Footer />
+             <Layout >
+                <GlobalStyles />
+                <Header />
+                <Component {...pageProps} />
+                <Footer />
+              </Layout>
             </CheckoutOverlayProvider>
           </MojitoApiProvider>
-        </AuthProvider>
+          </AuthProvider>
+        </StyledEngineProvider>
       </ThemeProvider>
     </>
   );
