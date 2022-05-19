@@ -47,4 +47,16 @@ export const images = {
     width: 24,
     height: 8,
   },
+  WALLET_CONTRACT_1_50: {
+    src: "/images/contract_1-50.jpg",
+    alt: "token_1_50",
+    width: 125,
+    height: 125,
+  },
+  WALLET_CONTRACT_51_100: {
+    src: "/images/contract_51-100.jpg",
+    alt: "token_51_100",
+    width: 125,
+    height: 125,
+  },
 };

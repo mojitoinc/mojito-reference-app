@@ -17,6 +17,7 @@ export const Layout = ( { children }:LayoutProps ) => {
   
   const [wallet, setWallet] = useState<WalletInfoType>({
     isTokenOwner: false,
+    tokens: [],
   });
 
   return (
