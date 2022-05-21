@@ -112,7 +112,8 @@ export const ConnectWallet: React.FC = () => {
           }
         })
         const results = ((result?.data?.checkTokenOwners) ?? []) as number[]
-        const tokens = Array.from(new Set(results));;
+        const tokens = Array.from(new Set(results));
+        console.log('tokens',result?.data)
         const isTokenOwner = tokens.length > 0;
         setWallet( prev=> ({...prev,isTokenOwner, tokens}) );
         const page = isTokenOwner ? '/wallet/connected' : '/wallet/purchase'; 
