@@ -28,13 +28,29 @@ export const Card = styled.div`
   border-radius: 6px;
 `;
 
-export const SuccessContainer = styled.svg`
-  background-color: #29a329;
-  width: 90px;
-  height: 90px;
-  border-radius: 45px;
+export const TokenContainer = styled.div`
+  padding: 0.5em;
+  box-shadow: 0 4px 8px 0 rgba(51, 102, 255,0.2);
+  transition: 0.3s;
+  border-radius: 6px;
+`;
+
+export const SuccessContainer = styled.div`
+  display: flex;
+  flex-direction: row;
   padding: 10px;
   color: #fff;
+  span{
+    margin-right: 10;
+  }
+  svg {
+    margin-top:20;
+    padding-top:20;
+    background-color: #29a329;
+    width: 90px;
+    height: 90px;
+    border-radius: 45px;
+  }
 `;
 
 

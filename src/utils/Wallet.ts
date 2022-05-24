@@ -2,6 +2,7 @@ import { createContext, useContext } from "react";
 
 export interface WalletInfoType {
   isTokenOwner: boolean;
+  tokens: number[];
 }
 export interface WalletContextType {
   wallet: WalletInfoType;

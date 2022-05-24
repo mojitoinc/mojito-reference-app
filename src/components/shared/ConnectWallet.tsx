@@ -111,9 +111,12 @@ export const ConnectWallet: React.FC = () => {
             rangeEnd: parseInt(process.env.NEXT_PUBLIC_CONTRACT_RANGE_END!)
           }
         })
-        const value = ((result?.data?.checkTokenOwners) ?? false) as boolean
-        setWallet({ isTokenOwner: value });
-        const page = value ? '/wallet/connected' : '/wallet/purchase'; 
+        const results = ((result?.data?.checkTokenOwners) ?? []) as number[]
+        const tokens = Array.from(new Set(results));
+        const isTokenOwner = tokens.length > 0;
+        
+        setWallet( prev=> ({...prev, isTokenOwner, tokens}) );
+        const page = isTokenOwner ? '/wallet/connected' : '/wallet/purchase'; 
         router.push(page);
       } catch (err) { }
 
@@ -125,7 +128,7 @@ export const ConnectWallet: React.FC = () => {
           account: accounts[0],
           signer: provider.provider.getSigner(accounts[0]),
         }));
-        setWallet({ isTokenOwner: false });
+        setWallet( prev=> ({...prev, isTokenOwner: false} ));
       });
 
       provider.web3.on("chainChanged", (_chainId: number) => {
