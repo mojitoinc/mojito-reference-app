@@ -18,7 +18,9 @@ const ConnectedPage: NextPage = ({  }) => {
 
   const renderToken = useCallback(() => {
     return wallet.tokens.map((value: number) => {
+      // The POC is using token values return in a range of a single contract. This can be edited to the customers contract range
       const tokenImage = value > 50 ? images.WALLET_CONTRACT_51_100 : images.WALLET_CONTRACT_1_50;
+      // The logic below is based on rendering images. You can edit the return container below to a route, modal, etc 
       return <TokenContainer key={value}>
                 <Image
                   src={tokenImage?.src}
