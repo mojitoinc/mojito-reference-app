@@ -1,10 +1,10 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 
 import {
-  PUICheckoutComponentProps, THREEDS_FLOW_SEARCH_PARAM_ERROR_KEY, THREEDS_FLOW_SEARCH_PARAM_SUCCESS_KEY, useOpenCloseCheckoutModal,
+  PUICheckoutComponentProps, THREEDS_FLOW_SEARCH_PARAM_ERROR_KEY, THREEDS_FLOW_SEARCH_PARAM_SUCCESS_KEY, useOpenCloseCheckoutModal
 } from "@mojitonft/mojito-mixers";
 
 import { config, images, strings } from "@constants";
@@ -65,6 +65,13 @@ export const BuyNowDetail: React.FC<AuctionDetailProps> = ({
     paymentIdParam,
     paymentErrorParam,
   });
+
+  /*
+  const loaderMode = 'default';
+  const isOpen = true;
+  const onOpen = () => {};
+  const onClose = () => {};
+  */
 
   const otherPageSpecificProps: Partial<PUICheckoutComponentProps> = {
     orgID: config.ORGANIZATION_ID || "",
