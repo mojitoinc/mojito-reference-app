@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { useCallback } from "react";
 
-import { PUIError } from "@mojitonft/mojito-mixers";
+import { PUIError, PUIRouterOptions } from "@mojitonft/mojito-mixers";
 
 import {
   REFERENCE_APP_LOGO_SX,
@@ -20,16 +20,23 @@ const CreditCardPaymentErrorPage: React.FC = () => {
     return token?.__raw || "";
   }, [getIdTokenClaims]);
 
-  const handleRedirect = useCallback(
-    (pathnameOrUrl: string) => {
-      if (pathnameOrUrl && pathnameOrUrl.startsWith("http")) {
+  const onGoTo = useCallback((pathnameOrUrl: string, { replace, reason, ...options }: PUIRouterOptions = {}) => {
+    if (pathnameOrUrl.startsWith("http")) {
+      if (replace) {
+        console.log(`Replace URL with ${ pathnameOrUrl }`, reason);
         window.location.replace(pathnameOrUrl);
       } else {
-        router.replace(pathnameOrUrl || "/");
+        console.log(`Push URL ${ pathnameOrUrl }`, reason);
+        window.location.href = pathnameOrUrl;
       }
-    },
-    [router]
-  );
+    } else if (replace) {
+      console.log(`Replace route with ${ pathnameOrUrl }`, reason);
+      router.replace(pathnameOrUrl || "/", undefined, options);
+    } else {
+      console.log(`Push route ${ pathnameOrUrl }`, reason);
+      router.push(pathnameOrUrl || "/", undefined, options);
+    }
+  }, [router]);
 
   return (
     <PUIError
@@ -39,7 +46,7 @@ const CreditCardPaymentErrorPage: React.FC = () => {
       logoSrc={images.LOGO?.src || ""}
       logoSx={REFERENCE_APP_LOGO_SX}
       errorImageSrc=""
-      onRedirect={handleRedirect}
+      onGoTo={onGoTo}
     />
   );
 };
