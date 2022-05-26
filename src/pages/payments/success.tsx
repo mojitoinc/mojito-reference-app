@@ -1,37 +1,29 @@
 import { useRouter } from "next/router";
-import { useCallback } from "react";
-
-import { PUISuccess } from "@mojitonft/mojito-mixers";
-
-import {
-  REFERENCE_APP_LOGO_SX,
-  REFERENCE_APP_THEME_OPTIONS,
-} from "@components";
-import { images } from "@constants";
+import { useEffect, useState } from "react";
+import { THREEDS_FLOW_SEARCH_PARAM_SUCCESS_KEY } from "@mojitonft/mojito-mixers";
+import { CheckoutComponent } from "@components";
 
 const CreditCardPaymentSuccessPage: React.FC = () => {
   const router = useRouter();
+  const [paymentId, setPaymentId] = useState<string | null>(null);
 
-  const handleRedirect = useCallback(
-    (pathnameOrUrl: string) => {
-      if (pathnameOrUrl && pathnameOrUrl.startsWith("http")) {
-        window.location.replace(pathnameOrUrl);
-      } else {
-        router.replace(pathnameOrUrl || "/");
-      }
-    },
-    [router]
-  );
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const paymentIdParam = params.get(THREEDS_FLOW_SEARCH_PARAM_SUCCESS_KEY) || "";
 
-  return (
-    <PUISuccess
-      themeOptions={REFERENCE_APP_THEME_OPTIONS}
-      logoSrc={images.LOGO?.src || ""}
-      logoSx={REFERENCE_APP_LOGO_SX}
-      successImageSrc=""
-      onRedirect={handleRedirect}
-    />
-  );
+    setPaymentId(paymentIdParam);
+  }, []);
+
+  useEffect(() => {
+    if (paymentId === "") router.replace("/");
+  }, [paymentId, router]);
+
+  return paymentId ? (
+    <CheckoutComponent
+      loaderMode="success"
+      open
+      paymentIdParam={ paymentId } />
+  ) : null;
 };
 
 export default CreditCardPaymentSuccessPage;
