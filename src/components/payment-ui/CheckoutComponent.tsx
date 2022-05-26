@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import React, { ErrorInfo, useCallback } from "react";
 
 import {
-  CheckoutComponentWithRequiredProps,
+  PUICheckoutComponentProps,
   CheckoutEventData,
   CheckoutEventType,
   CheckoutModalError,
@@ -17,7 +17,7 @@ import {
   REFERENCE_APP_THEME_OPTIONS,
 } from "./theme/paymentModalTheme";
 
-export const CheckoutComponent: React.FC<CheckoutComponentWithRequiredProps> = (
+export const CheckoutComponent: React.FC<PUICheckoutComponentProps> = (
   checkoutComponentProps
 ) => {
   const router = useRouter();
