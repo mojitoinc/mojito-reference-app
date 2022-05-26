@@ -66,13 +66,6 @@ export const BuyNowDetail: React.FC<AuctionDetailProps> = ({
     paymentErrorParam,
   });
 
-  /*
-  const loaderMode = 'default';
-  const isOpen = true;
-  const onOpen = () => {};
-  const onClose = () => {};
-  */
-
   const otherPageSpecificProps: Partial<PUICheckoutComponentProps> = {
     orgID: config.ORGANIZATION_ID || "",
     checkoutItems: [
