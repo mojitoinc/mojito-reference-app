@@ -19,7 +19,7 @@
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/styles": "^4.11.3",
-    "@mojitonft/mojito-mixers": "^1.3.45",
+    "@mojitonft/mojito-mixers": "^1.3.50",
     "@mui/icons-material": "^5.8.0",
     "@mui/material": "^5.8.1",
     "@walletconnect/web3-provider": "^1.4.1",
