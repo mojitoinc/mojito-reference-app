@@ -150,6 +150,75 @@ const BidsTitle = styled.h3(
 `
 );
 
+
+const WalletCard = styled.div(
+  ({ theme }) => `
+  border: ${theme.borders.medium(theme.colors.primary)};
+  border-radius: ${theme.borderRadius.large};
+  display: flex;
+  flex-direction: row;
+  max-width: 1114px;
+  padding: 24px 27px 40px 42px;
+  position: relative;
+  width: 100%;
+
+  ${theme.down(theme.breakpoints.md)} {
+    align-items: center;
+    flex-direction: column-reverse;
+    padding: 24px 27px;
+  }
+`
+);
+
+const WalletContainer = styled.div`
+  margin-top: 102px !important;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+`;
+
+const TokenContainer = styled.div(
+  ({ theme }) => `
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: flex-end;
+  margin-bottom: 5px;
+
+  ${theme.down(theme.breakpoints.md)} {
+    flex-direction: column;
+    margin-top: 10px
+  }
+`
+);
+
+const TokenItem = styled.div(
+  ({ theme }) => `
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  margin-bottom: 5px;
+
+  ${theme.down(theme.breakpoints.md)} {
+    flex-direction: column;
+    margin-top: 10px
+  }
+`
+);
+
+const TokenLabel = styled.h3(
+  ({ theme }) => `
+  background-color: ${theme.colors.primary};
+  color: ${theme.colors.background};
+  font: ${theme.fonts.h3("bold")};
+  padding: 20px;
+  border-radius: 8px;
+  min-height: 48px;
+  padding: 10px 12px;
+  margin-inline: 4px;
+`
+);
+
 const Grid = styled.div(
   ({ theme }) => `
   display: flex;
@@ -348,6 +417,38 @@ const Profile: NextPage = () => {
           </Info>
         </User>
       </TopContainer>
+      <WalletContainer>
+        <WalletCard>
+          <TokenContainer>
+            <ImageWrapper>
+              <Image
+                src={userPictureBetterQuality || images.AVATAR_PLACEHOLDER?.src}
+                alt={images.AVATAR_PLACEHOLDER?.alt}
+                width={images.AVATAR_PLACEHOLDER?.large}
+                height={images.AVATAR_PLACEHOLDER?.large}
+              />
+            </ImageWrapper>
+              <Info>
+                <Username>{usernameInput}</Username>
+                <BiddingScore>
+                  {strings.WALLET.ADDRESS}&nbsp;
+                  <Score>{activeBids.length}</Score>
+                </BiddingScore>
+              </Info>
+            </TokenContainer>
+          <TokenContainer>
+            <TokenItem>
+                <TokenLabel>
+                  Token (s)&nbsp; : 5
+                </TokenLabel>
+                <TokenLabel>
+                  Token (s)&nbsp; : 5
+                </TokenLabel>
+            </TokenItem>
+            <div>tok</div>
+          </TokenContainer>
+        </WalletCard>
+      </WalletContainer>
       <Bids>
         {!!activeBids.length ? (
           <>
