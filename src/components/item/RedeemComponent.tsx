@@ -1,29 +1,31 @@
-import { useRedeemClaimableCodeMutation } from "@services";
+import { useCallback, useMemo, useState } from "react";
+import { useRouter } from "next/router";
+import {
+  Button as MuiButton,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  TextField,
+} from "@mui/material";
 
 import {
   AuthorDescription,
   DetailContainer,
   DetailLeft,
   DetailRight,
+  Main,
   StyledContent,
   StyledImage,
-  Main,
 } from "./ItemComponents";
 import { Button } from "../shared";
-import { useCallback, useMemo, useState } from "react";
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  TextField,
-  Button as MuiButton,
-  DialogContentText,
-} from "@mui/material";
 import { Separator } from "./ModalComponents";
+
 import { strings } from "@constants";
 import { MockCMSService } from "src/data/MockCMSService";
-import { useRouter } from "next/router";
+
+import { useRedeemClaimableCodeMutation } from "@services";
 
 export interface RedeemComponentProps {
   id: string;
