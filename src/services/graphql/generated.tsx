@@ -2310,8 +2310,27 @@ mutation CheckTokenOwners($contractId: UUID1!, $walletAddress: String!, $rangeSt
   checkTokenOwners(contractId: $contractId, walletAddress: $walletAddress, rangeStart: $rangeStart, rangeEnd: $rangeEnd)
 }
 `;
-export function userCheckTokenOwners(baseOptions?: Apollo.MutationHookOptions<CheckTokenOwnersMutation, CheckTokenOwnersVariables>) {
+export function useCheckTokenOwners(baseOptions?: Apollo.MutationHookOptions<CheckTokenOwnersMutation, CheckTokenOwnersVariables>) {
   const options = {...defaultOptions, ...baseOptions}
   return Apollo.useMutation<CheckTokenOwnersMutation, CheckTokenOwnersVariables>(CheckTokenOwners, options);
 }
 export type checkTokenOwnersFn = Apollo.MutationFunction<CheckTokenOwnersMutation, CheckTokenOwnersVariables>;
+
+export type CheckWalletTokensMutation = { __typename?: 'Mutation', checkWalletTokens: { contractAddress: string, chainId: number, rangeStart: number, rangeEnd: number } };
+export type CheckWalletTokensVariables = Exact<{
+  contractAddress: Scalars['String'];
+  chainId: Scalars['Int'];
+  rangeStart: Scalars['Int'];
+  rangeEnd: Scalars['Int'];
+}>;
+
+export const CheckWalletTokens = gql`
+mutation CheckWalletTokens($contractAddress: String!, $chainId: Int!, $rangeStart: Int!, $rangeEnd: Int!) {
+  checkWalletTokens(contractAddress: $contractAddress, chainId: $chainId, rangeStart: $rangeStart, rangeEnd: $rangeEnd)
+}
+`;
+export function useCheckWalletTokens(baseOptions?: Apollo.MutationHookOptions<CheckWalletTokensMutation, CheckWalletTokensVariables>) {
+  const options = {...defaultOptions, ...baseOptions}
+  return Apollo.useMutation<CheckWalletTokensMutation, CheckWalletTokensVariables>(CheckWalletTokens, options);
+}
+export type checkWalletTokensFn = Apollo.MutationFunction<CheckWalletTokensMutation, CheckWalletTokensVariables>;

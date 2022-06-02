@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
 
@@ -11,6 +11,7 @@ import { useFetchAfterAuth } from "@hooks";
 import {
   useProfileLazyQuery,
   useUpdateUserOrgSettingsMutation,
+  useCheckWalletTokens
 } from "@services";
 
 const Main = styled.main`
@@ -164,7 +165,7 @@ const WalletCard = styled.div(
 
   ${theme.down(theme.breakpoints.md)} {
     align-items: center;
-    flex-direction: column-reverse;
+    flex-direction: column;
     padding: 24px 27px;
   }
 `
@@ -266,6 +267,8 @@ interface ShowFeedbackModalI {
 
 const Profile: NextPage = () => {
   const { logout, user } = useAuth0();
+  const [ checkWalletTokens ] = useCheckWalletTokens();
+
   const [getData, { data: profile }] = useProfileLazyQuery({
     variables: {
       organizationID: config.ORGANIZATION_ID,
@@ -301,6 +304,27 @@ const Profile: NextPage = () => {
   useEffect(() => {
     editMode && inputRef.current?.focus();
   }, [editMode]);
+
+  const handleCheckWalletTokens = useCallback(async () => {
+    try {
+      console.log('========ENTER======')
+      const response = await checkWalletTokens({
+        variables: {
+          contractAddress: process.env.NEXT_PUBLIC_CONTRACT_ID!,
+          chainId: parseInt(process.env.NEXT_PUBLIC_CHAINID!),
+          rangeStart: parseInt(process.env.NEXT_PUBLIC_CONTRACT_RANGE_START!),
+          rangeEnd: parseInt(process.env.NEXT_PUBLIC_CONTRACT_RANGE_END!)
+        }
+      });
+      console.log('checkWalletTokens', response)
+    } catch (e) {
+      console.log('checkWalletToken es', e)
+    }
+  }, [checkWalletTokens]);
+
+  useEffect(() => {
+    handleCheckWalletTokens();
+  }, [handleCheckWalletTokens]);
 
   const onEdit = async () => {
     if (!profile || !profile.me) {
