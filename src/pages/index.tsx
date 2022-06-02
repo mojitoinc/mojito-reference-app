@@ -1,12 +1,13 @@
 import type { NextPage } from "next";
 import Image from "next/image";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import styled from "styled-components";
 
-import { CollectionGridItem, DummyViews } from "@components";
+import { Button, CollectionGridItem, DummyViews } from "@components";
 import { config, images, strings } from "@constants";
 import { useCollectionBySlugQuery } from "@services";
 import { MockCMSService } from "@state";
+import { useRouter } from "next/router";
 
 const Container = styled.main(
   ({ theme }) => `
@@ -60,9 +61,15 @@ const Home: NextPage = () => {
       marketplaceID: config.MARKETPLACE_ID,
     },
   });
+  const router = useRouter();
+
+  const handleRedeem = useCallback(() => {
+    router.push("/redeem/123");
+  }, [router]);
 
   return (
     <Container>
+      <Button onClick={handleRedeem} isBig>{"Redeem (demo purpose)"}</Button>
       <Image
         src={images.BRAND_ICON?.src}
         alt={images.BRAND_ICON?.alt}
