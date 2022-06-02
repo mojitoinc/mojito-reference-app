@@ -45,8 +45,8 @@ export const RedeemComponent: React.FC<RedeemComponentProps> = ({
 
   const [redeemClaimableCode] = useRedeemClaimableCodeMutation();
 
-  const [code, setCode] = useState("safsaseaf");
-  const [name, setName] = useState("Robert Wang");
+  const [code, setCode] = useState("");
+  const [name, setName] = useState("");
   const [{ open, success, title, message }, openModal] = useState({
     open: false,
     success: false,
