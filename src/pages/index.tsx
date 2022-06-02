@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useCallback, useMemo } from "react";
 import styled from "styled-components";
 
-import { Button, CollectionGridItem, DummyViews } from "@components";
+import { Button, CollectionGridItem, DummyViews, Separator } from "@components";
 import { config, images, strings } from "@constants";
 import { useCollectionBySlugQuery } from "@services";
 import { MockCMSService } from "@state";
@@ -69,7 +69,8 @@ const Home: NextPage = () => {
 
   return (
     <Container>
-      <Button onClick={handleRedeem} isBig>{"Redeem (demo purpose)"}</Button>
+      <Button onClick={handleRedeem} isBig>{"Redeem (claimable demo)"}</Button>
+      <Separator/>
       <Image
         src={images.BRAND_ICON?.src}
         alt={images.BRAND_ICON?.alt}
