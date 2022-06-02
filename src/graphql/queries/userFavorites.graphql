@@ -2,7 +2,7 @@ query GetUserFavorites {
     serverTime
     me {
         id
-        favoriteLots {
+        favoriteItems {
             id
         }
     }

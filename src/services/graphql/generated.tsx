@@ -86,6 +86,64 @@ export type AchPaymentMethodPrepareStatementOutput = {
   linkToken: Scalars['String'];
 };
 
+export type Address = {
+  __typename?: 'Address';
+  buildingName?: Maybe<Scalars['String']>;
+  buildingNumber?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  flatNumber?: Maybe<Scalars['String']>;
+  line1?: Maybe<Scalars['String']>;
+  line2?: Maybe<Scalars['String']>;
+  line3?: Maybe<Scalars['String']>;
+  postcode: Scalars['String'];
+  state?: Maybe<Scalars['String']>;
+  street?: Maybe<Scalars['String']>;
+  subStreet?: Maybe<Scalars['String']>;
+  town?: Maybe<Scalars['String']>;
+};
+
+export type AddressInput = {
+  buildingName?: InputMaybe<Scalars['String']>;
+  buildingNumber: Scalars['String'];
+  country: Scalars['String'];
+  flatNumber?: InputMaybe<Scalars['String']>;
+  line1?: InputMaybe<Scalars['String']>;
+  line2?: InputMaybe<Scalars['String']>;
+  line3?: InputMaybe<Scalars['String']>;
+  postcode: Scalars['String'];
+  state?: InputMaybe<Scalars['String']>;
+  street: Scalars['String'];
+  subStreet?: InputMaybe<Scalars['String']>;
+  town: Scalars['String'];
+};
+
+export type AddressScreeningInput = {
+  address: Scalars['String'];
+  asset: Scalars['String'];
+  network: Scalars['String'];
+};
+
+export type ApplicantRequest = {
+  address?: InputMaybe<AddressInput>;
+  dob?: InputMaybe<Scalars['String']>;
+  email?: InputMaybe<Scalars['String']>;
+  firstName: Scalars['String'];
+  idNumbers?: InputMaybe<Array<InputMaybe<IdNumberInput>>>;
+  lastName: Scalars['String'];
+};
+
+export type ApplicantResponse = {
+  __typename?: 'ApplicantResponse';
+  address?: Maybe<Address>;
+  dob?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
+  firstName: Scalars['String'];
+  href?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  idNumbers?: Maybe<Array<Maybe<IdNumber>>>;
+  lastName: Scalars['String'];
+};
+
 export type Asset = {
   __typename?: 'Asset';
   currentVersion?: Maybe<AssetVersion>;
@@ -142,7 +200,25 @@ export enum AuctionLotStatus {
 export type BidFilterInput = {
   marketplaceAuctionLotId?: InputMaybe<Scalars['UUID']>;
   order?: InputMaybe<AuctionBidOrder>;
+  returnDeleted?: InputMaybe<Scalars['Boolean']>;
   userId?: InputMaybe<Scalars['UUID']>;
+};
+
+export type BuyerDetailOutput = {
+  __typename?: 'BuyerDetailOutput';
+  externalUserID: Scalars['String'];
+  timestamp: Scalars['Time'];
+  totalPrice: Scalars['Float'];
+  units: Scalars['Int'];
+  user?: Maybe<User>;
+  userId: Scalars['UUID1'];
+  username?: Maybe<Scalars['String']>;
+};
+
+export type CheckResponse = {
+  __typename?: 'CheckResponse';
+  id: Scalars['String'];
+  success: Scalars['Boolean'];
 };
 
 export enum CollectionType {
@@ -158,12 +234,24 @@ export enum ContractType {
 export type CreateMarketplaceBuyNowLotInput = {
   collectionId: Scalars['UUID1'];
   collectionItemName: Scalars['String'];
+  delivery?: InputMaybe<MarketplaceItemDeliveryInput>;
   endDate: Scalars['Time'];
-  marketplaceTokenId: Scalars['UUID1'];
+  marketplaceTokenId?: InputMaybe<Scalars['UUID1']>;
   sortNumber: Scalars['Int'];
   startDate: Scalars['Time'];
-  totalUnits: Scalars['Int'];
+  totalUnits?: InputMaybe<Scalars['Int']>;
   unitPrice: Scalars['Float'];
+};
+
+export type CreateMarketplaceClaimableSetInput = {
+  collectionId: Scalars['UUID1'];
+  collectionItemName: Scalars['String'];
+  delivery: MarketplaceItemDeliveryInput;
+  endDate: Scalars['Time'];
+  perWalletLimit: Scalars['Int'];
+  promoCodeConfig?: InputMaybe<MarketplaceItemCodeConfigInput>;
+  startDate: Scalars['Time'];
+  totalUnits: Scalars['Int'];
 };
 
 export type CreatePaymentCreditCardMetadataInput = {
@@ -171,9 +259,20 @@ export type CreatePaymentCreditCardMetadataInput = {
   keyID: Scalars['String'];
 };
 
+export type CreatePaymentCryptoMetadataInput = {
+  billingDetails?: InputMaybe<CryptoBillingDetails>;
+  cancelURL?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']>;
+  localPrice: LocalPrice;
+  name?: InputMaybe<Scalars['String']>;
+  redirectURL?: InputMaybe<Scalars['String']>;
+};
+
 export type CreatePaymentMetadataInput = {
-  creditCardData: CreatePaymentCreditCardMetadataInput;
+  creditCardData?: InputMaybe<CreatePaymentCreditCardMetadataInput>;
+  cryptoData?: InputMaybe<CreatePaymentCryptoMetadataInput>;
   destinationAddress?: InputMaybe<Scalars['EthAddress']>;
+  discountCodeID?: InputMaybe<Scalars['UUID1']>;
 };
 
 export type CreditCardBillingDetails = {
@@ -228,6 +327,28 @@ export type CreditCardPaymentMethodOutput = {
   type: PaymentType;
 };
 
+export type CryptoBillingDetails = {
+  address1?: InputMaybe<Scalars['String']>;
+  address2?: InputMaybe<Scalars['String']>;
+  city?: InputMaybe<Scalars['String']>;
+  country?: InputMaybe<Scalars['String']>;
+  district?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  postalCode?: InputMaybe<Scalars['String']>;
+};
+
+export type CryptoPaymentDetails = {
+  __typename?: 'CryptoPaymentDetails';
+  hostedURL: Scalars['String'];
+};
+
+export type CryptoPaymentMethodOutput = {
+  __typename?: 'CryptoPaymentMethodOutput';
+  id: Scalars['UUID1'];
+  status: Scalars['String'];
+  type: PaymentType;
+};
+
 export type CurrentUser = {
   __typename?: 'CurrentUser';
   activeBids: Array<MarketplaceAuctionBid>;
@@ -252,8 +373,16 @@ export type CurrentUserUserOrgsArgs = {
 
 
 export type CurrentUserWonBidsArgs = {
-  orgId?: InputMaybe<Scalars['UUID']>;
+  orgId: Scalars['UUID'];
 };
+
+export enum DeliveryMethod {
+  Erc721Provenance = 'ERC721Provenance',
+  Erc721Transfer = 'ERC721Transfer',
+  Erc1155OpenEdition = 'ERC1155OpenEdition',
+  Erc1155Transfer = 'ERC1155Transfer',
+  NoOp = 'NoOp'
+}
 
 export type DeployContractInput = {
   contractType: ContractType;
@@ -261,6 +390,25 @@ export type DeployContractInput = {
   nftSymbol: Scalars['String'];
   organizationId: Scalars['UUID1'];
   walletId: Scalars['UUID1'];
+};
+
+export type DiscountCode = {
+  __typename?: 'DiscountCode';
+  description?: Maybe<Scalars['String']>;
+  discountCode: Scalars['String'];
+  discountType: Scalars['String'];
+  id: Scalars['UUID1'];
+  organizationID: Scalars['UUID1'];
+  value: Scalars['Float'];
+};
+
+export type DiscountedInvoiceItem = {
+  __typename?: 'DiscountedInvoiceItem';
+  discountCode: DiscountCode;
+  discountedAmount: Scalars['Float'];
+  invoiceItemID: Scalars['UUID1'];
+  totalPrice: Scalars['Float'];
+  totalPriceAfterDiscount: Scalars['Float'];
 };
 
 export type Erc721Metadata = {
@@ -277,11 +425,27 @@ export type Erc721Metadata = {
 };
 
 export enum ExtensionType {
-  ProvenanceExtension = 'ProvenanceExtension'
+  ProvenanceExtension = 'ProvenanceExtension',
+  RedeemableExtension = 'RedeemableExtension'
 }
+
+export type IdNumber = {
+  __typename?: 'IDNumber';
+  stateCode: Scalars['String'];
+  type: Scalars['String'];
+  value: Scalars['String'];
+};
+
+export type IdNumberInput = {
+  stateCode: Scalars['String'];
+  type: Scalars['String'];
+  value: Scalars['String'];
+};
 
 export type InvoiceDetails = {
   __typename?: 'InvoiceDetails';
+  OrganizationID: Scalars['UUID1'];
+  billingAddress?: Maybe<InvoiceDetailsBillingAddress>;
   externalPaymentID: Scalars['String'];
   externalUserID: Scalars['String'];
   internalUserID: Scalars['String'];
@@ -291,12 +455,25 @@ export type InvoiceDetails = {
   items: Array<Maybe<ItemInvoiceDetail>>;
   paymentID: Scalars['UUID1'];
   status: InvoiceStatus;
+  userName: Scalars['String'];
+};
+
+export type InvoiceDetailsBillingAddress = {
+  __typename?: 'InvoiceDetailsBillingAddress';
+  city: Scalars['String'];
+  country: Scalars['String'];
+  postalCode: Scalars['String'];
+  state: Scalars['String'];
+  street1: Scalars['String'];
 };
 
 export enum InvoiceStatus {
+  AwaitingUserPayment = 'AwaitingUserPayment',
   Canceled = 'Canceled',
   Delivered = 'Delivered',
   Draft = 'Draft',
+  Expired = 'Expired',
+  Failed = 'Failed',
   Paid = 'Paid',
   Pending = 'Pending'
 }
@@ -308,6 +485,7 @@ export type ItemInvoiceDetail = {
   collectionItemTitle: Scalars['String'];
   collectionTitle: Scalars['String'];
   destinationAddress: Scalars['String'];
+  invoiceItemID: Scalars['UUID1'];
   overheadPremium: Scalars['Float'];
   saleDate: Scalars['Time'];
   salesTaxRate: Scalars['Float'];
@@ -318,11 +496,19 @@ export type ItemInvoiceDetail = {
 };
 
 export enum KycStatus {
+  Clear = 'Clear',
+  Failed1 = 'Failed1',
+  Failed2 = 'Failed2',
   Level1 = 'Level1',
   Level2 = 'Level2',
   None = 'None',
   Pending = 'Pending'
 }
+
+export type LocalPrice = {
+  amount: Scalars['Float'];
+  currency: Scalars['String'];
+};
 
 export enum MarketCollectionStatus {
   Active = 'Active',
@@ -346,6 +532,7 @@ export type MarketplaceAuctionBid = {
   buyersPremium: Scalars['Float'];
   createdAt: Scalars['Time'];
   currentBid: Scalars['Float'];
+  deletedAt?: Maybe<Scalars['Time']>;
   finalPrice: Scalars['Float'];
   id: Scalars['UUID'];
   isCurrent: Scalars['Boolean'];
@@ -421,9 +608,10 @@ export type MarketplaceAuctionLotDefaultConfigArgs = {
 export type MarketplaceAuctionLotInput = {
   collectionId: Scalars['UUID'];
   collectionItemName: Scalars['String'];
+  delivery?: InputMaybe<MarketplaceItemDeliveryInput>;
   endDate: Scalars['Time'];
   lotNumber?: InputMaybe<Scalars['Int']>;
-  marketplaceTokenId: Scalars['UUID'];
+  marketplaceTokenId?: InputMaybe<Scalars['UUID']>;
   reservePrice?: InputMaybe<Scalars['Float']>;
   saleType: MarketplaceSaleType;
   startDate: Scalars['Time'];
@@ -431,8 +619,10 @@ export type MarketplaceAuctionLotInput = {
 };
 
 export type MarketplaceAuctionLotUpdateInput = {
+  delivery?: InputMaybe<MarketplaceItemDeliveryInput>;
   endDate?: InputMaybe<Scalars['Time']>;
   lotNumber?: InputMaybe<Scalars['Int']>;
+  maxEndDate?: InputMaybe<Scalars['Time']>;
   reservePrice?: InputMaybe<Scalars['Float']>;
   startDate?: InputMaybe<Scalars['Time']>;
   startingBid?: InputMaybe<Scalars['Float']>;
@@ -445,11 +635,42 @@ export type MarketplaceBuyNowOutput = {
   id: Scalars['UUID'];
   invoice?: Maybe<InvoiceDetails>;
   marketplaceCollectionItem?: Maybe<MarketplaceCollectionItem>;
+  purchaseTimeoutInMinutes?: Maybe<Scalars['Int']>;
+  remainingCount: Scalars['Int'];
   sortNumber: Scalars['Int'];
   startDate: Scalars['Time'];
   totalAvailableUnits: Scalars['Int'];
   totalUnits: Scalars['Int'];
   unitPrice: Scalars['Float'];
+};
+
+export type MarketplaceBuyNowUpdateInput = {
+  endDate?: InputMaybe<Scalars['Time']>;
+  sortNumber?: InputMaybe<Scalars['Int']>;
+  startDate?: InputMaybe<Scalars['Time']>;
+  totalUnits?: InputMaybe<Scalars['Int']>;
+  unitPrice?: InputMaybe<Scalars['Float']>;
+};
+
+export type MarketplaceClaimableCodeOutput = {
+  __typename?: 'MarketplaceClaimableCodeOutput';
+  claimableSetID: Scalars['UUID1'];
+  code: Scalars['String'];
+  id: Scalars['UUID1'];
+  isASingleUseCode: Scalars['Boolean'];
+  redeemed: Scalars['Boolean'];
+};
+
+export type MarketplaceClaimableOutput = {
+  __typename?: 'MarketplaceClaimableOutput';
+  claimingType?: Maybe<Scalars['String']>;
+  endDate: Scalars['Time'];
+  id: Scalars['UUID'];
+  marketplaceCollectionItem?: Maybe<MarketplaceCollectionItem>;
+  perWalletLimit: Scalars['Int'];
+  startDate: Scalars['Time'];
+  totalAvailableUnits: Scalars['Int'];
+  totalUnits: Scalars['Int'];
 };
 
 export type MarketplaceCollection = {
@@ -484,18 +705,21 @@ export type MarketplaceCollectionCreateInput = {
 export type MarketplaceCollectionItem = {
   __typename?: 'MarketplaceCollectionItem';
   collectionId: Scalars['UUID'];
+  delivery?: Maybe<MarketplaceCollectionItemDelivery>;
   details: MarketplaceCollectionItemDetails;
   id: Scalars['UUID'];
   /** @deprecated Use `details` property instead */
   lot: MarketplaceAuctionLot;
-  marketplaceTokenId: Scalars['UUID'];
+  marketplaceTokenId?: Maybe<Scalars['UUID']>;
   name: Scalars['String'];
   saleType: MarketplaceSaleType;
   slug: Scalars['String'];
   status: MarketplaceCollectionItemStatus;
 };
 
-export type MarketplaceCollectionItemDetails = MarketplaceAuctionLot | MarketplaceBuyNowOutput;
+export type MarketplaceCollectionItemDelivery = MarketplaceItemDeliveryErc721Provenance | MarketplaceItemDeliveryErc721Transfer | MarketplaceItemDeliveryErc1155OpenEdition | MarketplaceItemDeliveryErc1155Transfer | MarketplaceItemDeliveryNoOp;
+
+export type MarketplaceCollectionItemDetails = MarketplaceAuctionLot | MarketplaceBuyNowOutput | MarketplaceClaimableOutput;
 
 export enum MarketplaceCollectionItemStatus {
   Active = 'Active',
@@ -513,14 +737,92 @@ export type MarketplaceCollectionUpdateInput = {
   status?: InputMaybe<MarketCollectionStatus>;
 };
 
+export type MarketplaceItemCodeConfigInput = {
+  codeValue?: InputMaybe<Scalars['String']>;
+  isSingleCode: Scalars['Boolean'];
+  numberOfCodes?: InputMaybe<Scalars['Int']>;
+  prefix?: InputMaybe<Scalars['String']>;
+};
+
+export type MarketplaceItemDeliveryErc721Provenance = {
+  __typename?: 'MarketplaceItemDeliveryERC721Provenance';
+  extensionAddress: Scalars['String'];
+  nftContractId: Scalars['UUID1'];
+};
+
+export type MarketplaceItemDeliveryErc721ProvenanceInput = {
+  extensionAddress: Scalars['String'];
+  nftContractId: Scalars['UUID1'];
+};
+
+export type MarketplaceItemDeliveryErc721Transfer = {
+  __typename?: 'MarketplaceItemDeliveryERC721Transfer';
+  contractAddress: Scalars['String'];
+  onChainTokenId: Scalars['Int'];
+  ownerWalletId: Scalars['UUID1'];
+};
+
+export type MarketplaceItemDeliveryErc721TransferInput = {
+  contractAddress: Scalars['String'];
+  onChainTokenId: Scalars['Int'];
+  ownerWalletId: Scalars['UUID1'];
+};
+
+export type MarketplaceItemDeliveryErc1155OpenEdition = {
+  __typename?: 'MarketplaceItemDeliveryERC1155OpenEdition';
+  contractId: Scalars['UUID1'];
+  onChainTokenId: Scalars['Int'];
+  ownerWalletId: Scalars['UUID1'];
+};
+
+export type MarketplaceItemDeliveryErc1155OpenEditionInput = {
+  contractId: Scalars['UUID1'];
+  onChainTokenId: Scalars['Int'];
+  ownerWalletId: Scalars['UUID1'];
+};
+
+export type MarketplaceItemDeliveryErc1155Transfer = {
+  __typename?: 'MarketplaceItemDeliveryERC1155Transfer';
+  contractAddress: Scalars['String'];
+  onChainTokenId: Scalars['Int'];
+  ownerWalletId: Scalars['UUID1'];
+};
+
+export type MarketplaceItemDeliveryErc1155TransferInput = {
+  amount: Scalars['Int'];
+  contractAddress: Scalars['String'];
+  onChainTokenId: Scalars['Int'];
+  ownerWalletId: Scalars['UUID1'];
+};
+
+export type MarketplaceItemDeliveryInput = {
+  ERC721Provenance?: InputMaybe<MarketplaceItemDeliveryErc721ProvenanceInput>;
+  ERC721Transfer?: InputMaybe<MarketplaceItemDeliveryErc721TransferInput>;
+  ERC1155OpenEdition?: InputMaybe<MarketplaceItemDeliveryErc1155OpenEditionInput>;
+  ERC1155Transfer?: InputMaybe<MarketplaceItemDeliveryErc1155TransferInput>;
+  NoOp?: InputMaybe<MarketplaceItemDeliveryNoOpInput>;
+  deliveryMethod: DeliveryMethod;
+};
+
+export type MarketplaceItemDeliveryNoOp = {
+  __typename?: 'MarketplaceItemDeliveryNoOp';
+  notes?: Maybe<Scalars['String']>;
+};
+
+export type MarketplaceItemDeliveryNoOpInput = {
+  notes?: InputMaybe<Scalars['String']>;
+};
+
 export enum MarketplaceSaleType {
   Auction = 'Auction',
-  BuyNow = 'BuyNow'
+  BuyNow = 'BuyNow',
+  Claimable = 'Claimable'
 }
 
 export type MarketplaceToken = {
   __typename?: 'MarketplaceToken';
   id: Scalars['UUID'];
+  isTransferDisabled: Scalars['Boolean'];
   marketplaceID: Scalars['UUID'];
   name?: Maybe<Scalars['String']>;
   nftContractAddress: Scalars['String'];
@@ -554,27 +856,37 @@ export type Mutation = {
   addExistingTokenToCollection: Scalars['String'];
   addOrganization: Organization;
   addTokensToCollection: Scalars['String'];
+  /** Screens wallet address takes input arguments address, asset, network provides risk rating */
+  addressScreening: RiskRating;
+  burnToken: Scalars['String'];
   cancelMarketplaceAuctionBid: Scalars['Boolean'];
   /** Cancels payment by ID, can be called by org admin */
   cancelPayment: Scalars['Boolean'];
+  /** Check Token Owner mutation takes the input arguments contractId, address, rangeStart, rangeEnd and then it check based on given contract ID and address matched within given range (start, end), If matched it returns the list of token Ids. */
+  checkTokenOwners: Array<Maybe<Scalars['Int']>>;
+  /** checkWalletTokens mutation checks what NFTs a user owns within a specific contract and token range */
+  checkWalletTokens: Array<Maybe<Scalars['Int']>>;
+  /** Creates new Applicant based on input data. */
+  createApplicant: ApplicantResponse;
   /** Creates invoice for given Lot, can be called by org admin */
   createAuctionLotInvoice: InvoiceDetails;
+  /** Creates new Check based for provided applicant ID. */
+  createCheck: CheckResponse;
   createMarketplaceAuctionBid: MarketplaceAuctionBid;
   createMarketplaceAuctionLot: MarketplaceAuctionLot;
   createMarketplaceBuyNowLot: MarketplaceBuyNowOutput;
+  createMarketplaceClaimableSet: MarketplaceClaimableOutput;
   createMarketplaceCollection: MarketplaceCollection;
   createOrgByUser: UserOrganization;
   /** Creates a multisig with organization as parent type */
   createOrgMultisig: Scalars['String'];
   /** Creates payment for given Invoice */
-  createPayment: Payment;
+  createPayment: PaymentOutput;
   /** Creates new Payment method based on input data. */
   createPaymentMethod: PaymentMethodOutput;
   createTokenDraft: Scalars['String'];
   /** Create a new API key for given User and Organization. */
   createUserAPIKey?: Maybe<UserApiKeyResponse>;
-  /** Creates a multisig with user as parent type */
-  createUserMultisig: Scalars['String'];
   deleteAsset: Scalars['String'];
   /**
    * Delete an existing lot from User favorite lots list.
@@ -582,28 +894,57 @@ export type Mutation = {
    *     If provided lot is invalid or not exists, then error message will be returned.
    */
   deleteCollectionItemFromUserFavorites: Scalars['Boolean'];
+  deleteOrgUser: Scalars['Boolean'];
   /** Deletes existing Payment method by Payment ID. */
   deletePaymentMethod: Scalars['Boolean'];
   deleteToken: Scalars['String'];
   /** Delete an existing API key. */
   deleteUserAPIKey: Scalars['Boolean'];
+  deleteUserInvitation: Scalars['Boolean'];
+  /** Deploy existing multisig wallet to a new network */
+  deployWalletToNetwork: Scalars['String'];
+  /** Generates promo codes for a marketplace item */
+  generatePromoCodes: Array<Maybe<Scalars['String']>>;
   importExternalTokenToCollection: Scalars['String'];
+  /** List Wallets With Token takes contract address as input along with start/end date range and network type. Returns a list of token owners. */
+  listWalletsWithToken: Array<Maybe<TokenOwner>>;
   loginWithSignature: Organization;
   marketplaceUpdateTheme: Marketplace;
   mintTokens: Scalars['String'];
   nftContractAddAdmin: Scalars['String'];
   nftContractExtensionPause: Scalars['String'];
+  nftContractExtensionProvenanceMint: Scalars['String'];
+  nftContractExtensionSetBaseURI: Scalars['String'];
+  nftContractExtensionSetProvenanceHash: Scalars['String'];
   nftContractExtensionUnpause: Scalars['String'];
-  nftContractRegisterExtensionProvenance: NftContract;
+  nftContractRegisterExtension: NftContract;
+  nftContractSetTokenURI: Scalars['String'];
   nftDeployContract: NftContract;
   orgCreateMarketplace: Marketplace;
   ping: Scalars['String'];
+  /** Redeem a claimable */
+  redeemClaimable: Scalars['Boolean'];
+  /** Redeem a claimable code */
+  redeemClaimableCode: Scalars['Boolean'];
+  /** Redeem a claimable */
+  redeemClaimableItem: Scalars['Boolean'];
+  /** Redeem a promo code */
+  redeemPromoCode: Scalars['Boolean'];
   /** Release reservations held by invoice ID */
   releaseReservation: Scalars['Boolean'];
   reserveMarketplaceBuyNowLot: MarketplaceBuyNowOutput;
+  sendUserInvitation: Scalars['Boolean'];
   setJwtIssuerDomain: Organization;
+  setRoyaltiesExtension: Scalars['String'];
+  startInvoiceDelivery: Scalars['Boolean'];
+  /** Transfers a token in the provided wallet to the `transferTo` address */
   transferToken: Scalars['String'];
+  updateAfterPaymentTransferSuspendTime: Scalars['Boolean'];
+  /** Updates existing  Applicant based on input data. */
+  updateApplicant: ApplicantResponse;
   updateMarketplaceAuctionLot: MarketplaceAuctionLot;
+  updateMarketplaceBuyNowLot: MarketplaceBuyNowOutput;
+  updateMarketplaceClaimableSet: MarketplaceClaimableOutput;
   updateMarketplaceCollection: MarketplaceCollection;
   /** Update name of multisig wallet */
   updateMultisigName: Scalars['Boolean'];
@@ -615,6 +956,9 @@ export type Mutation = {
   uploadArweaveAsset: Scalars['String'];
   uploadArweaveMetadata: Scalars['String'];
   uploadAsset: Scalars['String'];
+  uploadAssets: Scalars['Int'];
+  /** Verify Signature mutation takes the input arguments signature, message, address and then we need to check if signature+message indeed was signed by the address. */
+  verifySignature: Scalars['Boolean'];
 };
 
 
@@ -641,6 +985,19 @@ export type MutationAddTokensToCollectionArgs = {
 };
 
 
+export type MutationAddressScreeningArgs = {
+  input: AddressScreeningInput;
+  orgID: Scalars['UUID1'];
+};
+
+
+export type MutationBurnTokenArgs = {
+  contractId: Scalars['UUID1'];
+  tokenId: Scalars['Int'];
+  walletId: Scalars['UUID1'];
+};
+
+
 export type MutationCancelMarketplaceAuctionBidArgs = {
   bidID: Scalars['UUID1'];
   marketplaceID: Scalars['UUID1'];
@@ -653,9 +1010,36 @@ export type MutationCancelPaymentArgs = {
 };
 
 
+export type MutationCheckTokenOwnersArgs = {
+  contractId: Scalars['UUID1'];
+  rangeEnd: Scalars['Int'];
+  rangeStart: Scalars['Int'];
+  walletAddress: Scalars['String'];
+};
+
+
+export type MutationCheckWalletTokensArgs = {
+  chainId: Scalars['Int'];
+  contractAddress: Scalars['String'];
+  rangeEnd: Scalars['Int'];
+  rangeStart: Scalars['Int'];
+};
+
+
+export type MutationCreateApplicantArgs = {
+  input: ApplicantRequest;
+  orgID: Scalars['UUID1'];
+};
+
+
 export type MutationCreateAuctionLotInvoiceArgs = {
   lotID: Scalars['UUID1'];
   orgID: Scalars['UUID1'];
+};
+
+
+export type MutationCreateCheckArgs = {
+  applicantID: Scalars['String'];
 };
 
 
@@ -671,6 +1055,11 @@ export type MutationCreateMarketplaceAuctionLotArgs = {
 
 export type MutationCreateMarketplaceBuyNowLotArgs = {
   input: CreateMarketplaceBuyNowLotInput;
+};
+
+
+export type MutationCreateMarketplaceClaimableSetArgs = {
+  input: CreateMarketplaceClaimableSetInput;
 };
 
 
@@ -717,12 +1106,6 @@ export type MutationCreateUserApiKeyArgs = {
 };
 
 
-export type MutationCreateUserMultisigArgs = {
-  chainId: Scalars['Int'];
-  name: Scalars['String'];
-};
-
-
 export type MutationDeleteAssetArgs = {
   assetId: Scalars['UUID1'];
 };
@@ -730,6 +1113,12 @@ export type MutationDeleteAssetArgs = {
 
 export type MutationDeleteCollectionItemFromUserFavoritesArgs = {
   collectionItemId: Scalars['UUID1'];
+};
+
+
+export type MutationDeleteOrgUserArgs = {
+  organizationID: Scalars['UUID1'];
+  userID: Scalars['UUID1'];
 };
 
 
@@ -749,10 +1138,36 @@ export type MutationDeleteUserApiKeyArgs = {
 };
 
 
+export type MutationDeleteUserInvitationArgs = {
+  email: Scalars['String'];
+  orgId: Scalars['UUID1'];
+};
+
+
+export type MutationDeployWalletToNetworkArgs = {
+  networkId: Scalars['UUID1'];
+  walletId: Scalars['UUID1'];
+};
+
+
+export type MutationGeneratePromoCodesArgs = {
+  marketplaceCollectionItemId: Scalars['UUID1'];
+  num: Scalars['Int'];
+};
+
+
 export type MutationImportExternalTokenToCollectionArgs = {
   contractAddress: Scalars['String'];
   marketplaceId: Scalars['UUID1'];
   onChainId: Scalars['Int'];
+};
+
+
+export type MutationListWalletsWithTokenArgs = {
+  contractAddress: Scalars['String'];
+  endDate: Scalars['Time'];
+  networkId: Scalars['UUID1'];
+  startDate: Scalars['Time'];
 };
 
 
@@ -784,15 +1199,46 @@ export type MutationNftContractExtensionPauseArgs = {
 };
 
 
+export type MutationNftContractExtensionProvenanceMintArgs = {
+  contractId: Scalars['UUID1'];
+  extensionAddress: Scalars['String'];
+  mintToAddress: Scalars['String'];
+  numberOfTokens: Scalars['Int'];
+  voucherId: Scalars['UUID1'];
+};
+
+
+export type MutationNftContractExtensionSetBaseUriArgs = {
+  baseURI: Scalars['String'];
+  extensionAddress: Scalars['String'];
+  nftContractId: Scalars['UUID1'];
+};
+
+
+export type MutationNftContractExtensionSetProvenanceHashArgs = {
+  extensionAddress: Scalars['String'];
+  nftContractId: Scalars['UUID1'];
+  provenanceHash: Scalars['String'];
+};
+
+
 export type MutationNftContractExtensionUnpauseArgs = {
   extensionAddress: Scalars['String'];
   nftContractId: Scalars['UUID1'];
 };
 
 
-export type MutationNftContractRegisterExtensionProvenanceArgs = {
+export type MutationNftContractRegisterExtensionArgs = {
   contractId: Scalars['UUID1'];
+  extensionType: ExtensionType;
   maxTokenSupply: Scalars['Int'];
+};
+
+
+export type MutationNftContractSetTokenUriArgs = {
+  nftContractId: Scalars['UUID1'];
+  tokenId: Scalars['Int'];
+  uri: Scalars['String'];
 };
 
 
@@ -807,6 +1253,30 @@ export type MutationOrgCreateMarketplaceArgs = {
 };
 
 
+export type MutationRedeemClaimableArgs = {
+  claimableId: Scalars['String'];
+  destAddr?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationRedeemClaimableCodeArgs = {
+  code: Scalars['String'];
+  destAddr?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationRedeemClaimableItemArgs = {
+  claimableItemId: Scalars['UUID1'];
+  destAddr?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationRedeemPromoCodeArgs = {
+  code: Scalars['String'];
+  destAddr?: InputMaybe<Scalars['String']>;
+};
+
+
 export type MutationReleaseReservationArgs = {
   invoiceID: Scalars['UUID1'];
   orgID?: InputMaybe<Scalars['UUID1']>;
@@ -818,23 +1288,68 @@ export type MutationReserveMarketplaceBuyNowLotArgs = {
 };
 
 
+export type MutationSendUserInvitationArgs = {
+  email: Scalars['String'];
+  orgId: Scalars['UUID1'];
+};
+
+
 export type MutationSetJwtIssuerDomainArgs = {
   domain: Scalars['String'];
   orgId: Scalars['UUID'];
 };
 
 
+export type MutationSetRoyaltiesExtensionArgs = {
+  extensionAddress: Scalars['String'];
+  nftContractId: Scalars['UUID1'];
+  percentages: Array<Scalars['Int']>;
+  receivers: Array<Scalars['String']>;
+};
+
+
+export type MutationStartInvoiceDeliveryArgs = {
+  invoiceID: Scalars['UUID1'];
+};
+
+
 export type MutationTransferTokenArgs = {
+  amount?: InputMaybe<Scalars['Int']>;
   contractAddress: Scalars['String'];
   tokenOnChainId: Scalars['Int'];
+  tokenType?: InputMaybe<TokenType>;
   transferTo: Scalars['String'];
   walletId: Scalars['UUID1'];
+};
+
+
+export type MutationUpdateAfterPaymentTransferSuspendTimeArgs = {
+  afterPaymentTransferSuspendTime: Scalars['Int'];
+  orgID: Scalars['UUID1'];
+};
+
+
+export type MutationUpdateApplicantArgs = {
+  applicantID: Scalars['String'];
+  input: ApplicantRequest;
 };
 
 
 export type MutationUpdateMarketplaceAuctionLotArgs = {
   data: MarketplaceAuctionLotUpdateInput;
   marketplaceAuctionLotId: Scalars['UUID'];
+};
+
+
+export type MutationUpdateMarketplaceBuyNowLotArgs = {
+  input: MarketplaceBuyNowUpdateInput;
+  marketplaceBuyNowLotID: Scalars['UUID'];
+};
+
+
+export type MutationUpdateMarketplaceClaimableSetArgs = {
+  input: UpdateMarketplaceClaimableSetInput;
+  marketplaceClaimableSetID: Scalars['UUID1'];
 };
 
 
@@ -890,6 +1405,19 @@ export type MutationUploadAssetArgs = {
   orgId: Scalars['UUID1'];
 };
 
+
+export type MutationUploadAssetsArgs = {
+  files: Array<InputMaybe<Scalars['Upload']>>;
+  orgId: Scalars['UUID1'];
+};
+
+
+export type MutationVerifySignatureArgs = {
+  address: Scalars['String'];
+  message: Scalars['String'];
+  signature: Scalars['String'];
+};
+
 export type NftContract = {
   __typename?: 'NFTContract';
   activationTxHash: Scalars['String'];
@@ -928,6 +1456,7 @@ export type NftToken = {
   asset?: Maybe<Asset>;
   assetId?: Maybe<Scalars['UUID1']>;
   deployed: Scalars['Boolean'];
+  editions?: Maybe<Scalars['Int']>;
   ethereumTxId?: Maybe<Scalars['String']>;
   id: Scalars['UUID1'];
   metadataArweaveTxId?: Maybe<Scalars['String']>;
@@ -971,14 +1500,27 @@ export type OrganizationAssetsArgs = {
   filter?: InputMaybe<AssetFilter>;
 };
 
+
+export type OrganizationMembersArgs = {
+  filter?: InputMaybe<OrganizationMemberFilter>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+};
+
 export type OrganizationMember = {
   __typename?: 'OrganizationMember';
   email?: Maybe<Scalars['String']>;
   externalId: Scalars['String'];
-  id: Scalars['UUID'];
+  id: Scalars['UUID1'];
   name?: Maybe<Scalars['String']>;
+  organizationId: Scalars['UUID1'];
   role?: Maybe<Scalars['String']>;
-  username: Scalars['String'];
+  userId: Scalars['UUID1'];
+  username?: Maybe<Scalars['String']>;
+};
+
+export type OrganizationMemberFilter = {
+  externalUserId?: InputMaybe<Scalars['String']>;
 };
 
 export type Payment = {
@@ -991,6 +1533,8 @@ export type Payment = {
   userID: Scalars['UUID1'];
 };
 
+export type PaymentDetails = CryptoPaymentDetails;
+
 export type PaymentMethodCreateInput = {
   achData?: InputMaybe<AchData>;
   creditCardData?: InputMaybe<CreditCardData>;
@@ -998,7 +1542,7 @@ export type PaymentMethodCreateInput = {
   wireData?: InputMaybe<WireData>;
 };
 
-export type PaymentMethodOutput = AchPaymentMethodOutput | CreditCardPaymentMethodOutput | WirePaymentMethodOutput;
+export type PaymentMethodOutput = AchPaymentMethodOutput | CreditCardPaymentMethodOutput | CryptoPaymentMethodOutput | WirePaymentMethodOutput;
 
 export type PaymentMethodPrepareStatementOutput = AchPaymentMethodPrepareStatementOutput;
 
@@ -1010,7 +1554,8 @@ export type PaymentMethodUpdateInput = {
 
 export type PaymentNotification3DsMessage = {
   __typename?: 'PaymentNotification3DSMessage';
-  redirectURL: Scalars['String'];
+  error?: Maybe<Scalars['String']>;
+  redirectURL?: Maybe<Scalars['String']>;
 };
 
 export type PaymentNotificationMessage = PaymentNotification3DsMessage;
@@ -1018,6 +1563,17 @@ export type PaymentNotificationMessage = PaymentNotification3DsMessage;
 export type PaymentNotificationOutput = {
   __typename?: 'PaymentNotificationOutput';
   message: PaymentNotificationMessage;
+};
+
+export type PaymentOutput = {
+  __typename?: 'PaymentOutput';
+  details?: Maybe<PaymentDetails>;
+  id: Scalars['UUID1'];
+  invoiceID: Scalars['UUID1'];
+  paymentMethodID: Scalars['UUID1'];
+  processorPaymentID: Scalars['String'];
+  status: PaymentStatus;
+  userID: Scalars['UUID1'];
 };
 
 export type PaymentPublicKey = {
@@ -1037,14 +1593,30 @@ export enum PaymentStatus {
 export enum PaymentType {
   Ach = 'ACH',
   CreditCard = 'CreditCard',
+  Crypto = 'Crypto',
   Wire = 'Wire'
 }
 
 export type Query = {
   __typename?: 'Query';
+  /** Returns Invoice Item after applying the Discount */
+  applyDiscountCode: DiscountedInvoiceItem;
+  availableClaimables: Scalars['Int'];
+  /** Check if user can redeem claimable */
+  canRedeemClaimable: Scalars['Boolean'];
+  /** Check if user can redeem claimable item */
+  canRedeemClaimableItem: Scalars['Boolean'];
   collection?: Maybe<MarketplaceCollection>;
   collectionBySlug?: Maybe<MarketplaceCollection>;
   collectionItemById?: Maybe<MarketplaceCollectionItem>;
+  /** Retrieves applicant details by organizationID */
+  getApplicant: ApplicantResponse;
+  /** Get Available Claimables */
+  getAvailableClaimables: Scalars['Int'];
+  getBuyNowBuyerInfo?: Maybe<Array<BuyerDetailOutput>>;
+  getClaimableCodesForSetId: Array<Maybe<MarketplaceClaimableCodeOutput>>;
+  /** Retrieves Discount codes by Invoice Item ID */
+  getDiscountCodes: Array<Maybe<DiscountCode>>;
   /** Retrieves invoice details by ID */
   getInvoiceDetails: InvoiceDetails;
   /** Retrieves invoice list for given user, can be called by org admin */
@@ -1064,8 +1636,20 @@ export type Query = {
   getPaymentPublicKey: PaymentPublicKey;
   /** Retrieves payment list for given user, can be called by org admin */
   getPaymentsByUserID: Array<Maybe<Payment>>;
+  /** Retrieves sdk token to inititate onfido web SDK */
+  getSDKToken: SdkTokenResponse;
   /** Get Tax Quote */
   getTaxQuote: TaxQuoteOutput;
+  /** Get User by wallet address and orgID */
+  getUserByWalletAddress?: Maybe<User>;
+  /** Get UserInvitations by orgID */
+  getUserInvitations: Array<Maybe<UserInvitation>>;
+  getWalletDeliveryCount: Scalars['Int'];
+  internalUsers: Array<UserOrganization>;
+  /** create invoice/lot report by collectionID and mails  to provided email */
+  mailInvoiceLotDetailReportMailByCollectionID: Scalars['Boolean'];
+  /** create salesreport by collectionID and mails to provided email */
+  mailSalesReportByCollectionID: Scalars['Boolean'];
   marketplace: Marketplace;
   me?: Maybe<CurrentUser>;
   network: Network;
@@ -1085,6 +1669,27 @@ export type Query = {
 };
 
 
+export type QueryApplyDiscountCodeArgs = {
+  discountCode: Scalars['String'];
+  invoiceItemID: Scalars['UUID1'];
+};
+
+
+export type QueryAvailableClaimablesArgs = {
+  claimableSetID: Scalars['UUID1'];
+};
+
+
+export type QueryCanRedeemClaimableArgs = {
+  claimableID: Scalars['String'];
+};
+
+
+export type QueryCanRedeemClaimableItemArgs = {
+  claimableItemID: Scalars['UUID1'];
+};
+
+
 export type QueryCollectionArgs = {
   id: Scalars['String'];
 };
@@ -1101,9 +1706,33 @@ export type QueryCollectionItemByIdArgs = {
 };
 
 
+export type QueryGetApplicantArgs = {
+  organizationID: Scalars['UUID1'];
+};
+
+
+export type QueryGetAvailableClaimablesArgs = {
+  claimableId: Scalars['String'];
+};
+
+
+export type QueryGetBuyNowBuyerInfoArgs = {
+  itemId: Scalars['UUID1'];
+};
+
+
+export type QueryGetClaimableCodesForSetIdArgs = {
+  claimableSetID: Scalars['UUID1'];
+};
+
+
+export type QueryGetDiscountCodesArgs = {
+  invoiceItemID: Scalars['UUID1'];
+};
+
+
 export type QueryGetInvoiceDetailsArgs = {
   invoiceID: Scalars['UUID1'];
-  orgID?: InputMaybe<Scalars['UUID1']>;
 };
 
 
@@ -1128,14 +1757,60 @@ export type QueryGetPaymentMethodListArgs = {
 };
 
 
+export type QueryGetPaymentPublicKeyArgs = {
+  orgID: Scalars['UUID1'];
+};
+
+
 export type QueryGetPaymentsByUserIdArgs = {
   orgID: Scalars['UUID1'];
   userID: Scalars['UUID1'];
 };
 
 
+export type QueryGetSdkTokenArgs = {
+  applicantID: Scalars['String'];
+  referrer: Scalars['String'];
+};
+
+
 export type QueryGetTaxQuoteArgs = {
   input: TaxQuoteInput;
+};
+
+
+export type QueryGetUserByWalletAddressArgs = {
+  address: Scalars['String'];
+  orgId: Scalars['UUID1'];
+};
+
+
+export type QueryGetUserInvitationsArgs = {
+  orgId: Scalars['UUID1'];
+};
+
+
+export type QueryGetWalletDeliveryCountArgs = {
+  internalWallets: Scalars['Boolean'];
+  marketplaceCollectionId: Scalars['UUID1'];
+};
+
+
+export type QueryInternalUsersArgs = {
+  organizationID: Scalars['UUID1'];
+};
+
+
+export type QueryMailInvoiceLotDetailReportMailByCollectionIdArgs = {
+  collectionID: Scalars['UUID1'];
+  toEmail: Scalars['String'];
+};
+
+
+export type QueryMailSalesReportByCollectionIdArgs = {
+  collectionID: Scalars['UUID1'];
+  orgID: Scalars['UUID1'];
+  toEmail: Scalars['String'];
 };
 
 
@@ -1176,6 +1851,7 @@ export type QueryOrganizationByIdArgs = {
 
 
 export type QueryPreparePaymentMethodArgs = {
+  orgID?: InputMaybe<Scalars['UUID1']>;
   paymentMethodType: PaymentType;
 };
 
@@ -1201,10 +1877,20 @@ export type ReserveMarketplaceBuyNowLotInput = {
   marketplaceBuyNowLotID: Scalars['UUID1'];
 };
 
+export enum RiskRating {
+  High = 'High',
+  Low = 'Low'
+}
+
 export enum Role {
   Admin = 'admin',
   User = 'user'
 }
+
+export type SdkTokenResponse = {
+  __typename?: 'SDKTokenResponse';
+  token: Scalars['String'];
+};
 
 export type SettingsInput = {
   avatar?: InputMaybe<Scalars['String']>;
@@ -1256,6 +1942,12 @@ export type SubscriptionMarketplaceCollectionLotsUpdatesArgs = {
   collectionId: Scalars['UUID1'];
 };
 
+export enum TaxProvider {
+  NoOp = 'NoOp',
+  TaxJar = 'TaxJar',
+  Vertex = 'Vertex'
+}
+
 export type TaxQuoteBillingAddressInput = {
   city: Scalars['String'];
   country: Scalars['String'];
@@ -1275,6 +1967,7 @@ export type TaxQuoteBillingAddressOutput = {
 
 export type TaxQuoteInput = {
   address: TaxQuoteBillingAddressInput;
+  orgID: Scalars['UUID1'];
   taxablePrice: Scalars['Float'];
 };
 
@@ -1290,11 +1983,24 @@ export type TokenDraft = {
   assetId?: InputMaybe<Scalars['UUID1']>;
   copyright?: InputMaybe<Scalars['String']>;
   description?: InputMaybe<Scalars['String']>;
+  editions?: InputMaybe<Scalars['Int']>;
+  invoiceItemId?: InputMaybe<Scalars['UUID1']>;
   metadataJSON?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   royaltyBasisPoints?: InputMaybe<Scalars['Int']>;
   tokenId?: InputMaybe<Scalars['UUID1']>;
 };
+
+export type TokenOwner = {
+  __typename?: 'TokenOwner';
+  tokenId: Scalars['Int'];
+  walletAddress: Scalars['String'];
+};
+
+export enum TokenType {
+  Erc721 = 'ERC721',
+  Erc1155 = 'ERC1155'
+}
 
 export enum TransactionStatus {
   Completed = 'Completed',
@@ -1306,6 +2012,13 @@ export enum TransactionType {
   DeployMultisig = 'DeployMultisig',
   TransferToken = 'TransferToken'
 }
+
+export type UpdateMarketplaceClaimableSetInput = {
+  endDate?: InputMaybe<Scalars['Time']>;
+  startDate?: InputMaybe<Scalars['Time']>;
+  totalAvailableUnits?: InputMaybe<Scalars['Int']>;
+  totalUnits?: InputMaybe<Scalars['Int']>;
+};
 
 export type User = {
   __typename?: 'User';
@@ -1323,8 +2036,15 @@ export type UserApiKeyResponse = {
   updatedAt?: Maybe<Scalars['Time']>;
 };
 
+export type UserInvitation = {
+  __typename?: 'UserInvitation';
+  email: Scalars['String'];
+  id: Scalars['UUID'];
+  status: Scalars['String'];
+};
+
 export type UserOrgFilter = {
-  orgId?: InputMaybe<Scalars['UUID']>;
+  orgId: Scalars['UUID'];
 };
 
 export type UserOrganization = {
@@ -1384,10 +2104,11 @@ export enum WalletParentType {
 
 export type WalletToken = {
   __typename?: 'WalletToken';
+  balance?: Maybe<Scalars['String']>;
   contractAddress: Scalars['String'];
   description?: Maybe<Scalars['String']>;
   /** Token ID in smart contract */
-  id: Scalars['Int'];
+  id: Scalars['BigInt'];
   metadata?: Maybe<Erc721Metadata>;
   timeLastUpdated?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
@@ -1484,6 +2205,16 @@ export type WirePaymentMethodOutput = {
   type: PaymentType;
 };
 
+export type CheckTokenOwnersMutationVariables = Exact<{
+  contractId: Scalars['UUID1'];
+  walletAddress: Scalars['String'];
+  rangeStart: Scalars['Int'];
+  rangeEnd: Scalars['Int'];
+}>;
+
+
+export type CheckTokenOwnersMutation = { __typename?: 'Mutation', checkTokenOwners: Array<number | null> };
+
 export type PlaceBidMutationVariables = Exact<{
   marketplaceAuctionLotId: Scalars['UUID'];
   amount: Scalars['Float'];
@@ -1491,6 +2222,14 @@ export type PlaceBidMutationVariables = Exact<{
 
 
 export type PlaceBidMutation = { __typename?: 'Mutation', createMarketplaceAuctionBid: { __typename?: 'MarketplaceAuctionBid', id: any, amount: number, marketplaceAuctionLotId: any, userId: any } };
+
+export type RedeemClaimableCodeMutationVariables = Exact<{
+  code: Scalars['String'];
+  destAddr?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type RedeemClaimableCodeMutation = { __typename?: 'Mutation', redeemClaimableCode: boolean };
 
 export type RemoveFromUserFavoritesMutationVariables = Exact<{
   collectionItemId: Scalars['UUID1'];
@@ -1516,6 +2255,15 @@ export type UpdateUserOrgSettingsMutationVariables = Exact<{
 
 export type UpdateUserOrgSettingsMutation = { __typename?: 'Mutation', updateUserOrgSettings: { __typename?: 'UserOrganization', id: any } };
 
+export type VerifySignatureMutationVariables = Exact<{
+  signature: Scalars['String'];
+  message: Scalars['String'];
+  address: Scalars['String'];
+}>;
+
+
+export type VerifySignatureMutation = { __typename?: 'Mutation', verifySignature: boolean };
+
 export type CheckUsernameQueryVariables = Exact<{
   organizationID: Scalars['UUID1'];
   username: Scalars['String'];
@@ -1530,7 +2278,7 @@ export type CollectionBySlugQueryVariables = Exact<{
 }>;
 
 
-export type CollectionBySlugQuery = { __typename?: 'Query', collectionBySlug?: { __typename?: 'MarketplaceCollection', id: any, items?: Array<{ __typename?: 'MarketplaceCollectionItem', id: any, slug: string, name: string, details: { __typename?: 'MarketplaceAuctionLot', marketplaceCollectionItemId: any, startDate: any, endDate: any, status: AuctionLotStatus, feeStructure: { __typename?: 'MarketplaceAuctionFeeStructure', buyersPremiumRate: Array<{ __typename?: 'MarketplaceAuctionFeeStructureItem', from: number, to?: number | null, rate: number }>, overheadPremiumRate: Array<{ __typename?: 'MarketplaceAuctionFeeStructureItem', from: number, to?: number | null, rate: number }> }, currentBid?: { __typename?: 'MarketplaceAuctionBid', id: any, marketplaceAuctionLotId: any, amount: number, isCurrent: boolean, nextBidIncrement: number, createdAt: any, marketplaceUser?: { __typename?: 'MarketplaceUser', id: any, username?: string | null, avatar?: string | null } | null } | null, myBid?: { __typename?: 'MarketplaceAuctionBid', id: any, createdAt: any, marketplaceAuctionLotId: any, amount: number } | null } | { __typename?: 'MarketplaceBuyNowOutput', unitPrice: number, totalUnits: number, totalAvailableUnits: number, startDate: any, endDate: any, sortNumber: number } }> | null } | null };
+export type CollectionBySlugQuery = { __typename?: 'Query', collectionBySlug?: { __typename?: 'MarketplaceCollection', id: any, items?: Array<{ __typename?: 'MarketplaceCollectionItem', id: any, slug: string, name: string, details: { __typename?: 'MarketplaceAuctionLot', marketplaceCollectionItemId: any, startDate: any, endDate: any, status: AuctionLotStatus, feeStructure: { __typename?: 'MarketplaceAuctionFeeStructure', buyersPremiumRate: Array<{ __typename?: 'MarketplaceAuctionFeeStructureItem', from: number, to?: number | null, rate: number }>, overheadPremiumRate: Array<{ __typename?: 'MarketplaceAuctionFeeStructureItem', from: number, to?: number | null, rate: number }> }, currentBid?: { __typename?: 'MarketplaceAuctionBid', id: any, marketplaceAuctionLotId: any, amount: number, isCurrent: boolean, nextBidIncrement: number, createdAt: any, marketplaceUser?: { __typename?: 'MarketplaceUser', id: any, username?: string | null, avatar?: string | null } | null } | null, myBid?: { __typename?: 'MarketplaceAuctionBid', id: any, createdAt: any, marketplaceAuctionLotId: any, amount: number } | null } | { __typename?: 'MarketplaceBuyNowOutput', unitPrice: number, totalUnits: number, totalAvailableUnits: number, startDate: any, endDate: any, sortNumber: number } | { __typename?: 'MarketplaceClaimableOutput' } }> | null } | null };
 
 export type CollectionItemQueryVariables = Exact<{
   id: Scalars['UUID1'];
@@ -1538,7 +2286,7 @@ export type CollectionItemQueryVariables = Exact<{
 }>;
 
 
-export type CollectionItemQuery = { __typename?: 'Query', collectionItemById?: { __typename?: 'MarketplaceCollectionItem', id: any, slug: string, name: string, details: { __typename?: 'MarketplaceAuctionLot', marketplaceCollectionItemId: any, startDate: any, endDate: any, status: AuctionLotStatus, bids: Array<{ __typename?: 'MarketplaceAuctionBid', id: any, createdAt: any, marketplaceAuctionLotId: any, amount: number, marketplaceUser?: { __typename?: 'MarketplaceUser', id: any, avatar?: string | null, username?: string | null } | null, userOrganization: { __typename?: 'UserOrganization', user: { __typename?: 'User', name?: string | null } } }>, feeStructure: { __typename?: 'MarketplaceAuctionFeeStructure', buyersPremiumRate: Array<{ __typename?: 'MarketplaceAuctionFeeStructureItem', from: number, to?: number | null, rate: number }>, overheadPremiumRate: Array<{ __typename?: 'MarketplaceAuctionFeeStructureItem', from: number, to?: number | null, rate: number }> }, currentBid?: { __typename?: 'MarketplaceAuctionBid', id: any, marketplaceAuctionLotId: any, amount: number, isCurrent: boolean, nextBidIncrement: number, createdAt: any, marketplaceUser?: { __typename?: 'MarketplaceUser', id: any, username?: string | null, avatar?: string | null } | null } | null, myBid?: { __typename?: 'MarketplaceAuctionBid', id: any, createdAt: any, marketplaceAuctionLotId: any, amount: number } | null } | { __typename?: 'MarketplaceBuyNowOutput', unitPrice: number, totalUnits: number, totalAvailableUnits: number, startDate: any, endDate: any, sortNumber: number } } | null };
+export type CollectionItemQuery = { __typename?: 'Query', collectionItemById?: { __typename?: 'MarketplaceCollectionItem', id: any, slug: string, name: string, details: { __typename?: 'MarketplaceAuctionLot', marketplaceCollectionItemId: any, startDate: any, endDate: any, status: AuctionLotStatus, bids: Array<{ __typename?: 'MarketplaceAuctionBid', id: any, createdAt: any, marketplaceAuctionLotId: any, amount: number, marketplaceUser?: { __typename?: 'MarketplaceUser', id: any, avatar?: string | null, username?: string | null } | null, userOrganization: { __typename?: 'UserOrganization', user: { __typename?: 'User', name?: string | null } } }>, feeStructure: { __typename?: 'MarketplaceAuctionFeeStructure', buyersPremiumRate: Array<{ __typename?: 'MarketplaceAuctionFeeStructureItem', from: number, to?: number | null, rate: number }>, overheadPremiumRate: Array<{ __typename?: 'MarketplaceAuctionFeeStructureItem', from: number, to?: number | null, rate: number }> }, currentBid?: { __typename?: 'MarketplaceAuctionBid', id: any, marketplaceAuctionLotId: any, amount: number, isCurrent: boolean, nextBidIncrement: number, createdAt: any, marketplaceUser?: { __typename?: 'MarketplaceUser', id: any, username?: string | null, avatar?: string | null } | null } | null, myBid?: { __typename?: 'MarketplaceAuctionBid', id: any, createdAt: any, marketplaceAuctionLotId: any, amount: number } | null } | { __typename?: 'MarketplaceBuyNowOutput', unitPrice: number, totalUnits: number, totalAvailableUnits: number, startDate: any, endDate: any, sortNumber: number } | { __typename?: 'MarketplaceClaimableOutput' } } | null };
 
 export type CollectionItemBySlugQueryVariables = Exact<{
   marketplaceID: Scalars['UUID1'];
@@ -1547,14 +2295,14 @@ export type CollectionItemBySlugQueryVariables = Exact<{
 }>;
 
 
-export type CollectionItemBySlugQuery = { __typename?: 'Query', collectionBySlug?: { __typename?: 'MarketplaceCollection', id: any, items?: Array<{ __typename?: 'MarketplaceCollectionItem', id: any, slug: string, name: string, details: { __typename?: 'MarketplaceAuctionLot', id: any, startingBid?: number | null, marketplaceCollectionItemId: any, startDate: any, endDate: any, status: AuctionLotStatus, feeStructure: { __typename?: 'MarketplaceAuctionFeeStructure', buyersPremiumRate: Array<{ __typename?: 'MarketplaceAuctionFeeStructureItem', from: number, to?: number | null, rate: number }>, overheadPremiumRate: Array<{ __typename?: 'MarketplaceAuctionFeeStructureItem', from: number, to?: number | null, rate: number }> }, bids: Array<{ __typename?: 'MarketplaceAuctionBid', id: any, createdAt: any, marketplaceAuctionLotId: any, amount: number, marketplaceUser?: { __typename?: 'MarketplaceUser', id: any, avatar?: string | null, username?: string | null } | null }>, currentBid?: { __typename?: 'MarketplaceAuctionBid', id: any, marketplaceAuctionLotId: any, amount: number, isCurrent: boolean, nextBidIncrement: number, createdAt: any, marketplaceUser?: { __typename?: 'MarketplaceUser', id: any, username?: string | null, avatar?: string | null } | null } | null, myBid?: { __typename?: 'MarketplaceAuctionBid', id: any, createdAt: any, marketplaceAuctionLotId: any, amount: number } | null } | { __typename?: 'MarketplaceBuyNowOutput', id: any, unitPrice: number, totalUnits: number, totalAvailableUnits: number, startDate: any, endDate: any, sortNumber: number } }> | null } | null };
+export type CollectionItemBySlugQuery = { __typename?: 'Query', collectionBySlug?: { __typename?: 'MarketplaceCollection', id: any, items?: Array<{ __typename?: 'MarketplaceCollectionItem', id: any, slug: string, name: string, details: { __typename?: 'MarketplaceAuctionLot', id: any, startingBid?: number | null, marketplaceCollectionItemId: any, startDate: any, endDate: any, status: AuctionLotStatus, feeStructure: { __typename?: 'MarketplaceAuctionFeeStructure', buyersPremiumRate: Array<{ __typename?: 'MarketplaceAuctionFeeStructureItem', from: number, to?: number | null, rate: number }>, overheadPremiumRate: Array<{ __typename?: 'MarketplaceAuctionFeeStructureItem', from: number, to?: number | null, rate: number }> }, bids: Array<{ __typename?: 'MarketplaceAuctionBid', id: any, createdAt: any, marketplaceAuctionLotId: any, amount: number, marketplaceUser?: { __typename?: 'MarketplaceUser', id: any, avatar?: string | null, username?: string | null } | null }>, currentBid?: { __typename?: 'MarketplaceAuctionBid', id: any, marketplaceAuctionLotId: any, amount: number, isCurrent: boolean, nextBidIncrement: number, createdAt: any, marketplaceUser?: { __typename?: 'MarketplaceUser', id: any, username?: string | null, avatar?: string | null } | null } | null, myBid?: { __typename?: 'MarketplaceAuctionBid', id: any, createdAt: any, marketplaceAuctionLotId: any, amount: number } | null } | { __typename?: 'MarketplaceBuyNowOutput', id: any, unitPrice: number, totalUnits: number, totalAvailableUnits: number, startDate: any, endDate: any, sortNumber: number } | { __typename?: 'MarketplaceClaimableOutput' } }> | null } | null };
 
 export type GetMarketplaceQueryVariables = Exact<{
   id: Scalars['UUID'];
 }>;
 
 
-export type GetMarketplaceQuery = { __typename?: 'Query', marketplace: { __typename?: 'Marketplace', id: any, name: string, collections?: Array<{ __typename?: 'MarketplaceCollection', id: any, items?: Array<{ __typename?: 'MarketplaceCollectionItem', id: any, name: string, slug: string, details: { __typename?: 'MarketplaceAuctionLot', id: any } | { __typename?: 'MarketplaceBuyNowOutput' } }> | null }> | null } };
+export type GetMarketplaceQuery = { __typename?: 'Query', marketplace: { __typename?: 'Marketplace', id: any, name: string, collections?: Array<{ __typename?: 'MarketplaceCollection', id: any, items?: Array<{ __typename?: 'MarketplaceCollectionItem', id: any, name: string, slug: string, details: { __typename?: 'MarketplaceAuctionLot', id: any } | { __typename?: 'MarketplaceBuyNowOutput' } | { __typename?: 'MarketplaceClaimableOutput' } }> | null }> | null } };
 
 export type GetMyUserOrgsQueryVariables = Exact<{
   filter?: InputMaybe<UserOrgFilter>;
@@ -1563,9 +2311,9 @@ export type GetMyUserOrgsQueryVariables = Exact<{
 
 export type GetMyUserOrgsQuery = { __typename?: 'Query', serverTime: any, me?: { __typename?: 'CurrentUser', id: any, userOrgs: Array<{ __typename?: 'UserOrganization', id: any, role: string, kycStatus: KycStatus, bidAllowed: boolean, avatar?: string | null, username?: string | null, settings?: string | null }> } | null };
 
-export type CollectionItemDataFragment = { __typename?: 'MarketplaceCollectionItem', id: any, slug: string, name: string, details: { __typename?: 'MarketplaceAuctionLot', marketplaceCollectionItemId: any, startDate: any, endDate: any, status: AuctionLotStatus, feeStructure: { __typename?: 'MarketplaceAuctionFeeStructure', buyersPremiumRate: Array<{ __typename?: 'MarketplaceAuctionFeeStructureItem', from: number, to?: number | null, rate: number }>, overheadPremiumRate: Array<{ __typename?: 'MarketplaceAuctionFeeStructureItem', from: number, to?: number | null, rate: number }> }, currentBid?: { __typename?: 'MarketplaceAuctionBid', id: any, marketplaceAuctionLotId: any, amount: number, isCurrent: boolean, nextBidIncrement: number, createdAt: any, marketplaceUser?: { __typename?: 'MarketplaceUser', id: any, username?: string | null, avatar?: string | null } | null } | null, myBid?: { __typename?: 'MarketplaceAuctionBid', id: any, createdAt: any, marketplaceAuctionLotId: any, amount: number } | null } | { __typename?: 'MarketplaceBuyNowOutput', unitPrice: number, totalUnits: number, totalAvailableUnits: number, startDate: any, endDate: any, sortNumber: number } };
+export type CollectionItemDataFragment = { __typename?: 'MarketplaceCollectionItem', id: any, slug: string, name: string, details: { __typename?: 'MarketplaceAuctionLot', marketplaceCollectionItemId: any, startDate: any, endDate: any, status: AuctionLotStatus, feeStructure: { __typename?: 'MarketplaceAuctionFeeStructure', buyersPremiumRate: Array<{ __typename?: 'MarketplaceAuctionFeeStructureItem', from: number, to?: number | null, rate: number }>, overheadPremiumRate: Array<{ __typename?: 'MarketplaceAuctionFeeStructureItem', from: number, to?: number | null, rate: number }> }, currentBid?: { __typename?: 'MarketplaceAuctionBid', id: any, marketplaceAuctionLotId: any, amount: number, isCurrent: boolean, nextBidIncrement: number, createdAt: any, marketplaceUser?: { __typename?: 'MarketplaceUser', id: any, username?: string | null, avatar?: string | null } | null } | null, myBid?: { __typename?: 'MarketplaceAuctionBid', id: any, createdAt: any, marketplaceAuctionLotId: any, amount: number } | null } | { __typename?: 'MarketplaceBuyNowOutput', unitPrice: number, totalUnits: number, totalAvailableUnits: number, startDate: any, endDate: any, sortNumber: number } | { __typename?: 'MarketplaceClaimableOutput' } };
 
-export type CollectionItemDataAllFragment = { __typename?: 'MarketplaceCollectionItem', id: any, slug: string, name: string, details: { __typename?: 'MarketplaceAuctionLot', id: any, startingBid?: number | null, marketplaceCollectionItemId: any, startDate: any, endDate: any, status: AuctionLotStatus, feeStructure: { __typename?: 'MarketplaceAuctionFeeStructure', buyersPremiumRate: Array<{ __typename?: 'MarketplaceAuctionFeeStructureItem', from: number, to?: number | null, rate: number }>, overheadPremiumRate: Array<{ __typename?: 'MarketplaceAuctionFeeStructureItem', from: number, to?: number | null, rate: number }> }, bids: Array<{ __typename?: 'MarketplaceAuctionBid', id: any, createdAt: any, marketplaceAuctionLotId: any, amount: number, marketplaceUser?: { __typename?: 'MarketplaceUser', id: any, avatar?: string | null, username?: string | null } | null }>, currentBid?: { __typename?: 'MarketplaceAuctionBid', id: any, marketplaceAuctionLotId: any, amount: number, isCurrent: boolean, nextBidIncrement: number, createdAt: any, marketplaceUser?: { __typename?: 'MarketplaceUser', id: any, username?: string | null, avatar?: string | null } | null } | null, myBid?: { __typename?: 'MarketplaceAuctionBid', id: any, createdAt: any, marketplaceAuctionLotId: any, amount: number } | null } | { __typename?: 'MarketplaceBuyNowOutput', id: any, unitPrice: number, totalUnits: number, totalAvailableUnits: number, startDate: any, endDate: any, sortNumber: number } };
+export type CollectionItemDataAllFragment = { __typename?: 'MarketplaceCollectionItem', id: any, slug: string, name: string, details: { __typename?: 'MarketplaceAuctionLot', id: any, startingBid?: number | null, marketplaceCollectionItemId: any, startDate: any, endDate: any, status: AuctionLotStatus, feeStructure: { __typename?: 'MarketplaceAuctionFeeStructure', buyersPremiumRate: Array<{ __typename?: 'MarketplaceAuctionFeeStructureItem', from: number, to?: number | null, rate: number }>, overheadPremiumRate: Array<{ __typename?: 'MarketplaceAuctionFeeStructureItem', from: number, to?: number | null, rate: number }> }, bids: Array<{ __typename?: 'MarketplaceAuctionBid', id: any, createdAt: any, marketplaceAuctionLotId: any, amount: number, marketplaceUser?: { __typename?: 'MarketplaceUser', id: any, avatar?: string | null, username?: string | null } | null }>, currentBid?: { __typename?: 'MarketplaceAuctionBid', id: any, marketplaceAuctionLotId: any, amount: number, isCurrent: boolean, nextBidIncrement: number, createdAt: any, marketplaceUser?: { __typename?: 'MarketplaceUser', id: any, username?: string | null, avatar?: string | null } | null } | null, myBid?: { __typename?: 'MarketplaceAuctionBid', id: any, createdAt: any, marketplaceAuctionLotId: any, amount: number } | null } | { __typename?: 'MarketplaceBuyNowOutput', id: any, unitPrice: number, totalUnits: number, totalAvailableUnits: number, startDate: any, endDate: any, sortNumber: number } | { __typename?: 'MarketplaceClaimableOutput' } };
 
 export type ProfileQueryVariables = Exact<{
   organizationID: Scalars['UUID'];
@@ -1573,7 +2321,7 @@ export type ProfileQueryVariables = Exact<{
 }>;
 
 
-export type ProfileQuery = { __typename?: 'Query', serverTime: any, me?: { __typename?: 'CurrentUser', id: any, activeBids: Array<{ __typename?: 'MarketplaceAuctionBid', id: any, amount: number, marketplaceAuctionLot: { __typename?: 'MarketplaceAuctionLot', id: any, status: AuctionLotStatus, marketplaceCollectionItem?: { __typename?: 'MarketplaceCollectionItem', id: any, slug: string, name: string, details: { __typename?: 'MarketplaceAuctionLot', marketplaceCollectionItemId: any, startDate: any, endDate: any, status: AuctionLotStatus, feeStructure: { __typename?: 'MarketplaceAuctionFeeStructure', buyersPremiumRate: Array<{ __typename?: 'MarketplaceAuctionFeeStructureItem', from: number, to?: number | null, rate: number }>, overheadPremiumRate: Array<{ __typename?: 'MarketplaceAuctionFeeStructureItem', from: number, to?: number | null, rate: number }> }, currentBid?: { __typename?: 'MarketplaceAuctionBid', id: any, marketplaceAuctionLotId: any, amount: number, isCurrent: boolean, nextBidIncrement: number, createdAt: any, marketplaceUser?: { __typename?: 'MarketplaceUser', id: any, username?: string | null, avatar?: string | null } | null } | null, myBid?: { __typename?: 'MarketplaceAuctionBid', id: any, createdAt: any, marketplaceAuctionLotId: any, amount: number } | null } | { __typename?: 'MarketplaceBuyNowOutput', unitPrice: number, totalUnits: number, totalAvailableUnits: number, startDate: any, endDate: any, sortNumber: number } } | null, currentBid?: { __typename?: 'MarketplaceAuctionBid', amount: number, id: any } | null, bids: Array<{ __typename?: 'MarketplaceAuctionBid', amount: number }> } }>, user: { __typename?: 'User', id: any, username: string, email?: string | null }, userOrgs: Array<{ __typename?: 'UserOrganization', id: any, organizationId: any, role: string, bidAllowed: boolean, kycStatus: KycStatus, avatar?: string | null, username?: string | null, settings?: string | null }>, favoriteItems?: Array<{ __typename?: 'MarketplaceCollectionItem', id: any }> | null } | null };
+export type ProfileQuery = { __typename?: 'Query', serverTime: any, me?: { __typename?: 'CurrentUser', id: any, activeBids: Array<{ __typename?: 'MarketplaceAuctionBid', id: any, amount: number, marketplaceAuctionLot: { __typename?: 'MarketplaceAuctionLot', id: any, status: AuctionLotStatus, marketplaceCollectionItem?: { __typename?: 'MarketplaceCollectionItem', id: any, slug: string, name: string, details: { __typename?: 'MarketplaceAuctionLot', marketplaceCollectionItemId: any, startDate: any, endDate: any, status: AuctionLotStatus, feeStructure: { __typename?: 'MarketplaceAuctionFeeStructure', buyersPremiumRate: Array<{ __typename?: 'MarketplaceAuctionFeeStructureItem', from: number, to?: number | null, rate: number }>, overheadPremiumRate: Array<{ __typename?: 'MarketplaceAuctionFeeStructureItem', from: number, to?: number | null, rate: number }> }, currentBid?: { __typename?: 'MarketplaceAuctionBid', id: any, marketplaceAuctionLotId: any, amount: number, isCurrent: boolean, nextBidIncrement: number, createdAt: any, marketplaceUser?: { __typename?: 'MarketplaceUser', id: any, username?: string | null, avatar?: string | null } | null } | null, myBid?: { __typename?: 'MarketplaceAuctionBid', id: any, createdAt: any, marketplaceAuctionLotId: any, amount: number } | null } | { __typename?: 'MarketplaceBuyNowOutput', unitPrice: number, totalUnits: number, totalAvailableUnits: number, startDate: any, endDate: any, sortNumber: number } | { __typename?: 'MarketplaceClaimableOutput' } } | null, currentBid?: { __typename?: 'MarketplaceAuctionBid', amount: number, id: any } | null, bids: Array<{ __typename?: 'MarketplaceAuctionBid', amount: number }> } }>, user: { __typename?: 'User', id: any, username: string, email?: string | null }, userOrgs: Array<{ __typename?: 'UserOrganization', id: any, organizationId: any, role: string, bidAllowed: boolean, kycStatus: KycStatus, avatar?: string | null, username?: string | null, settings?: string | null }>, favoriteItems?: Array<{ __typename?: 'MarketplaceCollectionItem', id: any }> | null } | null };
 
 export type ServerTimeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1586,6 +2334,11 @@ export type GetUserActiveBidsQueryVariables = Exact<{
 
 
 export type GetUserActiveBidsQuery = { __typename?: 'Query', serverTime: any, me?: { __typename?: 'CurrentUser', id: any, activeBids: Array<{ __typename?: 'MarketplaceAuctionBid', id: any, amount: number, marketplaceAuctionLot: { __typename?: 'MarketplaceAuctionLot', id: any, status: AuctionLotStatus, currentBid?: { __typename?: 'MarketplaceAuctionBid', amount: number, id: any } | null, bids: Array<{ __typename?: 'MarketplaceAuctionBid', amount: number }> } }> } | null };
+
+export type GetUserFavoritesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetUserFavoritesQuery = { __typename?: 'Query', serverTime: any, me?: { __typename?: 'CurrentUser', id: any, favoriteItems?: Array<{ __typename?: 'MarketplaceCollectionItem', id: any }> | null } | null };
 
 export const CollectionItemDataFragmentDoc = gql`
     fragment CollectionItemData on MarketplaceCollectionItem {
@@ -1714,6 +2467,45 @@ export const CollectionItemDataAllFragmentDoc = gql`
   }
 }
     `;
+export const CheckTokenOwnersDocument = gql`
+    mutation CheckTokenOwners($contractId: UUID1!, $walletAddress: String!, $rangeStart: Int!, $rangeEnd: Int!) {
+  checkTokenOwners(
+    contractId: $contractId
+    walletAddress: $walletAddress
+    rangeStart: $rangeStart
+    rangeEnd: $rangeEnd
+  )
+}
+    `;
+export type CheckTokenOwnersMutationFn = Apollo.MutationFunction<CheckTokenOwnersMutation, CheckTokenOwnersMutationVariables>;
+
+/**
+ * __useCheckTokenOwnersMutation__
+ *
+ * To run a mutation, you first call `useCheckTokenOwnersMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCheckTokenOwnersMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [checkTokenOwnersMutation, { data, loading, error }] = useCheckTokenOwnersMutation({
+ *   variables: {
+ *      contractId: // value for 'contractId'
+ *      walletAddress: // value for 'walletAddress'
+ *      rangeStart: // value for 'rangeStart'
+ *      rangeEnd: // value for 'rangeEnd'
+ *   },
+ * });
+ */
+export function useCheckTokenOwnersMutation(baseOptions?: Apollo.MutationHookOptions<CheckTokenOwnersMutation, CheckTokenOwnersMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CheckTokenOwnersMutation, CheckTokenOwnersMutationVariables>(CheckTokenOwnersDocument, options);
+      }
+export type CheckTokenOwnersMutationHookResult = ReturnType<typeof useCheckTokenOwnersMutation>;
+export type CheckTokenOwnersMutationResult = Apollo.MutationResult<CheckTokenOwnersMutation>;
+export type CheckTokenOwnersMutationOptions = Apollo.BaseMutationOptions<CheckTokenOwnersMutation, CheckTokenOwnersMutationVariables>;
 export const PlaceBidDocument = gql`
     mutation PlaceBid($marketplaceAuctionLotId: UUID!, $amount: Float!) {
   createMarketplaceAuctionBid(
@@ -1753,6 +2545,38 @@ export function usePlaceBidMutation(baseOptions?: Apollo.MutationHookOptions<Pla
 export type PlaceBidMutationHookResult = ReturnType<typeof usePlaceBidMutation>;
 export type PlaceBidMutationResult = Apollo.MutationResult<PlaceBidMutation>;
 export type PlaceBidMutationOptions = Apollo.BaseMutationOptions<PlaceBidMutation, PlaceBidMutationVariables>;
+export const RedeemClaimableCodeDocument = gql`
+    mutation RedeemClaimableCode($code: String!, $destAddr: String) {
+  redeemClaimableCode(code: $code, destAddr: $destAddr)
+}
+    `;
+export type RedeemClaimableCodeMutationFn = Apollo.MutationFunction<RedeemClaimableCodeMutation, RedeemClaimableCodeMutationVariables>;
+
+/**
+ * __useRedeemClaimableCodeMutation__
+ *
+ * To run a mutation, you first call `useRedeemClaimableCodeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRedeemClaimableCodeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [redeemClaimableCodeMutation, { data, loading, error }] = useRedeemClaimableCodeMutation({
+ *   variables: {
+ *      code: // value for 'code'
+ *      destAddr: // value for 'destAddr'
+ *   },
+ * });
+ */
+export function useRedeemClaimableCodeMutation(baseOptions?: Apollo.MutationHookOptions<RedeemClaimableCodeMutation, RedeemClaimableCodeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RedeemClaimableCodeMutation, RedeemClaimableCodeMutationVariables>(RedeemClaimableCodeDocument, options);
+      }
+export type RedeemClaimableCodeMutationHookResult = ReturnType<typeof useRedeemClaimableCodeMutation>;
+export type RedeemClaimableCodeMutationResult = Apollo.MutationResult<RedeemClaimableCodeMutation>;
+export type RedeemClaimableCodeMutationOptions = Apollo.BaseMutationOptions<RedeemClaimableCodeMutation, RedeemClaimableCodeMutationVariables>;
 export const RemoveFromUserFavoritesDocument = gql`
     mutation RemoveFromUserFavorites($collectionItemId: UUID1!) {
   deleteCollectionItemFromUserFavorites(collectionItemId: $collectionItemId)
@@ -1853,6 +2677,39 @@ export function useUpdateUserOrgSettingsMutation(baseOptions?: Apollo.MutationHo
 export type UpdateUserOrgSettingsMutationHookResult = ReturnType<typeof useUpdateUserOrgSettingsMutation>;
 export type UpdateUserOrgSettingsMutationResult = Apollo.MutationResult<UpdateUserOrgSettingsMutation>;
 export type UpdateUserOrgSettingsMutationOptions = Apollo.BaseMutationOptions<UpdateUserOrgSettingsMutation, UpdateUserOrgSettingsMutationVariables>;
+export const VerifySignatureDocument = gql`
+    mutation VerifySignature($signature: String!, $message: String!, $address: String!) {
+  verifySignature(signature: $signature, message: $message, address: $address)
+}
+    `;
+export type VerifySignatureMutationFn = Apollo.MutationFunction<VerifySignatureMutation, VerifySignatureMutationVariables>;
+
+/**
+ * __useVerifySignatureMutation__
+ *
+ * To run a mutation, you first call `useVerifySignatureMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useVerifySignatureMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [verifySignatureMutation, { data, loading, error }] = useVerifySignatureMutation({
+ *   variables: {
+ *      signature: // value for 'signature'
+ *      message: // value for 'message'
+ *      address: // value for 'address'
+ *   },
+ * });
+ */
+export function useVerifySignatureMutation(baseOptions?: Apollo.MutationHookOptions<VerifySignatureMutation, VerifySignatureMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<VerifySignatureMutation, VerifySignatureMutationVariables>(VerifySignatureDocument, options);
+      }
+export type VerifySignatureMutationHookResult = ReturnType<typeof useVerifySignatureMutation>;
+export type VerifySignatureMutationResult = Apollo.MutationResult<VerifySignatureMutation>;
+export type VerifySignatureMutationOptions = Apollo.BaseMutationOptions<VerifySignatureMutation, VerifySignatureMutationVariables>;
 export const CheckUsernameDocument = gql`
     query CheckUsername($organizationID: UUID1!, $username: String!) {
   orgUsernameAvailable(organizationID: $organizationID, username: $username)
@@ -2277,41 +3134,41 @@ export function useGetUserActiveBidsLazyQuery(baseOptions?: Apollo.LazyQueryHook
 export type GetUserActiveBidsQueryHookResult = ReturnType<typeof useGetUserActiveBidsQuery>;
 export type GetUserActiveBidsLazyQueryHookResult = ReturnType<typeof useGetUserActiveBidsLazyQuery>;
 export type GetUserActiveBidsQueryResult = Apollo.QueryResult<GetUserActiveBidsQuery, GetUserActiveBidsQueryVariables>;
-
-export type VerifySignatureMutation = { __typename?: 'Mutation', verifySignature: { signature: string, message: string, address: string } };
-export type VerifySignatureVariables = Exact<{
-  signature: Scalars['String'];
-  message: Scalars['String'];
-  address: Scalars['String'];
-}>;
-
-export const VerifySignature = gql`
-mutation VerifySignature($signature: String!, $message: String!, $address: String!) {
-  verifySignature(signature: $signature, message: $message, address: $address)
+export const GetUserFavoritesDocument = gql`
+    query GetUserFavorites {
+  serverTime
+  me {
+    id
+    favoriteItems {
+      id
+    }
+  }
 }
-`;
+    `;
 
-export function useVerifySignature(baseOptions?: Apollo.MutationHookOptions<VerifySignatureMutation, VerifySignatureVariables>) {
-  const options = {...defaultOptions, ...baseOptions}
-  return Apollo.useMutation<VerifySignatureMutation, VerifySignatureVariables>(VerifySignature, options);
-}
-export type VerifySignatureMessageFn = Apollo.MutationFunction<VerifySignatureMutation, VerifySignatureVariables>;
-
-export type CheckTokenOwnersMutation = { __typename?: 'Mutation', checkTokenOwners: { contractId: any, walletAddress: string, rangeStart: number, rangeEnd: number } };
-export type CheckTokenOwnersVariables = Exact<{
-  contractId: Scalars['UUID1'];
-  walletAddress: Scalars['String'];
-  rangeStart: Scalars['Int'];
-  rangeEnd: Scalars['Int'];
-}>;
-
-export const CheckTokenOwners = gql`
-mutation CheckTokenOwners($contractId: UUID1!, $walletAddress: String!, $rangeStart: Int!, $rangeEnd: Int!) {
-  checkTokenOwners(contractId: $contractId, walletAddress: $walletAddress, rangeStart: $rangeStart, rangeEnd: $rangeEnd)
-}
-`;
-export function userCheckTokenOwners(baseOptions?: Apollo.MutationHookOptions<CheckTokenOwnersMutation, CheckTokenOwnersVariables>) {
-  const options = {...defaultOptions, ...baseOptions}
-  return Apollo.useMutation<CheckTokenOwnersMutation, CheckTokenOwnersVariables>(CheckTokenOwners, options);
-}
-export type checkTokenOwnersFn = Apollo.MutationFunction<CheckTokenOwnersMutation, CheckTokenOwnersVariables>;
+/**
+ * __useGetUserFavoritesQuery__
+ *
+ * To run a query within a React component, call `useGetUserFavoritesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserFavoritesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserFavoritesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetUserFavoritesQuery(baseOptions?: Apollo.QueryHookOptions<GetUserFavoritesQuery, GetUserFavoritesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUserFavoritesQuery, GetUserFavoritesQueryVariables>(GetUserFavoritesDocument, options);
+      }
+export function useGetUserFavoritesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserFavoritesQuery, GetUserFavoritesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUserFavoritesQuery, GetUserFavoritesQueryVariables>(GetUserFavoritesDocument, options);
+        }
+export type GetUserFavoritesQueryHookResult = ReturnType<typeof useGetUserFavoritesQuery>;
+export type GetUserFavoritesLazyQueryHookResult = ReturnType<typeof useGetUserFavoritesLazyQuery>;
+export type GetUserFavoritesQueryResult = Apollo.QueryResult<GetUserFavoritesQuery, GetUserFavoritesQueryVariables>;

@@ -1,0 +1,9 @@
+mutation RedeemClaimableCode(
+  $code: String!
+  $destAddr: String
+) {
+  redeemClaimableCode(
+    code: $code
+    destAddr: $destAddr
+  )
+}

@@ -1,0 +1,11 @@
+mutation VerifySignature(
+  $signature: String!
+  $message: String!
+  $address: String!
+) {
+  verifySignature(
+    signature: $signature
+    message: $message
+    address: $address
+  )
+}
