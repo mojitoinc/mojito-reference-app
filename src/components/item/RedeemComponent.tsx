@@ -64,14 +64,11 @@ export const RedeemComponent: React.FC<RedeemComponentProps> = ({
           destAddr: destAddr.length === 0 ? undefined : destAddr,
         },
       });
-      if (res.data?.redeemClaimableCode === true) {
-        showSuccessPopup();
-        return;
-      }
+      showSuccessPopup();
     } catch (e) {
       console.log(e);
+      showFailPopup();
     }
-    showFailPopup();
   };
 
   const showSuccessPopup = () => {
