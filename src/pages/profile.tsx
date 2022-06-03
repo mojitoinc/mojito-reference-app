@@ -265,6 +265,11 @@ interface ShowFeedbackModalI {
   error?: string;
 }
 
+interface WalletTokens{
+  token1?: string;
+  token2?: string;
+  hasAccess?: boolean;
+}
 const Profile: NextPage = () => {
   const { logout, user } = useAuth0();
   const [ checkWalletTokens ] = useCheckWalletTokens();
@@ -276,6 +281,7 @@ const Profile: NextPage = () => {
   });
   const inputRef = useRef<any>(null);
 
+  const [walletTokens, setWalletTokens] = useState<WalletTokens>({});
   const [editMode, setEditMode] = useState<boolean>(false);
   const [usernameInput, setUsernameInput] = useState<string | undefined>(
     user?.nickname
@@ -307,16 +313,22 @@ const Profile: NextPage = () => {
 
   const handleCheckWalletTokens = useCallback(async () => {
     try {
-      console.log('========ENTER======')
       const response = await checkWalletTokens({
         variables: {
-          contractAddress: process.env.NEXT_PUBLIC_CONTRACT_ID!,
+          contractAddress: "0x91ac466afa713fe42ad0b10a1f2dc1d9023fbab1",
           chainId: parseInt(process.env.NEXT_PUBLIC_CHAINID!),
           rangeStart: parseInt(process.env.NEXT_PUBLIC_CONTRACT_RANGE_START!),
-          rangeEnd: parseInt(process.env.NEXT_PUBLIC_CONTRACT_RANGE_END!)
+          rangeEnd: 200
         }
       });
-      console.log('checkWalletTokens', response)
+      const items = ((response?.data?.checkWalletTokens) ?? []) as number[];
+      const token1List = items.filter(item=> item<=50)
+      const token2List = items.filter(item => item > 50)
+      const hasAccess = items.length > 0;
+      const token1 = `${token1List.length}`;
+      const token2 = `${token2List.length}`;
+      setWalletTokens({token1 , token2, hasAccess});
+      console.log('items', items)
     } catch (e) {
       console.log('checkWalletToken es', e)
     }
@@ -453,24 +465,25 @@ const Profile: NextPage = () => {
               />
             </ImageWrapper>
               <Info>
-                <Username>{usernameInput}</Username>
+                <Username>{walletTokens?.hasAccess ? "Your Mojiti Wallet is Connected" : "You don't have a Mojiti Wallet Connected"}</Username>
                 <BiddingScore>
                   {strings.WALLET.ADDRESS}&nbsp;
                   <Score>{activeBids.length}</Score>
                 </BiddingScore>
               </Info>
-            </TokenContainer>
+          </TokenContainer>
+          {walletTokens?.hasAccess && 
           <TokenContainer>
             <TokenItem>
                 <TokenLabel>
-                  Token (s)&nbsp; : 5
+                  Token (s)&nbsp; : { walletTokens.token1}
                 </TokenLabel>
                 <TokenLabel>
-                  Token (s)&nbsp; : 5
+                  Token (s)&nbsp; :  { walletTokens.token2}
                 </TokenLabel>
             </TokenItem>
-            <div>tok</div>
-          </TokenContainer>
+            </TokenContainer>
+          }
         </WalletCard>
       </WalletContainer>
       <Bids>
