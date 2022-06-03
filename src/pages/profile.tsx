@@ -260,12 +260,22 @@ const ModalMessage = styled.h3`
   margin: 50px 0 0;
 `;
 
+const ImageContent = styled.div`
+  width: 50px;
+  height: 50px;
+  img {
+    width: 50px;
+    height: 50px;
+  }
+`;
+
 interface ShowFeedbackModalI {
   success?: boolean;
   error?: string;
 }
 
 interface WalletTokens{
+  tokens?: number[];
   token1?: string;
   token2?: string;
   hasAccess?: boolean;
@@ -327,7 +337,7 @@ const Profile: NextPage = () => {
       const hasAccess = items.length > 0;
       const token1 = `${token1List.length}`;
       const token2 = `${token2List.length}`;
-      setWalletTokens({token1 , token2, hasAccess});
+      setWalletTokens({tokens: items, token1 , token2, hasAccess});
       console.log('items', items)
     } catch (e) {
       console.log('checkWalletToken es', e)
@@ -374,6 +384,22 @@ const Profile: NextPage = () => {
   const { avatar } = userOrgs[0];
   const userPictureBetterQuality = avatar?.replace("_normal", "_400x400");
 
+  const renderToken = () => {
+    const items =  (walletTokens?.tokens) as []
+    return items.map((value: number) => {
+      const tokenImage = value > 50 ? images.WALLET_CONTRACT_51_100 : images.WALLET_CONTRACT_1_50;
+      return <ImageContent key={value}>
+                <Image
+                  src={tokenImage?.src}
+                  alt={tokenImage.alt}
+                  width={45}
+                  height={45}
+              />
+        </ImageContent>
+    });
+  };
+
+  
   return (
     <Main>
       {!!Object.keys(showFeedbackModal).length && (
@@ -473,7 +499,7 @@ const Profile: NextPage = () => {
               </Info>
           </TokenContainer>
           {walletTokens?.hasAccess && 
-          <TokenContainer>
+            <TokenContainer>
             <TokenItem>
                 <TokenLabel>
                   Token (s)&nbsp; : { walletTokens.token1}
@@ -481,7 +507,8 @@ const Profile: NextPage = () => {
                 <TokenLabel>
                   Token (s)&nbsp; :  { walletTokens.token2}
                 </TokenLabel>
-            </TokenItem>
+              </TokenItem>
+              {renderToken()}
             </TokenContainer>
           }
         </WalletCard>
