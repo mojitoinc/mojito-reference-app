@@ -68,5 +68,17 @@ fragment CollectionItemDataAll on MarketplaceCollectionItem {
         amount
       }
     }
+    ... on MarketplaceClaimableOutput {
+      id
+      totalUnits
+      totalAvailableUnits
+      startDate
+      endDate
+      perWalletLimit
+      claimingType
+      marketplaceCollectionItem {
+        id
+      }
+    }
   }
 }
