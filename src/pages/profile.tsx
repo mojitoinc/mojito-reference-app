@@ -338,9 +338,8 @@ const Profile: NextPage = () => {
       const token1 = `${token1List.length}`;
       const token2 = `${token2List.length}`;
       setWalletTokens({tokens: items, token1 , token2, hasAccess});
-      console.log('items', items)
+      // console.log('items', items)
     } catch (e) {
-      console.log('checkWalletToken es', e)
     }
   }, [checkWalletTokens]);
 
@@ -385,7 +384,7 @@ const Profile: NextPage = () => {
   const userPictureBetterQuality = avatar?.replace("_normal", "_400x400");
 
   const renderToken = () => {
-    const items =  (walletTokens?.tokens) as []
+    const items =  (walletTokens?.tokens ?? []) as []
     return items.map((value: number) => {
       const tokenImage = value > 50 ? images.WALLET_CONTRACT_51_100 : images.WALLET_CONTRACT_1_50;
       return <ImageContent key={value}>
