@@ -157,7 +157,7 @@ const WalletCard = styled.div(
   border: ${theme.borders.medium(theme.colors.primary)};
   border-radius: ${theme.borderRadius.large};
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   max-width: 1114px;
   padding: 24px 27px 40px 42px;
   position: relative;
@@ -480,8 +480,7 @@ const Profile: NextPage = () => {
       </TopContainer>
       <WalletContainer>
         <WalletCard>
-          <TokenContainer>
-            <ImageWrapper>
+        <ImageWrapper>
               <Image
                 src={userPictureBetterQuality || images.AVATAR_PLACEHOLDER?.src}
                 alt={images.AVATAR_PLACEHOLDER?.alt}
@@ -489,6 +488,22 @@ const Profile: NextPage = () => {
                 height={images.AVATAR_PLACEHOLDER?.large}
               />
             </ImageWrapper>
+            {/* {walletTokens?.hasAccess &&  */}
+            <TokenContainer>
+            <TokenItem>
+                <TokenLabel>
+                  Token 1
+                  {/* Token (s)&nbsp; : { walletTokens.token1} */}
+                </TokenLabel>
+                <TokenLabel>
+                  Token 2
+                  {/* Token (s)&nbsp; :  { walletTokens.token2} */}
+                </TokenLabel>
+              </TokenItem>
+              {/* {renderToken()} */}
+            </TokenContainer>
+            <TokenContainer>
+          {/* } */}
               <Info>
                 <Username>{walletTokens?.hasAccess ? "Your Mojiti Wallet is Connected" : "You don't have a Mojiti Wallet Connected"}</Username>
                 <BiddingScore>
@@ -497,19 +512,6 @@ const Profile: NextPage = () => {
                 </BiddingScore>
               </Info>
           </TokenContainer>
-          {walletTokens?.hasAccess && 
-            <TokenContainer>
-            <TokenItem>
-                <TokenLabel>
-                  Token (s)&nbsp; : { walletTokens.token1}
-                </TokenLabel>
-                <TokenLabel>
-                  Token (s)&nbsp; :  { walletTokens.token2}
-                </TokenLabel>
-              </TokenItem>
-              {renderToken()}
-            </TokenContainer>
-          }
         </WalletCard>
       </WalletContainer>
       <Bids>
