@@ -1,6 +1,7 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useContext, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import {
+  Box,
   Button as MuiButton,
   Dialog,
   DialogActions,
@@ -26,16 +27,14 @@ import { strings } from "@constants";
 import { MockCMSService } from "src/data/MockCMSService";
 
 import { useRedeemClaimableCodeMutation } from "@services";
+import ConnectContext from "../../utils/ConnectContext";
 
 export interface RedeemComponentProps {
   id: string;
-  walletAddr: string;
 }
 
-export const RedeemComponent: React.FC<RedeemComponentProps> = ({
-  id,
-  walletAddr: destAddr,
-}) => {
+export const RedeemComponent: React.FC<RedeemComponentProps> = ({ id }) => {
+  const { connect, setConnect } = useContext(ConnectContext);
   const router = useRouter();
   const cms = useMemo(() => {
     return new MockCMSService();
@@ -56,20 +55,24 @@ export const RedeemComponent: React.FC<RedeemComponentProps> = ({
     message: "",
   });
 
-  const handleSubmit = async () => {
-    try {
-      const res = await redeemClaimableCode({
-        variables: {
-          code,
-          destAddr: destAddr.length === 0 ? undefined : destAddr,
-        },
-      });
-      showSuccessPopup();
-    } catch (e) {
-      console.log(e);
+  const handleSubmit = useCallback(async () => {
+    if (connect.account && code) {
+      try {
+        const res = await redeemClaimableCode({
+          variables: {
+            code,
+            destAddr: connect.account,
+          },
+        });
+        showSuccessPopup();
+      } catch (e) {
+        console.log(e);
+        showFailPopup();
+      }
+    } else {
       showFailPopup();
     }
-  };
+  }, [code, connect.account, redeemClaimableCode]);
 
   const showSuccessPopup = () => {
     openModal({
@@ -78,7 +81,7 @@ export const RedeemComponent: React.FC<RedeemComponentProps> = ({
       message: strings.REDEEM.ALERT.SUCCESS.MESSAGE,
       success: true,
     });
-  }
+  };
 
   const showFailPopup = () => {
     openModal({
@@ -134,24 +137,68 @@ export const RedeemComponent: React.FC<RedeemComponentProps> = ({
               justifyContent: "center",
             }}
           >
-            <AuthorDescription>
-              {strings.REDEEM.DESCRIPTION.INFORMATION}
-            </AuthorDescription>
-            <TextField
-              value={name}
-              label={strings.REDEEM.LABEL.FULL_NAME}
-              onChange={(e) => setName(e.target.value)}
-            />
-            <AuthorDescription>
-              {strings.REDEEM.DESCRIPTION.REDEMPTION_CODE}
-            </AuthorDescription>
-            <TextField
-              value={code}
-              label={strings.REDEEM.LABEL.REDEMPTION_CODE}
-              onChange={(e) => setCode(e.target.value)}
-            />
-            <Separator />
-            <Button onClick={handleSubmit}>{strings.REDEEM.BUTTON}</Button>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                position: "relative",
+              }}
+            >
+              <AuthorDescription>
+                {strings.REDEEM.DESCRIPTION.INFORMATION}
+              </AuthorDescription>
+              <TextField
+                value={name}
+                label={strings.REDEEM.LABEL.FULL_NAME}
+                onChange={(e) => setName(e.target.value)}
+              />
+              <AuthorDescription>
+                {strings.REDEEM.DESCRIPTION.REDEMPTION_CODE}
+              </AuthorDescription>
+              <TextField
+                value={code}
+                label={strings.REDEEM.LABEL.REDEMPTION_CODE}
+                onChange={(e) => setCode(e.target.value)}
+              />
+              <Separator />
+              <Button onClick={handleSubmit}>{strings.REDEEM.BUTTON}</Button>
+              {!(connect.connected && connect.account) && (
+                <>
+                  {/* display overlay */}
+                  <Box
+                    sx={{
+                      backgroundColor: "#ffffffaf",
+                      position: "absolute",
+                      top: 0,
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      boxShadow: "0px 0px 20px 20px #ffffffaf",
+                      zIndex: 1,
+                    }}
+                  />
+                  <div
+                    style={{
+                      backgroundColor: "#ffffffaf",
+                      position: "absolute",
+                      top: 0,
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      boxShadow: "0px 0px 20px 20px #ffffffaf",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      fontSize: "1.3rem",
+                      zIndex: 1,
+                    }}
+                  >
+                    Connect your wallet to redeem
+                  </div>
+                </>
+              )}
+            </div>
           </DetailRight>
         </DetailContainer>
       </StyledContent>

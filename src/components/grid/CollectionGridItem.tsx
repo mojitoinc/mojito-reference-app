@@ -8,6 +8,7 @@ import { strings } from "@constants";
 import { CollectionItemDataFragment } from "@services";
 import { CMSData } from "@state";
 import { formatCurrencyAmount, isDuringSale, isPostSale } from "@utils";
+import Link from "next/link";
 
 const Item = styled.a(
   ({ theme }) => `
@@ -125,65 +126,67 @@ export const CollectionGridItem = ({
   cmsData,
   youHoldBid,
 }: CollectionGridItemProps) => (
-  <Item href={`item/${item.slug}`}>
-    <ImageWrapper>
-      {cmsData?.format === "image" && (
-        <ItemImage
-          objectFit="cover"
-          layout="fill"
-          draggable="false"
-          src={cmsData.image!}
-          alt="lot-image"
-        />
-      )}
-      {cmsData?.format === "video" && (
-        <Video preload="none" poster={cmsData.preview}>
-          <source src={cmsData.video} />
-        </Video>
-      )}
-    </ImageWrapper>
-    <TagContainer>
-      <StatusTag item={item} />
-    </TagContainer>
-    <Line>
-      <Title>{item.name}</Title>
-    </Line>
-    <Row>
-      <div>
-        <Id>{`#${item.slug}`}</Id>
-        <Paragraph>
-          {item.details.__typename === "MarketplaceAuctionLot" &&
-          isPostSale(item) &&
-          item.details.currentBid ? (
-            <>
-              {strings.COMMON.WINNER}
-              <WinnerName>
-                {`${item.details.currentBid?.marketplaceUser?.username}${
-                  youHoldBid ? ` (${strings.COMMON.YOU})` : ""
-                }`}
-              </WinnerName>
-            </>
-          ) : (
-            <>
-              {strings.COMMON.CREATED_BY}
-              <CreatorName>{cmsData?.author.name}</CreatorName>
-            </>
-          )}
-        </Paragraph>
-      </div>
-      {item.details.__typename === "MarketplaceAuctionLot" &&
-        isDuringSale(item) && (
-          <CurrentBid>
-            {strings.COMMON.CURRENT_BID}
-            <CurrentBidAmount>
-              {formatCurrencyAmount(
-                item.details.currentBid?.amount
-                  ? item.details.currentBid?.amount
-                  : 0
-              )}
-            </CurrentBidAmount>
-          </CurrentBid>
+  <Link href="item/[slug]" as={`item/${item.slug}`}>
+    <Item>
+      <ImageWrapper>
+        {cmsData?.format === "image" && (
+          <ItemImage
+            objectFit="cover"
+            layout="fill"
+            draggable="false"
+            src={cmsData.image!}
+            alt="lot-image"
+          />
         )}
-    </Row>
-  </Item>
+        {cmsData?.format === "video" && (
+          <Video preload="none" poster={cmsData.preview}>
+            <source src={cmsData.video} />
+          </Video>
+        )}
+      </ImageWrapper>
+      <TagContainer>
+        <StatusTag item={item} />
+      </TagContainer>
+      <Line>
+        <Title>{item.name}</Title>
+      </Line>
+      <Row>
+        <div>
+          <Id>{`#${item.slug}`}</Id>
+          <Paragraph>
+            {item.details.__typename === "MarketplaceAuctionLot" &&
+            isPostSale(item) &&
+            item.details.currentBid ? (
+              <>
+                {strings.COMMON.WINNER}
+                <WinnerName>
+                  {`${item.details.currentBid?.marketplaceUser?.username}${
+                    youHoldBid ? ` (${strings.COMMON.YOU})` : ""
+                  }`}
+                </WinnerName>
+              </>
+            ) : (
+              <>
+                {strings.COMMON.CREATED_BY}
+                <CreatorName>{cmsData?.author.name}</CreatorName>
+              </>
+            )}
+          </Paragraph>
+        </div>
+        {item.details.__typename === "MarketplaceAuctionLot" &&
+          isDuringSale(item) && (
+            <CurrentBid>
+              {strings.COMMON.CURRENT_BID}
+              <CurrentBidAmount>
+                {formatCurrencyAmount(
+                  item.details.currentBid?.amount
+                    ? item.details.currentBid?.amount
+                    : 0
+                )}
+              </CurrentBidAmount>
+            </CurrentBid>
+          )}
+      </Row>
+    </Item>
+  </Link>
 );
