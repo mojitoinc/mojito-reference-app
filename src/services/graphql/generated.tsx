@@ -1028,7 +1028,7 @@ export type MutationCheckWalletTokensArgs = {
 
 export type MutationCreateApplicantArgs = {
   input: ApplicantRequest;
-  orgID: Scalars['UUID1'];
+  orgID?: InputMaybe<Scalars['UUID1']>;
 };
 
 
