@@ -1758,7 +1758,7 @@ export type QueryGetPaymentMethodListArgs = {
 
 
 export type QueryGetPaymentPublicKeyArgs = {
-  orgID: Scalars['UUID1'];
+  orgID?: InputMaybe<Scalars['UUID1']>;
 };
 
 
