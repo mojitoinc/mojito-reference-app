@@ -94,6 +94,15 @@ export const RedeemComponent: React.FC<RedeemComponentProps> = ({ id }) => {
     });
   }, []);
 
+  const showRequiredPopup = useCallback(() => {
+    openModal({
+      open: true,
+      title: strings.REDEEM.ALERT.CODE_REQUIRED.TITLE,
+      message: strings.REDEEM.ALERT.CODE_REQUIRED.MESSAGE,
+      success: false,
+    });
+  }, []);
+
   const handleSubmit = useCallback(async () => {
     if (connect.account && code) {
       try {
@@ -109,13 +118,14 @@ export const RedeemComponent: React.FC<RedeemComponentProps> = ({ id }) => {
         showFailPopup();
       }
     } else {
-      showFailPopup();
+      showRequiredPopup();
     }
   }, [
     code,
     connect.account,
     redeemClaimableCode,
     showFailPopup,
+    showRequiredPopup,
     showSuccessPopup,
   ]);
 

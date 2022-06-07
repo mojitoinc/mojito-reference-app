@@ -84,6 +84,10 @@ export const strings = {
         TITLE: "Failed to redeem",
         MESSAGE: "Failed to redeem your item. Please try again with correct code.",
       },
+      CODE_REQUIRED: {
+        TITLE: "Code is required",
+        MESSAGE: "Please enter the redemption code you received in via email below.",
+      },
       SUCCESS: {
         TITLE: "Successfully redeemed",
         MESSAGE: "Your item has been redeemed successfully! ",
