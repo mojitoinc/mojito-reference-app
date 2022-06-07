@@ -86,7 +86,8 @@ export const strings = {
       },
       SUCCESS: {
         TITLE: "Successfully redeemed",
-        MESSAGE: "Your item has been redeemed successfully!",
+        MESSAGE: "Your item has been redeemed successfully! ",
+        WALLET_VISIT: "Check my wallet",
       },
       CLOSE: "Close",
     },

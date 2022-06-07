@@ -1,4 +1,4 @@
-import { useCallback, useContext, useMemo, useState } from "react";
+import { useCallback, useContext, useMemo, useState, ReactNode } from "react";
 import { useRouter } from "next/router";
 import {
   Box,
@@ -19,6 +19,7 @@ import {
   Main,
   StyledContent,
   StyledImage,
+  Video,
 } from "./ItemComponents";
 import { Button } from "../shared";
 import { Separator } from "./ModalComponents";
@@ -28,6 +29,7 @@ import { MockCMSService } from "src/data/MockCMSService";
 
 import { useRedeemClaimableCodeMutation } from "@services";
 import ConnectContext from "../../utils/ConnectContext";
+import Link from "next/link";
 
 export interface RedeemComponentProps {
   id: string;
@@ -48,12 +50,49 @@ export const RedeemComponent: React.FC<RedeemComponentProps> = ({ id }) => {
 
   const [code, setCode] = useState("");
   const [name, setName] = useState("");
-  const [{ open, success, title, message }, openModal] = useState({
+  const [{ open, success, title, message }, openModal] = useState<{
+    open: boolean;
+    success: boolean;
+    title: ReactNode;
+    message: ReactNode;
+  }>({
     open: false,
     success: false,
     title: "",
     message: "",
   });
+
+  const walletLink = useMemo(() => {
+    // Should update in the future - to use correct subnet
+    return `https://etherscan.io/address/${connect.account}`;
+  }, [connect.account]);
+
+  const showSuccessPopup = useCallback(() => {
+    openModal({
+      open: true,
+      title: strings.REDEEM.ALERT.SUCCESS.TITLE,
+      message: (
+        <>
+          {strings.REDEEM.ALERT.SUCCESS.MESSAGE}
+          <Link href={walletLink} passHref>
+            <a target="_blank" rel="noopener noreferrer">
+              {strings.REDEEM.ALERT.SUCCESS.WALLET_VISIT}
+            </a>
+          </Link>
+        </>
+      ),
+      success: true,
+    });
+  }, [walletLink]);
+
+  const showFailPopup = useCallback(() => {
+    openModal({
+      open: true,
+      title: strings.REDEEM.ALERT.FAIL.TITLE,
+      message: strings.REDEEM.ALERT.FAIL.MESSAGE,
+      success: false,
+    });
+  }, []);
 
   const handleSubmit = useCallback(async () => {
     if (connect.account && code) {
@@ -72,25 +111,13 @@ export const RedeemComponent: React.FC<RedeemComponentProps> = ({ id }) => {
     } else {
       showFailPopup();
     }
-  }, [code, connect.account, redeemClaimableCode]);
-
-  const showSuccessPopup = () => {
-    openModal({
-      open: true,
-      title: strings.REDEEM.ALERT.SUCCESS.TITLE,
-      message: strings.REDEEM.ALERT.SUCCESS.MESSAGE,
-      success: true,
-    });
-  };
-
-  const showFailPopup = () => {
-    openModal({
-      open: true,
-      title: strings.REDEEM.ALERT.FAIL.TITLE,
-      message: strings.REDEEM.ALERT.FAIL.MESSAGE,
-      success: false,
-    });
-  };
+  }, [
+    code,
+    connect.account,
+    redeemClaimableCode,
+    showFailPopup,
+    showSuccessPopup,
+  ]);
 
   const handleClose = useCallback(() => {
     openModal({
@@ -127,6 +154,11 @@ export const RedeemComponent: React.FC<RedeemComponentProps> = ({ id }) => {
           <DetailLeft>
             {cmsData?.format === "image" && (
               <StyledImage src={cmsData.image} alt={id} width={612} />
+            )}
+            {cmsData?.format === "video" && (
+              <Video width={612} controls preload="auto">
+                <source src={cmsData.video} type="video/mp4" />
+              </Video>
             )}
           </DetailLeft>
 
