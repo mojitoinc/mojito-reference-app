@@ -97,7 +97,7 @@ export const RedeemComponent: React.FC<RedeemComponentProps> = ({ id }) => {
   const handleSubmit = useCallback(async () => {
     if (connect.account && code) {
       try {
-        const res = await redeemClaimableCode({
+        await redeemClaimableCode({
           variables: {
             code,
             destAddr: connect.account,
