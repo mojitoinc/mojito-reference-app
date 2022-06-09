@@ -32,6 +32,7 @@ export const theme: DefaultTheme = {
     info: "#C4C4C4",
     bidBannerBorder: "#999999",
     modalOverlayBackground: "rgba(0, 0, 0, 0.6)",
+    textOverlayBackground: "#ffffffaf",
   },
   fonts: {
     primary: "IBMPlexMono",

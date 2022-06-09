@@ -25,6 +25,7 @@ declare module "styled-components" {
       imageBackground: string;
       info: string;
       modalOverlayBackground: string;
+      textOverlayBackground: string;
       primary: string;
       secondary: string;
       text: string;

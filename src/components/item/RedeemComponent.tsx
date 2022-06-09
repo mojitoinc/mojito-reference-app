@@ -30,6 +30,7 @@ import { MockCMSService } from "src/data/MockCMSService";
 import { useRedeemClaimableCodeMutation } from "@services";
 import ConnectContext from "../../utils/ConnectContext";
 import Link from "next/link";
+import { useTheme } from "styled-components";
 
 export interface RedeemComponentProps {
   id: string;
@@ -37,6 +38,7 @@ export interface RedeemComponentProps {
 
 export const RedeemComponent: React.FC<RedeemComponentProps> = ({ id }) => {
   const { connect, setConnect } = useContext(ConnectContext);
+  const { colors } = useTheme();
   const router = useRouter();
   const cms = useMemo(() => {
     return new MockCMSService();
@@ -210,25 +212,25 @@ export const RedeemComponent: React.FC<RedeemComponentProps> = ({ id }) => {
                   {/* display overlay */}
                   <Box
                     sx={{
-                      backgroundColor: "#ffffffaf",
+                      backgroundColor: `${colors.textOverlayBackground}`,
                       position: "absolute",
                       top: 0,
                       bottom: 0,
                       left: 0,
                       right: 0,
-                      boxShadow: "0px 0px 20px 20px #ffffffaf",
+                      boxShadow: `0px 0px 20px 20px ${colors.textOverlayBackground}`,
                       zIndex: 1,
                     }}
                   />
                   <div
                     style={{
-                      backgroundColor: "#ffffffaf",
+                      backgroundColor: `${colors.textOverlayBackground}`,
                       position: "absolute",
                       top: 0,
                       bottom: 0,
                       left: 0,
                       right: 0,
-                      boxShadow: "0px 0px 20px 20px #ffffffaf",
+                      boxShadow: `0px 0px 20px 20px ${colors.textOverlayBackground}`,
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
