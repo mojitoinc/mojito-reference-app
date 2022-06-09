@@ -69,8 +69,12 @@ const Home: NextPage = () => {
 
   return (
     <Container>
-      <Button onClick={handleRedeem} isBig>{"Redeem (claimable demo)"}</Button>
-      <Separator/>
+      <>
+        <Button onClick={handleRedeem} isBig>
+          {"Redeem (claimable demo)"}
+        </Button>
+        <Separator />
+      </>
       <Image
         src={images.BRAND_ICON?.src}
         alt={images.BRAND_ICON?.alt}
