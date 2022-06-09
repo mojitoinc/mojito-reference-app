@@ -64,6 +64,7 @@ const Home: NextPage = () => {
   const router = useRouter();
 
   const handleRedeem = useCallback(() => {
+    // TODO: redirect to redeem page - 123 is just for a placeholder.
     router.push("/redeem/123");
   }, [router]);
 
