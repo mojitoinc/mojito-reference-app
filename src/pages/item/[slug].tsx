@@ -34,13 +34,13 @@ const ItemDetail: NextPage = () => {
 
       return item;
     }
-  }, [collectionData, loading, error]);
+  }, [collectionData, router.query]);
 
   const cmsData = useMemo(() => {
     if (data) {
       return cms.getData(data.id);
     }
-  }, [data, error, loading]);
+  }, [cms, data]);
 
   if (loading) {
     return <></>;

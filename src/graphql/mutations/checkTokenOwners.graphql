@@ -1,0 +1,13 @@
+mutation CheckTokenOwners(
+  $contractId: UUID1!
+  $walletAddress: String!
+  $rangeStart: Int!
+  $rangeEnd: Int!
+) {
+  checkTokenOwners(
+    contractId: $contractId
+    walletAddress: $walletAddress
+    rangeStart: $rangeStart
+    rangeEnd: $rangeEnd
+  )
+}
