@@ -31,6 +31,8 @@ import { useRedeemClaimableCodeMutation } from "@services";
 import ConnectContext from "../../utils/ConnectContext";
 import Link from "next/link";
 import { useTheme } from "styled-components";
+import { AlertDialog } from "../shared/AlertDialog";
+import { RedeemResultDialog } from "./RedeemResultDialog";
 
 export interface RedeemComponentProps {
   id: string;
@@ -52,17 +54,7 @@ export const RedeemComponent: React.FC<RedeemComponentProps> = ({ id }) => {
 
   const [code, setCode] = useState("");
   const [name, setName] = useState("");
-  const [{ open, success, title, message }, openModal] = useState<{
-    open: boolean;
-    success: boolean;
-    title: ReactNode;
-    message: ReactNode;
-  }>({
-    open: false,
-    success: false,
-    title: "",
-    message: "",
-  });
+  const [type, setType] = useState<"success" | "error" | "required" | undefined>(undefined);
 
   const walletLink = useMemo(() => {
     // Should update in the future - to use correct subnet
@@ -70,39 +62,15 @@ export const RedeemComponent: React.FC<RedeemComponentProps> = ({ id }) => {
   }, [connect.account]);
 
   const showSuccessPopup = useCallback(() => {
-    openModal({
-      open: true,
-      title: strings.REDEEM.ALERT.SUCCESS.TITLE,
-      message: (
-        <>
-          {strings.REDEEM.ALERT.SUCCESS.MESSAGE}
-          <Link href={walletLink} passHref>
-            <a target="_blank" rel="noopener noreferrer">
-              {strings.REDEEM.ALERT.SUCCESS.WALLET_VISIT}
-            </a>
-          </Link>
-        </>
-      ),
-      success: true,
-    });
-  }, [walletLink]);
+    setType("success");
+  }, []);
 
   const showFailPopup = useCallback(() => {
-    openModal({
-      open: true,
-      title: strings.REDEEM.ALERT.FAIL.TITLE,
-      message: strings.REDEEM.ALERT.FAIL.MESSAGE,
-      success: false,
-    });
+    setType("error");
   }, []);
 
   const showRequiredPopup = useCallback(() => {
-    openModal({
-      open: true,
-      title: strings.REDEEM.ALERT.CODE_REQUIRED.TITLE,
-      message: strings.REDEEM.ALERT.CODE_REQUIRED.MESSAGE,
-      success: false,
-    });
+    setType("required");
   }, []);
 
   const handleSubmit = useCallback(async () => {
@@ -132,35 +100,20 @@ export const RedeemComponent: React.FC<RedeemComponentProps> = ({ id }) => {
   ]);
 
   const handleClose = useCallback(() => {
-    openModal({
-      open: false,
-      title: "",
-      message: "",
-      success: false,
-    });
-    success && router.push(`/`);
-  }, [success, router]);
+    if (type === "success") {
+      router.push("/");
+    } else {
+      setType(undefined);
+    }
+  }, [type, router]);
 
   return (
     <Main>
-      <Dialog
-        open={open}
+      <RedeemResultDialog
+        walletLink={walletLink}
         onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            {message}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <MuiButton onClick={handleClose} autoFocus>
-            {strings.REDEEM.ALERT.CLOSE}
-          </MuiButton>
-        </DialogActions>
-      </Dialog>
+        type={type}
+      />
       <StyledContent>
         <DetailContainer style={{ flexDirection: "row", width: "100%" }}>
           <DetailLeft>
