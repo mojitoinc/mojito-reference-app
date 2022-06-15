@@ -323,6 +323,7 @@ const Profile: NextPage = () => {
 
   const handleCheckWalletTokens = useCallback(async () => {
     try {
+      // this is hard coded contract for testing the profile token
       const response = await checkWalletTokens({
         variables: {
           contractAddress: "0x91ac466afa713fe42ad0b10a1f2dc1d9023fbab1",
@@ -338,7 +339,6 @@ const Profile: NextPage = () => {
       const token1 = `${token1List.length}`;
       const token2 = `${token2List.length}`;
       setWalletTokens({tokens: items, token1 , token2, hasAccess});
-      // console.log('items', items)
     } catch (e) {
     }
   }, [checkWalletTokens]);
@@ -386,6 +386,7 @@ const Profile: NextPage = () => {
   const renderToken = () => {
     const items =  (walletTokens?.tokens ?? []) as []
     return items.map((value: number) => {
+      // for dev purpose visulally represent the image for token. 0...50 & 51...100
       const tokenImage = value > 50 ? images.WALLET_CONTRACT_51_100 : images.WALLET_CONTRACT_1_50;
       return <ImageContent key={value}>
                 <Image
@@ -492,15 +493,13 @@ const Profile: NextPage = () => {
             <TokenContainer>
             <TokenItem>
                 <TokenLabel>
-                  Token 1
-                  {/* Token (s)&nbsp; : { walletTokens.token1} */}
+                  Token (s)&nbsp; : { walletTokens.token1}
                 </TokenLabel>
                 <TokenLabel>
-                  Token 2
-                  {/* Token (s)&nbsp; :  { walletTokens.token2} */}
+                  Token (s)&nbsp; :  { walletTokens.token2}
                 </TokenLabel>
               </TokenItem>
-              {/* {renderToken()} */}
+              {renderToken()}
             </TokenContainer>
             <TokenContainer>
           {/* } */}
