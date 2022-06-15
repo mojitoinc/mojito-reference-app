@@ -5,7 +5,7 @@ import { AlertDialog } from "../shared/AlertDialog";
 import Link from "next/link";
 
 export interface RedeemResultDialogProps {
-  type?: "success" | "error" | "required";
+  type?: "success" | "error" | "required-code" | "required-wallet";
   walletLink: string;
   onClose: () => void;
 }
@@ -42,10 +42,15 @@ export const RedeemResultDialog: React.FC<RedeemResultDialogProps> = ({
           title: strings.REDEEM.ALERT.FAIL.TITLE,
           message: strings.REDEEM.ALERT.FAIL.MESSAGE,
         };
-      case "required":
+      case "required-code":
         return {
           title: strings.REDEEM.ALERT.CODE_REQUIRED.TITLE,
           message: strings.REDEEM.ALERT.CODE_REQUIRED.MESSAGE,
+        };
+      case "required-wallet":
+        return {
+          title: strings.REDEEM.ALERT.WALLET_REQUIRED.TITLE,
+          message: strings.REDEEM.ALERT.WALLET_REQUIRED.MESSAGE,
         };
       default:
         return {

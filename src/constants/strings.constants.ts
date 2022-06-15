@@ -75,6 +75,7 @@ export const strings = {
     DESCRIPTION: {
       INFORMATION: "Information",
       REDEMPTION_CODE: "Please enter the redemption code you received in via email below:",
+      SELECT_WALLET: "Select wallet address",
     },
     LABEL: {
       FULL_NAME: "Full Name",
@@ -88,6 +89,10 @@ export const strings = {
       CODE_REQUIRED: {
         TITLE: "Code is required",
         MESSAGE: "Please enter the redemption code you received in via email below.",
+      },
+      WALLET_REQUIRED: {
+        TITLE: "Wallet address is required",
+        MESSAGE: "Please select the wallet address.",
       },
       SUCCESS: {
         TITLE: "Successfully redeemed",

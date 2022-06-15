@@ -1,4 +1,4 @@
-import { useCallback, useContext, useMemo, useState, ReactNode } from "react";
+import { useCallback, useContext, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import {
   Box,
@@ -8,6 +8,8 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  MenuItem,
+  Select,
   TextField,
 } from "@mui/material";
 
@@ -24,21 +26,27 @@ import {
 import { Button } from "../shared";
 import { Separator } from "./ModalComponents";
 
-import { strings } from "@constants";
+import { config, strings } from "@constants";
 import { MockCMSService } from "src/data/MockCMSService";
 
-import { useRedeemClaimableCodeMutation } from "@services";
+import { useProfileQuery, useRedeemClaimableCodeMutation } from "@services";
 import ConnectContext from "../../utils/ConnectContext";
 import Link from "next/link";
 import { useTheme } from "styled-components";
 import { AlertDialog } from "../shared/AlertDialog";
 import { RedeemResultDialog } from "./RedeemResultDialog";
+import DropdownMenu from "../shared/DropdownMenu";
 
 export interface RedeemComponentProps {
   id: string;
 }
 
 export const RedeemComponent: React.FC<RedeemComponentProps> = ({ id }) => {
+  const profile = useProfileQuery({
+    variables: {
+      organizationID: config.ORGANIZATION_ID,
+    },
+  });
   const { connect, setConnect } = useContext(ConnectContext);
   const { colors } = useTheme();
   const router = useRouter();
@@ -54,12 +62,28 @@ export const RedeemComponent: React.FC<RedeemComponentProps> = ({ id }) => {
 
   const [code, setCode] = useState("");
   const [name, setName] = useState("");
-  const [type, setType] = useState<"success" | "error" | "required" | undefined>(undefined);
 
-  const walletLink = useMemo(() => {
+  const [type, setType] = useState<
+    "success" | "error" | "required-code" | "required-wallet" | undefined
+  >(undefined);
+
+  const [wallet, setWallet] = useState<string | undefined>(undefined);
+  const wallets = useMemo(() => {
+    const wallets: string[] = (profile?.data?.me?.wallets ?? []).map(
+      (wallet) => wallet.address
+    );
+    if (connect.connected && connect.account) {
+      wallets.push(connect.account);
+    }
+    return wallets;
+  }, [profile?.data?.me?.wallets, connect.account, connect.connected]);
+
+  const walletLink = useCallback((wallet?: string) => {
     // Should update in the future - to use correct subnet
-    return `https://etherscan.io/address/${connect.account}`;
-  }, [connect.account]);
+    return wallet
+      ? `https://etherscan.io/address/${wallet}`
+      : "https://etherscan.io";
+  }, []);
 
   const showSuccessPopup = useCallback(() => {
     setType("success");
@@ -69,12 +93,20 @@ export const RedeemComponent: React.FC<RedeemComponentProps> = ({ id }) => {
     setType("error");
   }, []);
 
-  const showRequiredPopup = useCallback(() => {
-    setType("required");
+  const showCodeRequiredPopup = useCallback(() => {
+    setType("required-code");
+  }, []);
+
+  const showWalletRequiredPopup = useCallback(() => {
+    setType("required-wallet");
   }, []);
 
   const handleSubmit = useCallback(async () => {
-    if (connect.account && code) {
+    if (!code) {
+      showCodeRequiredPopup();
+    } else if (!wallet) {
+      showWalletRequiredPopup();
+    } else {
       try {
         await redeemClaimableCode({
           variables: {
@@ -87,16 +119,16 @@ export const RedeemComponent: React.FC<RedeemComponentProps> = ({ id }) => {
         console.log(e);
         showFailPopup();
       }
-    } else {
-      showRequiredPopup();
     }
   }, [
     code,
     connect.account,
     redeemClaimableCode,
+    showCodeRequiredPopup,
     showFailPopup,
-    showRequiredPopup,
     showSuccessPopup,
+    showWalletRequiredPopup,
+    wallet,
   ]);
 
   const handleClose = useCallback(() => {
@@ -110,7 +142,7 @@ export const RedeemComponent: React.FC<RedeemComponentProps> = ({ id }) => {
   return (
     <Main>
       <RedeemResultDialog
-        walletLink={walletLink}
+        walletLink={walletLink(wallet)}
         onClose={handleClose}
         type={type}
       />
@@ -158,11 +190,23 @@ export const RedeemComponent: React.FC<RedeemComponentProps> = ({ id }) => {
                 label={strings.REDEEM.LABEL.REDEMPTION_CODE}
                 onChange={(e) => setCode(e.target.value)}
               />
+              <AuthorDescription>
+                {strings.REDEEM.DESCRIPTION.SELECT_WALLET}
+              </AuthorDescription>
+              <Select
+                value={wallet}
+                onChange={(e) => setWallet(e.target.value)}
+              >
+                {wallets.map((wallet) => (
+                  <MenuItem key={wallet} value={wallet}>
+                    {wallet}
+                  </MenuItem>
+                ))}
+              </Select>
               <Separator />
               <Button onClick={handleSubmit}>{strings.REDEEM.BUTTON}</Button>
-              {!(connect.connected && connect.account) && (
+              {wallets.length === 0 && (
                 <>
-                  {/* display overlay */}
                   <Box
                     sx={{
                       backgroundColor: `${colors.textOverlayBackground}`,
