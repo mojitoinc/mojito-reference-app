@@ -1,11 +1,10 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 
 import {
-  CheckoutComponentProps,
-  useCheckoutOverlay,
+  PUICheckoutComponentProps, THREEDS_FLOW_SEARCH_PARAM_ERROR_KEY, THREEDS_FLOW_SEARCH_PARAM_SUCCESS_KEY, useOpenCloseCheckoutModal
 } from "@mojitonft/mojito-mixers";
 
 import { config, images, strings } from "@constants";
@@ -33,6 +32,7 @@ import {
 } from "./ItemComponents";
 import { Winner } from "./AuctionComponents";
 import { Button, StatusTag } from "../shared";
+import { CheckoutComponent } from "../payment-ui";
 
 export const BuyNowDetail: React.FC<AuctionDetailProps> = ({
   item,
@@ -42,6 +42,8 @@ export const BuyNowDetail: React.FC<AuctionDetailProps> = ({
   const [isSeeMoreLot, setIsSeeMoreLot] = useState(true);
   const [isSeeMoreAuthor, setIsSeeMoreAuthor] = useState(true);
   const router = useRouter();
+  const paymentIdParam = router.query[THREEDS_FLOW_SEARCH_PARAM_SUCCESS_KEY]?.toString();
+  const paymentErrorParam = router.query[THREEDS_FLOW_SEARCH_PARAM_ERROR_KEY]?.toString();
 
   const { data: profile } = useProfileQuery({
     skip: !isAuthenticated,
@@ -59,49 +61,37 @@ export const BuyNowDetail: React.FC<AuctionDetailProps> = ({
     });
   };
 
-  const { open, setCheckoutComponentProps } = useCheckoutOverlay();
+  const { loaderMode, isOpen, onOpen, onClose } = useOpenCloseCheckoutModal({
+    paymentIdParam,
+    paymentErrorParam,
+  });
 
-  const getComponentPropsRef = useRef<() => CheckoutComponentProps>(() => ({}));
+  const otherPageSpecificProps: Partial<PUICheckoutComponentProps> = {
+    orgID: config.ORGANIZATION_ID || "",
+    checkoutItems: [
+      {
+        // Common:
+        lotID: (item?.details?.id as string) || "",
+        collectionItemId: "",
+        lotType: "buyNow",
+        name: item.name || "",
+        description: cmsData?.about || "",
+        imageSrc: cmsData?.image || "",
+        imageBackground: "rgba(0, 0, 0, .125)",
 
-  getComponentPropsRef.current = () => {
-    return {
-      orgID: config.ORGANIZATION_ID || "",
-      checkoutItems: [
-        {
-          // Common:
-          lotID: (item?.details?.id as string) || "",
-          lotType: "buyNow",
-          name: item.name || "",
-          description: cmsData?.about || "",
-          imageSrc: cmsData?.image || "",
-          imageBackground: "rgba(0, 0, 0, .125)",
+        // Buy Now:
+        units: 1,
+        totalSupply:
+          (item?.details as { totalUnits: number })?.totalUnits || 0,
+        remainingSupply:
+          (item?.details as { totalAvailableUnits: number })
+            ?.totalAvailableUnits || 0,
 
-          // Buy Now:
-          units: 1,
-          totalSupply:
-            (item?.details as { totalUnits: number })?.totalUnits || 0,
-          remainingSupply:
-            (item?.details as { totalAvailableUnits: number })
-              ?.totalAvailableUnits || 0,
-
-          // Auction:
-          fee: 0,
-        },
-      ],
-    };
+        // Auction:
+        fee: 0,
+      },
+    ],
   };
-
-  const handleOpenClicked = useCallback(() => {
-    if (!profile || !item || !cmsData) return;
-
-    open(getComponentPropsRef.current());
-  }, [open, profile, item, cmsData]);
-
-  useEffect(() => {
-    setCheckoutComponentProps(getComponentPropsRef.current());
-
-    // If some of the fields in the object above can change, add them to the dependencies here:
-  }, [setCheckoutComponentProps, profile, item, cmsData]);
 
   if (item.details.__typename !== "MarketplaceBuyNowOutput") {
     return <div>{strings.COMMON.INVALID_TYPE}</div>;
@@ -115,7 +105,13 @@ export const BuyNowDetail: React.FC<AuctionDetailProps> = ({
   const isDuringSale = saleStage === "during";
   const isPostSale = saleStage === "post";
 
-  return (
+  return (<>
+    <CheckoutComponent
+      loaderMode={ loaderMode }
+      open={ isOpen }
+      onClose={ onClose }
+      { ...otherPageSpecificProps } />
+
     <Main>
       <StyledContent>
         <DetailContainer>
@@ -191,7 +187,7 @@ export const BuyNowDetail: React.FC<AuctionDetailProps> = ({
               {isDuringSale && !isLoading && (
                 <>
                   {isAuthenticated ? (
-                    <Button onClick={handleOpenClicked} isBig>
+                    <Button onClick={onOpen} isBig>
                       {strings.ITEM.BUY_NOW}
                     </Button>
                   ) : (
@@ -207,5 +203,5 @@ export const BuyNowDetail: React.FC<AuctionDetailProps> = ({
         </DetailContainer>
       </StyledContent>
     </Main>
-  );
+  </>);
 };

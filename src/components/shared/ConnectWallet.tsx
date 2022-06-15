@@ -8,7 +8,7 @@ import { useWallet } from "@utils";
 import DropdownMenu from "./DropdownMenu";
 import styled from "styled-components";
 import { media } from "../../utils/media";
-import { useVerifySignature, useCheckTokenOwners } from "@services";
+import { useVerifySignatureMutation, useCheckTokenOwnersMutation } from "@services";
 
 const ConnectBtn = styled.div`
   position: relative;
@@ -64,8 +64,8 @@ export const ConnectWallet: React.FC = () => {
   const [ isLoading, setLoading ] = useState(false);
 
   const { connect, setConnect } = useContext(ConnectContext);
-  const [verifySignature] = useVerifySignature();
-  const [checkTokenOwners] = useCheckTokenOwners();
+  const [verifySignature] = useVerifySignatureMutation();
+  const [checkTokenOwners] = useCheckTokenOwnersMutation();
   const { setWallet } = useWallet();
 
   const connectWeb3 = async () => {

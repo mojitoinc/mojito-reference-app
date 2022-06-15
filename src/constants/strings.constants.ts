@@ -71,4 +71,31 @@ export const strings = {
     OWNER_SUCCESS_MESSAGE: "Your account has valid access!",
     OWNER_FAILURE_MESSAGE: "Your account does not have access",
   },
+  REDEEM: {
+    DESCRIPTION: {
+      INFORMATION: "Information",
+      REDEMPTION_CODE: "Please enter the redemption code you received in via email below:",
+    },
+    LABEL: {
+      FULL_NAME: "Full Name",
+      REDEMPTION_CODE: "Redemption Code",
+    },
+    ALERT: {
+      FAIL: {
+        TITLE: "Failed to redeem",
+        MESSAGE: "Failed to redeem your item. Please try again with correct code.",
+      },
+      CODE_REQUIRED: {
+        TITLE: "Code is required",
+        MESSAGE: "Please enter the redemption code you received in via email below.",
+      },
+      SUCCESS: {
+        TITLE: "Successfully redeemed",
+        MESSAGE: "Your item has been redeemed successfully! ",
+        WALLET_VISIT: "Check my wallet",
+      },
+      CLOSE: "Close",
+    },
+    BUTTON: "Redeem",
+  }
 };

@@ -3,12 +3,15 @@ import { useRouter } from "next/router";
 import React, { ErrorInfo, useCallback } from "react";
 
 import {
-  CheckoutComponentWithRequiredProps,
+  PUICheckoutComponentProps,
   CheckoutEventData,
   CheckoutEventType,
   CheckoutModalError,
   PUICheckout,
   PUICheckoutProps,
+  THREEDS_FLOW_SEARCH_PARAM_SUCCESS_KEY,
+  THREEDS_FLOW_SEARCH_PARAM_ERROR_KEY,
+  PUIRouterOptions,
 } from "@mojitonft/mojito-mixers";
 
 import { config, images } from "@constants";
@@ -17,10 +20,12 @@ import {
   REFERENCE_APP_THEME_OPTIONS,
 } from "./theme/paymentModalTheme";
 
-export const CheckoutComponent: React.FC<CheckoutComponentWithRequiredProps> = (
+export const CheckoutComponent: React.FC<PUICheckoutComponentProps> = (
   checkoutComponentProps
 ) => {
   const router = useRouter();
+  const paymentIdParam = router.query[THREEDS_FLOW_SEARCH_PARAM_SUCCESS_KEY]?.toString();
+  const paymentErrorParam = router.query[THREEDS_FLOW_SEARCH_PARAM_ERROR_KEY]?.toString();
 
   const {
     loginWithRedirect,
@@ -35,16 +40,23 @@ export const CheckoutComponent: React.FC<CheckoutComponentWithRequiredProps> = (
     return token?.__raw || "";
   }, [getIdTokenClaims]);
 
-  const onGoTo = useCallback(() => {
-    router.push("/profile/invoices");
+  const onGoTo = useCallback((pathnameOrUrl: string, { replace, reason, ...options }: PUIRouterOptions = {}) => {
+    if (pathnameOrUrl.startsWith("http")) {
+      if (replace) {
+        console.log(`Replace URL with ${ pathnameOrUrl }`, reason);
+        window.location.replace(pathnameOrUrl);
+      } else {
+        console.log(`Push URL ${ pathnameOrUrl }`, reason);
+        window.location.href = pathnameOrUrl;
+      }
+    } else if (replace) {
+      console.log(`Replace route with ${ pathnameOrUrl }`, reason);
+      router.replace(pathnameOrUrl || "/", undefined, options);
+    } else {
+      console.log(`Push route ${ pathnameOrUrl }`, reason);
+      router.push(pathnameOrUrl || "/", undefined, options);
+    }
   }, [router]);
-
-  const onRemoveUrlParams = useCallback(
-    (cleanURL: string) => {
-      router.replace(cleanURL, undefined, { shallow: true });
-    },
-    [router]
-  );
 
   const handleLogin = useCallback(async () => {
     loginWithRedirect({
@@ -86,13 +98,11 @@ export const CheckoutComponent: React.FC<CheckoutComponentWithRequiredProps> = (
     // open,
     // onClose,
     onGoTo,
-    goToHref: "/profile",
-    goToLabel: "View Profile",
 
     // Flow:
     // loaderMode,
-    // paymentErrorParam,
-    onRemoveUrlParams,
+    paymentIdParam,
+    paymentErrorParam,
     guestCheckoutEnabled: false,
     productConfirmationEnabled: false,
     vertexEnabled: false,
@@ -115,7 +125,10 @@ export const CheckoutComponent: React.FC<CheckoutComponentWithRequiredProps> = (
     acceptedCreditCardNetworks: ["visa", "mastercard"],
     // network,
     // paymentLimits,
-    // dictionary,
+    dictionary: {
+      goToHref: "/profile",
+      goToLabel: "View Profile",
+    },
 
     // Legal:
     consentType: "circle",

@@ -110,13 +110,13 @@ function Countdown({
   );
   const timerCallback = useCallback(() => {
     setDuration(calculateDuration(eventTime, serverTime.add(1, "seconds")));
-  }, [serverTime]);
+  }, [eventTime, serverTime]);
 
   useEffect(() => {
     const intervalId = setInterval(timerCallback, interval);
 
     return () => clearInterval(intervalId);
-  }, [serverTime]);
+  }, [interval, serverTime, timerCallback]);
 
   return (
     <>

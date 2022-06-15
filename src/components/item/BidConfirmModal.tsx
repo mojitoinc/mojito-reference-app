@@ -103,15 +103,11 @@ export const BidConfirmModal = ({
         setAvailableOptions(options);
       }
     }
-  }, [
-    item.details?.bids?.length,
-    item.details?.startingBid,
-    item.details?.currentBid?.id,
-  ]);
+  }, [item.details, auctionDetails, availableOptions]);
 
   useLayoutEffect(() => {
     setBidAmount(availableOptions[0]?.value);
-  }, [availableOptions[0]?.value]);
+  }, [availableOptions]);
 
   const bidOnChange = (e: any) => {
     const value = e.value;

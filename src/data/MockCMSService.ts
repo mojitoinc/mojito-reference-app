@@ -46,7 +46,7 @@ export class MockCMSService {
       lotNumber: 1,
       format: "image",
       about: faker.lorem.paragraph(),
-      image: faker.image.imageUrl(400, 400, "animals", true),
+      image: faker.image.imageUrl(400, 400, "animals", true, true),
       author: {
         name: `${faker.name.firstName()} ${faker.name.lastName()}`,
         title: "Rick Ross",
