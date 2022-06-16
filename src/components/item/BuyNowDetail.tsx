@@ -44,11 +44,22 @@ export const BuyNowDetail: React.FC<AuctionDetailProps> = ({
   const router = useRouter();
   const paymentIdParam = router.query[THREEDS_FLOW_SEARCH_PARAM_SUCCESS_KEY]?.toString();
   const paymentErrorParam = router.query[THREEDS_FLOW_SEARCH_PARAM_ERROR_KEY]?.toString();
+  const lotID = (item?.details?.id as string) || "";
 
   const { data: profile } = useProfileQuery({
     skip: !isAuthenticated,
     variables: {
       organizationID: config.ORGANIZATION_ID,
+    },
+  });
+
+  const {
+    loading: loadingIsUserOnAllowList,
+    data: isUserOnAllowList,
+  } = useIsUserOnAllowListQuery({
+    skip: !isAuthenticated,
+    variables: {
+      lotID,
     },
   });
 
@@ -71,7 +82,7 @@ export const BuyNowDetail: React.FC<AuctionDetailProps> = ({
     checkoutItems: [
       {
         // Common:
-        lotID: (item?.details?.id as string) || "",
+        lotID,
         collectionItemId: "",
         lotType: "buyNow",
         name: item.name || "",
@@ -187,7 +198,7 @@ export const BuyNowDetail: React.FC<AuctionDetailProps> = ({
               {isDuringSale && !isLoading && (
                 <>
                   {isAuthenticated ? (
-                    <Button onClick={onOpen} isBig>
+                    <Button isBig onClick={onOpen} disabled={ loadingIsUserOnAllowList || !isUserOnAllowList }>
                       {strings.ITEM.BUY_NOW}
                     </Button>
                   ) : (
