@@ -1,17 +1,6 @@
 import { useCallback, useContext, useMemo, useState } from "react";
 import { useRouter } from "next/router";
-import {
-  Box,
-  Button as MuiButton,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  MenuItem,
-  Select,
-  TextField,
-} from "@mui/material";
+import { Box, MenuItem, Select, TextField } from "@mui/material";
 
 import {
   AuthorDescription,
@@ -31,9 +20,7 @@ import { MockCMSService } from "src/data/MockCMSService";
 
 import { useProfileQuery, useRedeemClaimableCodeMutation } from "@services";
 import ConnectContext from "../../utils/ConnectContext";
-import Link from "next/link";
 import { useTheme } from "styled-components";
-import { AlertDialog } from "../shared/AlertDialog";
 import { RedeemResultDialog } from "./RedeemResultDialog";
 import { getWalletLink } from "src/utils/walletLink";
 
@@ -186,16 +173,16 @@ export const RedeemComponent: React.FC<RedeemComponentProps> = ({ id }) => {
               <AuthorDescription>
                 {strings.REDEEM.DESCRIPTION.SELECT_WALLET}
               </AuthorDescription>
-              <Select
-                value={wallet}
-                onChange={(e) => setWallet(e.target.value)}
-              >
-                {wallets.map((wallet) => (
-                  <MenuItem key={wallet} value={wallet}>
-                    {wallet}
-                  </MenuItem>
-                ))}
-              </Select>
+                <Select
+                  value={wallet}
+                  onChange={(e) => setWallet(e.target.value as string)}
+                >
+                  {wallets.map((wallet) => (
+                    <MenuItem key={wallet} value={wallet}>
+                      {wallet}
+                    </MenuItem>
+                  ))}
+                </Select>
               <Separator />
               <Button onClick={handleSubmit}>{strings.REDEEM.BUTTON}</Button>
               {wallets.length === 0 && (
