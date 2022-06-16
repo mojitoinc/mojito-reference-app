@@ -9,7 +9,7 @@ import {
 
 import { config, images, strings } from "@constants";
 import { AuctionDetailProps } from "@interfaces";
-import { useProfileQuery } from "@services";
+import { useIsUserOnAllowListQuery, useProfileQuery } from "@services";
 import { getSaleStage } from "@utils";
 
 import {
@@ -44,6 +44,7 @@ export const BuyNowDetail: React.FC<AuctionDetailProps> = ({
   const router = useRouter();
   const paymentIdParam = router.query[THREEDS_FLOW_SEARCH_PARAM_SUCCESS_KEY]?.toString();
   const paymentErrorParam = router.query[THREEDS_FLOW_SEARCH_PARAM_ERROR_KEY]?.toString();
+  const lotID = (item?.details?.id as string) || "";
 
   const { data: profile } = useProfileQuery({
     skip: !isAuthenticated,
@@ -51,6 +52,18 @@ export const BuyNowDetail: React.FC<AuctionDetailProps> = ({
       organizationID: config.ORGANIZATION_ID,
     },
   });
+
+  const {
+    loading: loadingIsUserOnAllowList,
+    data: isUserOnAllowListResponse,
+  } = useIsUserOnAllowListQuery({
+    skip: !isAuthenticated,
+    variables: {
+      lotID,
+    },
+  });
+
+  const isUserOnAllowList = isUserOnAllowListResponse?.isUserOnAllowList;
 
   const login = () => {
     loginWithRedirect({
@@ -71,7 +84,7 @@ export const BuyNowDetail: React.FC<AuctionDetailProps> = ({
     checkoutItems: [
       {
         // Common:
-        lotID: (item?.details?.id as string) || "",
+        lotID,
         collectionItemId: "",
         lotType: "buyNow",
         name: item.name || "",
@@ -187,8 +200,8 @@ export const BuyNowDetail: React.FC<AuctionDetailProps> = ({
               {isDuringSale && !isLoading && (
                 <>
                   {isAuthenticated ? (
-                    <Button onClick={onOpen} isBig>
-                      {strings.ITEM.BUY_NOW}
+                    <Button isBig onClick={onOpen} disabled={ loadingIsUserOnAllowList || !isUserOnAllowList }>
+                      { loadingIsUserOnAllowList || isUserOnAllowList ? strings.ITEM.BUY_NOW : strings.ITEM.NOT_ALLOWED }
                     </Button>
                   ) : (
                     <Button isBig onClick={login}>
