@@ -55,13 +55,15 @@ export const BuyNowDetail: React.FC<AuctionDetailProps> = ({
 
   const {
     loading: loadingIsUserOnAllowList,
-    data: isUserOnAllowList,
+    data: isUserOnAllowListResponse,
   } = useIsUserOnAllowListQuery({
     skip: !isAuthenticated,
     variables: {
       lotID,
     },
   });
+
+  const isUserOnAllowList = isUserOnAllowListResponse?.isUserOnAllowList;
 
   const login = () => {
     loginWithRedirect({
