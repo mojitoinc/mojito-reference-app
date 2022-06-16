@@ -35,7 +35,7 @@ import Link from "next/link";
 import { useTheme } from "styled-components";
 import { AlertDialog } from "../shared/AlertDialog";
 import { RedeemResultDialog } from "./RedeemResultDialog";
-import DropdownMenu from "../shared/DropdownMenu";
+import { getWalletLink } from "src/utils/walletLink";
 
 export interface RedeemComponentProps {
   id: string;
@@ -77,13 +77,6 @@ export const RedeemComponent: React.FC<RedeemComponentProps> = ({ id }) => {
     }
     return wallets;
   }, [profile?.data?.me?.wallets, connect.account, connect.connected]);
-
-  const walletLink = useCallback((wallet?: string) => {
-    // Should update in the future - to use correct subnet
-    return wallet
-      ? `https://etherscan.io/address/${wallet}`
-      : "https://etherscan.io";
-  }, []);
 
   const showSuccessPopup = useCallback(() => {
     setType("success");
@@ -142,7 +135,7 @@ export const RedeemComponent: React.FC<RedeemComponentProps> = ({ id }) => {
   return (
     <Main>
       <RedeemResultDialog
-        walletLink={walletLink(wallet)}
+        walletLink={getWalletLink(wallet)}
         onClose={handleClose}
         type={type}
       />
