@@ -1905,12 +1905,7 @@ export type QueryGetPaymentsByUserIdArgs = {
 
 export type QueryGetSdkTokenArgs = {
   applicantID: Scalars['String'];
-  referrer?: InputMaybe<Scalars['String']>;
-};
-
-
-export type QueryGetSignatureMessageArgs = {
-  orgID: Scalars['UUID1'];
+  referrer: Scalars['String'];
 };
 
 
