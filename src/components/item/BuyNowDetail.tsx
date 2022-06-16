@@ -9,7 +9,7 @@ import {
 
 import { config, images, strings } from "@constants";
 import { AuctionDetailProps } from "@interfaces";
-import { useProfileQuery } from "@services";
+import { useIsUserOnAllowListQuery, useProfileQuery } from "@services";
 import { getSaleStage } from "@utils";
 
 import {
@@ -199,7 +199,7 @@ export const BuyNowDetail: React.FC<AuctionDetailProps> = ({
                 <>
                   {isAuthenticated ? (
                     <Button isBig onClick={onOpen} disabled={ loadingIsUserOnAllowList || !isUserOnAllowList }>
-                      {strings.ITEM.BUY_NOW}
+                      { loadingIsUserOnAllowList || isUserOnAllowList ? strings.ITEM.BUY_NOW : strings.ITEM.NOT_ALLOWED }
                     </Button>
                   ) : (
                     <Button isBig onClick={login}>
