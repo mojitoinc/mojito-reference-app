@@ -38,5 +38,16 @@ query Profile($organizationID: UUID!, $filter: UserOrgFilter) {
     favoriteItems {
       id
     }
+    wallets {
+      id
+      name
+      address
+      network {
+        id
+        name
+        chainID
+      }
+      networkId
+    }
   }
 }

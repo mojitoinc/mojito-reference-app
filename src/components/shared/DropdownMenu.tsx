@@ -1,11 +1,11 @@
 import { useState, useContext } from "react";
-import { Button, Menu, MenuProps, MenuItem, ListItemIcon, ListItemText } from "@material-ui/core";
-import { ExitToApp as ExitToAppIcon, Person as PersonIcon } from "@material-ui/icons";
+import { Button, Menu, MenuProps, MenuItem, ListItemIcon, ListItemText } from "@mui/material";
+import { ExitToApp as ExitToAppIcon, Person as PersonIcon } from "@mui/icons-material";
 import { useRouter } from "next/router";
 import ConnectContext from "../../utils/ConnectContext";
-import { makeStyles } from "@material-ui/core/styles";
-import { withStyles } from "@material-ui/core/styles";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import { makeStyles } from "@mui/styles";
+import { withStyles } from "@mui/styles";
+import {ExpandMore} from "@mui/icons-material";
 import styled from "styled-components";
 
 const StyledDropdown = styled.div`
@@ -24,7 +24,7 @@ const StyledMenu = withStyles({
 })((props: MenuProps) => (
   <Menu
     elevation={0}
-    getContentAnchorEl={null}
+    anchorEl={null}
     anchorOrigin={{
       vertical: "bottom",
       horizontal: "right",
@@ -87,11 +87,11 @@ const DropdownMenu: React.FC<{ address: string }> = ({ address }) => {
       <Button
         aria-controls="customized-menu"
         variant="contained"
-        color="default"
+        color="inherit"
         onClick={handleClick}
         className={classes.button}
       >
-        {address} {"  "} <ExpandMoreIcon />
+        {address} {"  "} <ExpandMore />
       </Button>
       <StyledMenu
         id="customized-menu"
