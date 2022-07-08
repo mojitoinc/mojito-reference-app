@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { useAuth0, withAuthenticationRequired } from "@auth0/auth0-react";
 
@@ -11,6 +11,7 @@ import { useFetchAfterAuth } from "@hooks";
 import {
   useProfileLazyQuery,
   useUpdateUserOrgSettingsMutation,
+  useCheckWalletTokens
 } from "@services";
 
 const Main = styled.main`
@@ -150,6 +151,75 @@ const BidsTitle = styled.h3(
 `
 );
 
+
+const WalletCard = styled.div(
+  ({ theme }) => `
+  border: ${theme.borders.medium(theme.colors.primary)};
+  border-radius: ${theme.borderRadius.large};
+  display: flex;
+  flex-direction: column;
+  max-width: 1114px;
+  padding: 24px 27px 40px 42px;
+  position: relative;
+  width: 100%;
+
+  ${theme.down(theme.breakpoints.md)} {
+    align-items: center;
+    flex-direction: column;
+    padding: 24px 27px;
+  }
+`
+);
+
+const WalletContainer = styled.div`
+  margin-top: 102px !important;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+`;
+
+const TokenContainer = styled.div(
+  ({ theme }) => `
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: flex-end;
+  margin-bottom: 5px;
+
+  ${theme.down(theme.breakpoints.md)} {
+    flex-direction: column;
+    margin-top: 10px
+  }
+`
+);
+
+const TokenItem = styled.div(
+  ({ theme }) => `
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  margin-bottom: 5px;
+
+  ${theme.down(theme.breakpoints.md)} {
+    flex-direction: column;
+    margin-top: 10px
+  }
+`
+);
+
+const TokenLabel = styled.h3(
+  ({ theme }) => `
+  background-color: ${theme.colors.primary};
+  color: ${theme.colors.background};
+  font: ${theme.fonts.h3("bold")};
+  padding: 20px;
+  border-radius: 8px;
+  min-height: 48px;
+  padding: 10px 12px;
+  margin-inline: 4px;
+`
+);
+
 const Grid = styled.div(
   ({ theme }) => `
   display: flex;
@@ -190,13 +260,30 @@ const ModalMessage = styled.h3`
   margin: 50px 0 0;
 `;
 
+const ImageContent = styled.div`
+  width: 50px;
+  height: 50px;
+  img {
+    width: 50px;
+    height: 50px;
+  }
+`;
+
 interface ShowFeedbackModalI {
   success?: boolean;
   error?: string;
 }
 
+interface WalletTokens{
+  tokens?: number[];
+  token1?: string;
+  token2?: string;
+  hasAccess?: boolean;
+}
 const Profile: NextPage = () => {
   const { logout, user } = useAuth0();
+  const [ checkWalletTokens ] = useCheckWalletTokens();
+
   const [getData, { data: profile }] = useProfileLazyQuery({
     variables: {
       organizationID: config.ORGANIZATION_ID,
@@ -204,6 +291,7 @@ const Profile: NextPage = () => {
   });
   const inputRef = useRef<any>(null);
 
+  const [walletTokens, setWalletTokens] = useState<WalletTokens>({});
   const [editMode, setEditMode] = useState<boolean>(false);
   const [usernameInput, setUsernameInput] = useState<string | undefined>(
     user?.nickname
@@ -232,6 +320,32 @@ const Profile: NextPage = () => {
   useEffect(() => {
     editMode && inputRef.current?.focus();
   }, [editMode]);
+
+  const handleCheckWalletTokens = useCallback(async () => {
+    try {
+      // this is hard coded contract for testing the profile token
+      const response = await checkWalletTokens({
+        variables: {
+          contractAddress: "0x91ac466afa713fe42ad0b10a1f2dc1d9023fbab1",
+          chainId: parseInt(process.env.NEXT_PUBLIC_CHAINID!),
+          rangeStart: parseInt(process.env.NEXT_PUBLIC_CONTRACT_RANGE_START!),
+          rangeEnd: 200
+        }
+      });
+      const items = ((response?.data?.checkWalletTokens) ?? []) as number[];
+      const token1List = items.filter(item=> item<=50)
+      const token2List = items.filter(item => item > 50)
+      const hasAccess = items.length > 0;
+      const token1 = `${token1List.length}`;
+      const token2 = `${token2List.length}`;
+      setWalletTokens({tokens: items, token1 , token2, hasAccess});
+    } catch (e) {
+    }
+  }, [checkWalletTokens]);
+
+  useEffect(() => {
+    handleCheckWalletTokens();
+  }, [handleCheckWalletTokens]);
 
   const onEdit = async () => {
     if (!profile || !profile.me) {
@@ -269,6 +383,23 @@ const Profile: NextPage = () => {
   const { avatar } = userOrgs[0];
   const userPictureBetterQuality = avatar?.replace("_normal", "_400x400");
 
+  const renderToken = () => {
+    const items =  (walletTokens?.tokens ?? []) as []
+    return items.map((value: number) => {
+      // for dev purpose visulally represent the image for token. 0...50 & 51...100
+      const tokenImage = value > 50 ? images.WALLET_CONTRACT_51_100 : images.WALLET_CONTRACT_1_50;
+      return <ImageContent key={value}>
+                <Image
+                  src={tokenImage?.src}
+                  alt={tokenImage.alt}
+                  width={45}
+                  height={45}
+              />
+        </ImageContent>
+    });
+  };
+
+  
   return (
     <Main>
       {!!Object.keys(showFeedbackModal).length && (
@@ -348,6 +479,40 @@ const Profile: NextPage = () => {
           </Info>
         </User>
       </TopContainer>
+      <WalletContainer>
+        <WalletCard>
+        <ImageWrapper>
+              <Image
+                src={userPictureBetterQuality || images.AVATAR_PLACEHOLDER?.src}
+                alt={images.AVATAR_PLACEHOLDER?.alt}
+                width={images.AVATAR_PLACEHOLDER?.large}
+                height={images.AVATAR_PLACEHOLDER?.large}
+              />
+            </ImageWrapper>
+            {/* {walletTokens?.hasAccess &&  */}
+            <TokenContainer>
+            <TokenItem>
+                <TokenLabel>
+                  Token (s)&nbsp; : { walletTokens.token1}
+                </TokenLabel>
+                <TokenLabel>
+                  Token (s)&nbsp; :  { walletTokens.token2}
+                </TokenLabel>
+              </TokenItem>
+              {renderToken()}
+            </TokenContainer>
+            <TokenContainer>
+          {/* } */}
+              <Info>
+                <Username>{walletTokens?.hasAccess ? "Your Mojiti Wallet is Connected" : "You don't have a Mojiti Wallet Connected"}</Username>
+                <BiddingScore>
+                  {strings.WALLET.ADDRESS}&nbsp;
+                  <Score>{activeBids.length}</Score>
+                </BiddingScore>
+              </Info>
+          </TokenContainer>
+        </WalletCard>
+      </WalletContainer>
       <Bids>
         {!!activeBids.length ? (
           <>
